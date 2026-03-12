@@ -1,0 +1,74 @@
+#include "pch.h"
+#include "AnimationClip.h"
+
+AnimationClip::AnimationClip()
+{}
+
+AnimationClip::AnimationClip(Animation Animation)
+{
+	animation = Animation;
+	loop = false;
+	flip = SDL_FLIP_NONE;
+}
+
+void AnimationClip::Play(Animation _animation)
+{
+	if (animation.texture != NULL && animation.texture->Compare(_animation.texture)) return;
+	animation = _animation;
+	loop = animation.loop;
+	ResetFrame();
+}
+
+void AnimationClip::ResetFrame()
+{
+	std::cout << "Resetting animation frame to 0\n";
+	animation.CurrentFrame = 0;
+	timer = 0;
+}
+
+void AnimationClip::Update(const float& dt)
+{
+	deltaTime = dt;
+	timer += deltaTime;
+
+	if (timer <= animation.FrameSpeed)
+		return;
+
+	timer = 0;
+	animation.CurrentFrame += 1;
+
+	if (animation.CurrentFrame >= animation.FrameCount) {
+		if (animation.loop) animation.CurrentFrame = 0;
+		else animation.CurrentFrame = animation.LastFrame();
+	}
+}
+
+void AnimationClip::stop()
+{
+	animation.CurrentFrame = animation.LastFrame();
+	loop = false;
+	timer = 0;
+	flip = false;
+}
+
+bool AnimationClip::IsFlip()
+{
+	if (flip != false)
+		return true;
+	return false;
+}
+
+bool AnimationClip::IsDone()
+{
+	if (animation.CurrentFrame == animation.LastFrame() && timer + deltaTime > animation.FrameSpeed) {
+		return true;
+	}
+
+	return false;
+}
+
+Rect AnimationClip::getRect()
+{
+	return Rect(animation.CurrentFrame * animation.FrameWidth, 0, animation.FrameWidth, animation.FrameHeight);
+}
+

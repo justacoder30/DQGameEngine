@@ -108,16 +108,15 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)DQGameEngine\externalLib\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)DQGameEngine\externalLib\debug\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL3.lib;
 SDL3_image.lib;
 SDL3_mixer.lib;
 SDL3_test.lib
-;SDL3_ttf.lib;
-tmxlite.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+;SDL3_ttf.lib;opengl32.lib;tmxlite-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /D /I "$(SolutionDir)DQGameEngine\externalLib\bin\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /Y /D /I "$(SolutionDir)DQGameEngine\externalLib\debug\bin\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -129,7 +128,7 @@ tmxlite.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)DQGameEngine\externalLib\include;$(SolutionDir)DQGameEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\DesktopFile\GameDev\tmxlite\tmxlite\include;$(SolutionDir)DQGameEngine\externalLib\include;$(SolutionDir)DQGameEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,8 +138,7 @@ tmxlite.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
 SDL3_image.lib;
 SDL3_mixer.lib;
 SDL3_test.lib
-;SDL3_ttf.lib;
-tmxlite.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+;SDL3_ttf.lib;opengl32.lib;tmxlite.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /D /I "$(SolutionDir)DQGameEngine\externalLib\bin\*.dll" "$(OutDir)"</Command>
@@ -153,6 +151,16 @@ tmxlite.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\images\tilemap\tileset.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\demo.tmx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

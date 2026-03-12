@@ -103,7 +103,9 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)DQGameEngine\externalLib\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;$(SolutionDir)DQGameEngine\externalLib\include</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -119,7 +121,9 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)DQGameEngine\externalLib\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;$(SolutionDir)tmxlite\src\include;$(SolutionDir)DQGameEngine\externalLib\include</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,13 +131,63 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\Input.h" />
+    <ClInclude Include="src\Components\Animation2DComponent.h" />
+    <ClInclude Include="src\Components\AnimationClip.h" />
+    <ClInclude Include="src\Components\Animation.h" />
+    <ClInclude Include="src\Components\GameApp.h" />
+    <ClInclude Include="src\Components\SpriteComponent.h" />
+    <ClInclude Include="src\Components\Component.h" />
     <ClInclude Include="externalLib\include\glad\glad.h" />
+    <ClInclude Include="src\Core\Rect.h" />
+    <ClInclude Include="src\Renderer\Shader.h" />
+    <ClInclude Include="src\Renderer\Renderer2D.h" />
     <ClInclude Include="src\DQEngine.h" />
     <ClInclude Include="externalLib\include\stb_image.h" />
+    <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\Renderer\Texture.h" />
+    <ClInclude Include="src\Core\Vector.h" />
+    <ClInclude Include="src\Components\TiltedMapComponent.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="externalLib\include\glad\glad.c" />
+    <ClCompile Include="src\Core\Input.cpp" />
+    <ClCompile Include="src\Components\Animation2DComponent.cpp" />
+    <ClCompile Include="src\Components\AnimationClip.cpp" />
+    <ClCompile Include="src\Components\Animation.cpp" />
+    <ClCompile Include="src\Components\GameApp.cpp" />
+    <ClCompile Include="src\Components\SpriteComponent.cpp" />
+    <ClCompile Include="src\Components\Component.cpp" />
+    <ClCompile Include="externalLib\include\glad\glad.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="externalLib\include\stb_image.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\Core\Rect.cpp" />
+    <ClCompile Include="src\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\DQEngine.cpp" />
+    <ClCompile Include="src\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Texture.cpp" />
+    <ClCompile Include="src\Core\Vector.cpp" />
+    <ClCompile Include="src\Components\TiltedMapComponent.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\vertex.glsl">
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </None>
+    <None Include="assets\shaders\fragment.glsl">
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,5 +1,10 @@
 #pragma once
+#include "Components/GameApp.h"
+#include "Components/TiltedMapComponent.h"
+#include "Components/SpriteComponent.h"
+#include "Components/Animation2DComponent.h"
 
-#include <iostream>
+#include "Core/Input.h"
 
-void Print(const std::string& message);
+int Test();
+void TestTexture();
