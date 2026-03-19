@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
 
     auto tilemap = new TiltedMapComponent("assets/demo.tmx");
 	auto sprite = new SpriteComponent(new Texture("assets/images/tilemap/Run.png"));
-
+    
 	sprite->x = 0;
 	sprite->y = 0;
 

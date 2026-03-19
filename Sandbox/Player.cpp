@@ -27,7 +27,7 @@ Player::Player()
 
 	Play(Idle);
 
-	SetPosition(0, 0);
+	SetPosition(900, 400);
 
 	SetSize(400, 400);
 }

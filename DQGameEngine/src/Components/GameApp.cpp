@@ -24,6 +24,7 @@ GameApp::GameApp(int width, int height, const char* title)
     Renderer2D::SetViewport(width, height);
 
     m_LastTime = SDL_GetPerformanceCounter();
+    std::cout << "OpenGL: " << glGetString(GL_VERSION) << std::endl;
 }
 
 GameApp::~GameApp()
