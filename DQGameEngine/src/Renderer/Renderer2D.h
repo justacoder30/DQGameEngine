@@ -26,4 +26,6 @@ public:
 
 private:
     static void Flush();
+    static void StartBatch();
+    static void NextBatch();
 };

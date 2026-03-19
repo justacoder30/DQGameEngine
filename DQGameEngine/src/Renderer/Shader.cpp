@@ -105,7 +105,7 @@ Shader::Shader(
 void Shader::Bind() const
 {
     glUseProgram(m_ID);
-    glUniform1i(glGetUniformLocation(m_ID, "uTexture"), 0);
+    glUniform1i(glGetUniformLocation(m_ID, "u_Textures"), 0);
 }
 
 void Shader::Unbind() const

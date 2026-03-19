@@ -108,22 +108,23 @@ void Renderer2D::BeginScene()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    
-    //glUseProgram(shaderProgram);
-
-    s_Data.IndexCount = 0;
-
-    s_Data.VertexBufferPtr =
-        s_Data.VertexBufferBase;
-
-    s_Data.TextureSlotIndex = 1;
-
-    for (uint32_t i = 1; i < MaxTextureSlots; i++)
-        s_Data.TextureSlots[i] = nullptr;
+    StartBatch();
 }
 
 void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, float angle, Vector centerP)
 {
+    if (s_Data.IndexCount + 6 > MaxIndices)
+    {
+        NextBatch();
+    }
+
+    uint32_t currentVertexCount = (uint32_t)(s_Data.VertexBufferPtr - s_Data.VertexBufferBase);
+
+    if (currentVertexCount + 4 > MaxVertices)
+    {
+        NextBatch();
+    }
+
     // --- 1. Quản lý Texture Slot (giống hàm cũ) ---
     float texIndex = 0.0f;
     for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++) {
@@ -135,8 +136,7 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, f
 
     if (texIndex == 0.0f) {
         if (s_Data.TextureSlotIndex >= MaxTextureSlots) {
-            EndScene();
-            BeginScene();
+            NextBatch();
         }
         texIndex = (float)s_Data.TextureSlotIndex;
         s_Data.TextureSlots[s_Data.TextureSlotIndex] = &texture;
@@ -211,9 +211,11 @@ void Renderer2D::EndScene()
 {
     GLsizeiptr size = (uint8_t*)s_Data.VertexBufferPtr - (uint8_t*)s_Data.VertexBufferBase;
 
-    glBindBuffer(GL_ARRAY_BUFFER, s_Data.VBO);
+    if (size == 0)
+        return; 
 
-    glBufferSubData( GL_ARRAY_BUFFER, 0, size, s_Data.VertexBufferBase);
+    glBindBuffer(GL_ARRAY_BUFFER, s_Data.VBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Data.VertexBufferBase);
 
     Flush();
 }
@@ -242,4 +244,17 @@ void Renderer2D::Flush()
     glBindVertexArray(s_Data.VAO);
 
     glDrawElements( GL_TRIANGLES, s_Data.IndexCount, GL_UNSIGNED_INT, nullptr);
+}
+
+void Renderer2D::StartBatch()
+{
+    s_Data.IndexCount = 0;
+    s_Data.VertexBufferPtr = s_Data.VertexBufferBase;
+    s_Data.TextureSlotIndex = 1;
+}
+
+void Renderer2D::NextBatch()
+{
+    EndScene();
+    StartBatch();
 }

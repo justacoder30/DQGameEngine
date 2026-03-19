@@ -21,6 +21,5 @@ int main(int argc, char** argv) {
     app.Add(player);
 
     app.Run();
-    //TestTexture();
     return 0;
 }
