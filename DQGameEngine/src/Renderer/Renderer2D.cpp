@@ -117,6 +117,9 @@ void Renderer2D::BeginScene()
         s_Data.VertexBufferBase;
 
     s_Data.TextureSlotIndex = 1;
+
+    for (uint32_t i = 1; i < MaxTextureSlots; i++)
+        s_Data.TextureSlots[i] = nullptr;
 }
 
 void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, float angle, Vector centerP)
@@ -124,7 +127,7 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, f
     // --- 1. Quản lý Texture Slot (giống hàm cũ) ---
     float texIndex = 0.0f;
     for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++) {
-        if (s_Data.TextureSlots[i] == &texture) {
+        if (s_Data.TextureSlots[i]->GetID() == texture.GetID()) {
             texIndex = (float)i;
             break;
         }

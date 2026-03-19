@@ -327,7 +327,7 @@ void TestTexture()
         //Renderer2D::DrawQuad(0, 0, 400.0f, tex);
 
         //Renderer2D::Draw(tex, src, dst, false, 100.0f);
-        //Renderer2D::Draw(tex2, src2, dst2);
+        Renderer2D::Draw(tex2, src2, dst2);
 		map.Draw();
 
         Renderer2D::EndScene();
