@@ -9,7 +9,6 @@ struct QuadVertex
     float Position[3];
     float TexCoord[2];
     float TexIndex;
-    float Padding[2];
 };
 
 class Renderer2D
