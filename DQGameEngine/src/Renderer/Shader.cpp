@@ -60,18 +60,16 @@ Shader::Shader(
 
     const char* vertexSrc = R"( 	
         #version 330 core
-
         layout(location = 0) in vec3 a_Position;
         layout(location = 1) in vec2 a_TexCoord;
-        layout(location = 2) in int a_TexIndex;
+        layout(location = 2) in float a_TexIndex; // Nhận vào float
 
         uniform mat4 u_ViewProjection; 
 
         out vec2 v_TexCoord;
-        flat out int v_TexIndex; 
+        out float v_TexIndex; // Truyền đi float
 
-        void main()
-        {
+        void main() {
             v_TexCoord = a_TexCoord;
             v_TexIndex = a_TexIndex;
             gl_Position = u_ViewProjection * vec4(a_Position, 1.0); 
@@ -79,21 +77,19 @@ Shader::Shader(
     )";
 
     const char* fragmentSrc = R"( 	
-
         #version 330 core
-
         layout(location = 0) out vec4 color;
 
         in vec2 v_TexCoord;
-        flat in int v_TexIndex; // ✅ flat
+        in float v_TexIndex; // Nhận float từ VS
 
         uniform sampler2D u_Textures[32];
 
-        void main()
-        {
-            color = texture(u_Textures[v_TexIndex], v_TexCoord);
+        void main() {
+            // Cộng 0.5 trước khi ép kiểu để tránh sai số làm tròn trên driver AMD
+            int index = int(v_TexIndex + 0.5); 
+            color = texture(u_Textures[index], v_TexCoord);
         }
-
     )";
 
     m_ID = CompileShader(vertexSrc, fragmentSrc);
