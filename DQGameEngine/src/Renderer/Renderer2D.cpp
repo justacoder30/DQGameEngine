@@ -82,8 +82,7 @@ void Renderer2D::Init()
 
     glEnableVertexAttribArray(1);
 
-    glVertexAttribPointer( 2, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(5 * sizeof(float))
-    );
+    glVertexAttribIPointer( 2, 1, GL_INT, sizeof(QuadVertex), (void*)(5 * sizeof(float)) );
 
     glEnableVertexAttribArray(2);
 
@@ -129,7 +128,7 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, f
     float texIndex = 0.0f;
     for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++) {
         if (s_Data.TextureSlots[i]->GetID() == texture.GetID()) {
-            texIndex = (float)i;
+            texIndex = i;
             break;
         }
     }
@@ -138,7 +137,7 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, f
         if (s_Data.TextureSlotIndex >= MaxTextureSlots) {
             NextBatch();
         }
-        texIndex = (float)s_Data.TextureSlotIndex;
+        texIndex = s_Data.TextureSlotIndex;
         s_Data.TextureSlots[s_Data.TextureSlotIndex] = &texture;
         s_Data.TextureSlotIndex++;
     }
