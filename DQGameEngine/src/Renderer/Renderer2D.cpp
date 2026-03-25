@@ -123,7 +123,8 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, f
     }
 
     // --- 1. Quản lý Texture Slot (giống hàm cũ) ---
-    int texIndex = 0;
+    int texIndex = -1;
+
     for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++) {
         if (s_Data.TextureSlots[i]->GetID() == texture.GetID()) {
             texIndex = i;
@@ -131,10 +132,11 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, f
         }
     }
 
-    if (texIndex == 0) {
+    if (texIndex == -1) {
         if (s_Data.TextureSlotIndex >= MaxTextureSlots) {
             NextBatch();
         }
+
         texIndex = s_Data.TextureSlotIndex;
         s_Data.TextureSlots[s_Data.TextureSlotIndex] = &texture;
         s_Data.TextureSlotIndex++;
@@ -218,7 +220,7 @@ void Renderer2D::EndScene()
 
     if (size == 0)
         return; 
-
+    glBindVertexArray(s_Data.VAO);
     glBindBuffer(GL_ARRAY_BUFFER, s_Data.VBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Data.VertexBufferBase);
 
@@ -256,6 +258,11 @@ void Renderer2D::StartBatch()
     s_Data.IndexCount = 0;
     s_Data.VertexBufferPtr = s_Data.VertexBufferBase;
     s_Data.TextureSlotIndex = 1;
+
+    s_Data.TextureSlots[0] = s_Data.WhiteTexture;
+
+    for (uint32_t i = 1; i < MaxTextureSlots; i++)
+        s_Data.TextureSlots[i] = nullptr;
 }
 
 void Renderer2D::NextBatch()
