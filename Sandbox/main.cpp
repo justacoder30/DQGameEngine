@@ -3,7 +3,7 @@
 #include <iostream>
 
 int main(int argc, char** argv) {
-    /*GameApp app(1920, 1080, "My Game");
+    GameApp app(1920, 1080, "My Game");
 
     auto anim = new Animation2DComponent();
 
@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
 
     app.Add(player);
 
-    app.Run();*/
-    Test1();
+    app.Run();
+    //Test1();
     return 0;
 }

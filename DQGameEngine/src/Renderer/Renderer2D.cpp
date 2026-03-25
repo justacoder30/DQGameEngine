@@ -80,7 +80,8 @@ void Renderer2D::Init()
     glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(3 * sizeof(float)) );
     glEnableVertexAttribArray(1);
 
-    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(5 * sizeof(float)));
+    //glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(5 * sizeof(float)));
+    glVertexAttribIPointer(2, 1, GL_INT, sizeof(QuadVertex), (void*)(5 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     s_Data.VertexBufferBase = new QuadVertex[MaxVertices];
@@ -122,7 +123,7 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, f
     }
 
     // --- 1. Quản lý Texture Slot (giống hàm cũ) ---
-    float texIndex = 0.0f;
+    int texIndex = 0;
     for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++) {
         if (s_Data.TextureSlots[i]->GetID() == texture.GetID()) {
             texIndex = i;
@@ -130,7 +131,7 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, f
         }
     }
 
-    if (texIndex == 0.0f) {
+    if (texIndex == 0) {
         if (s_Data.TextureSlotIndex >= MaxTextureSlots) {
             NextBatch();
         }

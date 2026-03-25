@@ -62,12 +62,12 @@ Shader::Shader(
         #version 330 core
         layout(location = 0) in vec3 a_Position;
         layout(location = 1) in vec2 a_TexCoord;
-        layout(location = 2) in float a_TexIndex; // Nhận vào float
+        layout(location = 2) in int a_TexIndex; 
 
         uniform mat4 u_ViewProjection; 
 
         out vec2 v_TexCoord;
-        out float v_TexIndex; // Truyền đi float
+        flat out int v_TexIndex;
 
         void main() {
             v_TexCoord = a_TexCoord;
@@ -81,14 +81,12 @@ Shader::Shader(
         layout(location = 0) out vec4 color;
 
         in vec2 v_TexCoord;
-        in float v_TexIndex; // Nhận float từ VS
+        flat in int v_TexIndex;
 
         uniform sampler2D u_Textures[32];
 
         void main() {
-            // Cộng 0.5 trước khi ép kiểu để tránh sai số làm tròn trên driver AMD
-            int index = int(v_TexIndex + 0.5); 
-            color = texture(u_Textures[index], v_TexCoord);
+            color = texture(u_Textures[v_TexIndex], v_TexCoord);
         }
     )";
 
@@ -98,7 +96,6 @@ Shader::Shader(
 void Shader::Bind() const
 {
     glUseProgram(m_ID);
-    glUniform1i(glGetUniformLocation(m_ID, "u_Textures"), 0);
 }
 
 void Shader::Unbind() const
