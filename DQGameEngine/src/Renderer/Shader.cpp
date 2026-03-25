@@ -78,6 +78,7 @@ Shader::Shader(
 
     const char* fragmentSrc = R"( 	
         #version 330 core
+
         layout(location = 0) out vec4 color;
 
         in vec2 v_TexCoord;
@@ -85,8 +86,47 @@ Shader::Shader(
 
         uniform sampler2D u_Textures[32];
 
-        void main() {
-            color = texture(u_Textures[v_TexIndex], v_TexCoord);
+        void main()
+        {
+            vec4 result = vec4(1.0, 0.0, 1.0, 1.0); // debug màu tím nếu lỗi
+
+            switch(v_TexIndex)
+            {
+                case 0:  result = texture(u_Textures[0],  v_TexCoord); break;
+                case 1:  result = texture(u_Textures[1],  v_TexCoord); break;
+                case 2:  result = texture(u_Textures[2],  v_TexCoord); break;
+                case 3:  result = texture(u_Textures[3],  v_TexCoord); break;
+                case 4:  result = texture(u_Textures[4],  v_TexCoord); break;
+                case 5:  result = texture(u_Textures[5],  v_TexCoord); break;
+                case 6:  result = texture(u_Textures[6],  v_TexCoord); break;
+                case 7:  result = texture(u_Textures[7],  v_TexCoord); break;
+                case 8:  result = texture(u_Textures[8],  v_TexCoord); break;
+                case 9:  result = texture(u_Textures[9],  v_TexCoord); break;
+                case 10: result = texture(u_Textures[10], v_TexCoord); break;
+                case 11: result = texture(u_Textures[11], v_TexCoord); break;
+                case 12: result = texture(u_Textures[12], v_TexCoord); break;
+                case 13: result = texture(u_Textures[13], v_TexCoord); break;
+                case 14: result = texture(u_Textures[14], v_TexCoord); break;
+                case 15: result = texture(u_Textures[15], v_TexCoord); break;
+                case 16: result = texture(u_Textures[16], v_TexCoord); break;
+                case 17: result = texture(u_Textures[17], v_TexCoord); break;
+                case 18: result = texture(u_Textures[18], v_TexCoord); break;
+                case 19: result = texture(u_Textures[19], v_TexCoord); break;
+                case 20: result = texture(u_Textures[20], v_TexCoord); break;
+                case 21: result = texture(u_Textures[21], v_TexCoord); break;
+                case 22: result = texture(u_Textures[22], v_TexCoord); break;
+                case 23: result = texture(u_Textures[23], v_TexCoord); break;
+                case 24: result = texture(u_Textures[24], v_TexCoord); break;
+                case 25: result = texture(u_Textures[25], v_TexCoord); break;
+                case 26: result = texture(u_Textures[26], v_TexCoord); break;
+                case 27: result = texture(u_Textures[27], v_TexCoord); break;
+                case 28: result = texture(u_Textures[28], v_TexCoord); break;
+                case 29: result = texture(u_Textures[29], v_TexCoord); break;
+                case 30: result = texture(u_Textures[30], v_TexCoord); break;
+                case 31: result = texture(u_Textures[31], v_TexCoord); break;
+            }
+
+            color = result;
         }
     )";
 

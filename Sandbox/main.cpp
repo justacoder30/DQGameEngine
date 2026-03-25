@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
     auto tilemap = new TiltedMapComponent("assets/demo.tmx");
 	auto sprite1 = new SpriteComponent(new Texture("assets/images/tilemap/tileset.png"));
 	auto sprite2 = new SpriteComponent(new Texture("assets/images/tilemap/tileset.png"));
-    auto bg = new SpriteComponent(new Texture("resource/img/Knight/Run.png"));
+    auto bg = new SpriteComponent(new Texture("resource/img/Background/background.png"));
 
 	bg->width = 1920;   
 	bg->height = 1080;
