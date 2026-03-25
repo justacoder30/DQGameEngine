@@ -74,14 +74,14 @@ void Renderer2D::Init()
 
     delete[] indices;
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)offsetof(QuadVertex, Position));
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(3 * sizeof(float)) );
+    glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)offsetof(QuadVertex, TexCoord));
     glEnableVertexAttribArray(1);
 
     //glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(5 * sizeof(float)));
-    glVertexAttribIPointer(2, 1, GL_INT, sizeof(QuadVertex), (void*)(5 * sizeof(float)));
+    glVertexAttribIPointer(2, 1, GL_INT, sizeof(QuadVertex), (void*)offsetof(QuadVertex, TexIndex));
     glEnableVertexAttribArray(2);
 
     s_Data.VertexBufferBase = new QuadVertex[MaxVertices];

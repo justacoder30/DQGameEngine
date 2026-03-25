@@ -10,18 +10,24 @@ int main(int argc, char** argv) {
 	auto player = new Player(); 
 
     auto tilemap = new TiltedMapComponent("assets/demo.tmx");
-	auto sprite = new SpriteComponent(new Texture("assets/images/tilemap/Run.png"));
-    auto bg = new SpriteComponent(new Texture("resource/img/Background/background.png"));
+	auto sprite1 = new SpriteComponent(new Texture("assets/images/tilemap/tileset.png"));
+	auto sprite2 = new SpriteComponent(new Texture("assets/images/tilemap/tileset.png"));
+    auto bg = new SpriteComponent(new Texture("resource/img/Knight/Run.png"));
 
 	bg->width = 1920;   
 	bg->height = 1080;
     
-	sprite->x = 0;
-	sprite->y = 0;
+    sprite1->x = 0;
+    sprite1->y = 0;
+
+    sprite2->x = 11.5;
+    sprite2->y = 0;
 
 	app.Add(bg);
-    app.Add(tilemap);
-	app.Add(sprite);
+    //app.Add(tilemap);
+	//app.Add(sprite1);
+    //app.Add(sprite2);
+
 
     app.Add(player);
 
