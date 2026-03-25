@@ -4,14 +4,12 @@
 #include "Core/Rect.h" 
 #include "Core/Vector.h" 
 
-#pragma pack(push, 1)
 struct QuadVertex
 {
     float Position[3];
     float TexCoord[2];
     int   TexIndex;
 };
-#pragma pack(pop)
 
 class Renderer2D
 {
