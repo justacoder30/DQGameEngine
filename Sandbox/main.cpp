@@ -24,9 +24,9 @@ int main(int argc, char** argv) {
     sprite2->y = 0;
 
 	app.Add(bg);
-    //app.Add(tilemap);
-	//app.Add(sprite1);
-    //app.Add(sprite2);
+    app.Add(tilemap);
+	app.Add(sprite1);
+    app.Add(sprite2);
 
 
     app.Add(player);

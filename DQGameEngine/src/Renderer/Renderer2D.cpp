@@ -260,9 +260,6 @@ void Renderer2D::StartBatch()
     s_Data.TextureSlotIndex = 1;
 
     s_Data.TextureSlots[0] = s_Data.WhiteTexture;
-
-    for (uint32_t i = 1; i < MaxTextureSlots; i++)
-        s_Data.TextureSlots[i] = nullptr;
 }
 
 void Renderer2D::NextBatch()
