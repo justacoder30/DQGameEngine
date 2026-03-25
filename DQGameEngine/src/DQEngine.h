@@ -7,4 +7,5 @@
 #include "Core/Input.h"
 
 int Test();
+int Test1();
 void TestTexture();

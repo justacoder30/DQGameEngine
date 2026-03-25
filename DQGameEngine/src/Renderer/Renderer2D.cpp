@@ -144,7 +144,8 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, f
     float texW = (float)texture.GetWidth();
     float texH = (float)texture.GetHeight();
 
-    float eps = 0.01f; // Một khoảng bù rất nhỏ tính bằng pixel
+    float u_eps = 0.5f / texW; // Khoảng eps tính bằng 0.5 pixel
+    float v_eps = 0.5f / texH;
 
     // Tính toán lại UV cho chuẩn
     //float u0 = srcrect.x / texW;
@@ -152,10 +153,10 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, f
     //float u1 = (srcrect.x + srcrect.w) / texW;
     //float v0 = 1.0f - ((srcrect.y + srcrect.h) / texH);
 
-    float u0 = (srcrect.x + eps) / texW;
-    float v1 = 1.0f - ((srcrect.y + eps) / texH);// Đảo ngược trục V
-    float u1 = (srcrect.x + srcrect.w - eps) / texW;
-    float v0 = 1.0f - ((srcrect.y + srcrect.h - eps) / texH);
+    float u0 = (srcrect.x / texW) + u_eps;
+    float v1 = 1.0f - (srcrect.y / texH) - v_eps;
+    float u1 = ((srcrect.x + srcrect.w) / texW) - u_eps;
+    float v0 = 1.0f - ((srcrect.y + srcrect.h) / texH) + v_eps;
 
     if (flip) std::swap(u0, u1);
 
