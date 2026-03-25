@@ -375,6 +375,28 @@ int Test1()
 
     stbi_image_free(data);
 
+    int w2, h2, ch2;
+    unsigned char* data2 = stbi_load("assets/images/tilemap/tileset.png", &w2, &h2, &ch2, 4);
+
+    if (!data2) {
+        std::cout << "Failed to load image 2\n";
+        return -1;
+    }
+
+    GLuint texture2;
+    glGenTextures(1, &texture2);
+    glBindTexture(GL_TEXTURE_2D, texture2);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w2, h2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data2);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    stbi_image_free(data2);
+
     // ===== Main loop =====
     bool running = true;
 
@@ -394,13 +416,16 @@ int Test1()
         glBindVertexArray(VAO);
         glBindTexture(GL_TEXTURE_2D, texture);
 
-        // Quad 1 (ở giữa)
         GLint loc = glGetUniformLocation(shader, "uOffset");
-        glUniform2f(loc, 0.0f, 0.0f);
+
+        // ===== Quad 1 =====
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glUniform2f(loc, -0.25f, 0.0f);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        // Quad 2 (đè lên, lệch nhẹ để thấy alpha)
-        glUniform2f(loc, 0.05f, 0.05f);
+        // ===== Quad 2 (texture khác) =====
+        glBindTexture(GL_TEXTURE_2D, texture2);
+        glUniform2f(loc, 0.25f, 0.0f);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         SDL_GL_SwapWindow(window);
