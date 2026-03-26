@@ -6,12 +6,12 @@
 
 #include <tmxlite/Map.hpp>
 #include <tmxlite/TileLayer.hpp>
-#include "Component.h"
+#include "PositionComponent.h"
 
 #include <vector>
 #include <string>
 
-class TiltedMapComponent : public Component
+class TiltedMapComponent : public PositionComponent
 {
 private:
 
