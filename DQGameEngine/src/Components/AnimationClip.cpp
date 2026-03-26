@@ -21,7 +21,6 @@ void AnimationClip::Play(Animation _animation)
 
 void AnimationClip::ResetFrame()
 {
-	std::cout << "Resetting animation frame to 0\n";
 	animation.CurrentFrame = 0;
 	timer = 0;
 }

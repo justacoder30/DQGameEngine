@@ -30,9 +30,9 @@ static RendererData s_Data;
 
 void Renderer2D::Init()
 {
-    uint32_t white = 0xffffffff;
+    uint32_t color = 0xffff0000;
 
-    s_Data.WhiteTexture = new Texture(1, 1, &white);
+    s_Data.WhiteTexture = new Texture(1, 1, &color);
 
     s_Data.TextureSlots[0] = s_Data.WhiteTexture;
 
@@ -211,6 +211,72 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, f
     }
 
     s_Data.IndexCount += 6;
+}
+
+void Renderer2D::DrawRect(const Rect& rect)
+{
+    Texture& tex = *s_Data.WhiteTexture;
+
+    if (s_Data.IndexCount + 6 > MaxIndices)
+        NextBatch();
+
+    uint32_t currentVertexCount = (uint32_t)(s_Data.VertexBufferPtr - s_Data.VertexBufferBase);
+
+    if (currentVertexCount + 4 > MaxVertices)
+        NextBatch();
+
+    
+    int texIndex = 0; 
+
+    float texCoords[4][2] = {
+        {0.0f, 1.0f},
+        {1.0f, 1.0f},
+        {1.0f, 0.0f},
+        {0.0f, 0.0f}
+    };
+
+    float x = rect.x;
+    float y = rect.y;
+    float w = rect.w;
+    float h = rect.h;
+
+    float vertices[4][2] = {
+        {x,     y},
+        {x + w, y},
+        {x + w, y + h},
+        {x,     y + h}
+    };
+
+    for (int i = 0; i < 4; i++)
+    {
+        s_Data.VertexBufferPtr->Position[0] = vertices[i][0];
+        s_Data.VertexBufferPtr->Position[1] = vertices[i][1];
+        s_Data.VertexBufferPtr->Position[2] = 0.0f;
+
+        s_Data.VertexBufferPtr->TexCoord[0] = texCoords[i][0];
+        s_Data.VertexBufferPtr->TexCoord[1] = texCoords[i][1];
+
+        s_Data.VertexBufferPtr->TexIndex = texIndex;
+
+        s_Data.VertexBufferPtr++;
+    }
+
+    s_Data.IndexCount += 6;
+}
+
+void Renderer2D::DrawRectOutline(const Rect& rect, float thickness)
+{
+    // Top
+    DrawRect(Rect(rect.x, rect.y, rect.w, thickness));
+
+    // Bottom
+    DrawRect(Rect(rect.x, rect.y + rect.h - thickness, rect.w, thickness));
+
+    // Left
+    DrawRect(Rect(rect.x, rect.y, thickness, rect.h));
+
+    // Right
+    DrawRect(Rect(rect.x + rect.w - thickness, rect.y, thickness, rect.h));
 }
 
 void Renderer2D::EndScene()

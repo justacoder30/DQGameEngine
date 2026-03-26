@@ -27,20 +27,15 @@ private:
 
 private:
 
-    inline static tmx::Map m_Map;
-
-    std::vector<Texture> m_Textures;
-    std::vector<Tile> m_Tiles;
-
-    int m_TileSize = 0;
-
-    float m_Width = 0;
-    float m_Height = 0;
-
-private:
-
     void Load(const std::string& path);
     void BuildTiles();
+
+    inline static tmx::Map m_Map;
+    std::vector<Texture> m_Textures;
+    std::vector<Tile> m_Tiles;
+    int m_TileSize = 0;
+    float m_Width = 0;
+    float m_Height = 0;
 
 public:
 

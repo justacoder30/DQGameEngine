@@ -1,13 +1,11 @@
 #pragma once
-#include "Component.h"
+#include "PositionComponent.h"
 #include "Renderer/Texture.h"
 #include "Renderer/Renderer2D.h"
 
-class SpriteComponent : public Component
+class SpriteComponent : public PositionComponent
 {
 public:
-    float x, y, width, height;
-
     SpriteComponent(Texture* tex);
 
 protected:

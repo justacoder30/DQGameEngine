@@ -3,7 +3,9 @@
 
 void Component::Add(Component* component)
 {
+	component->m_Parent = this; 
     m_Children.push_back(component);
+	component->OnAttach();
 }
 
 void Component::Update(float dt)

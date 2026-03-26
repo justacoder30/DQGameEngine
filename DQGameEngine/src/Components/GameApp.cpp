@@ -3,6 +3,8 @@
 #include "Renderer/Renderer2D.h"
 #include "Core/Input.h" 
 
+CollisionSystem GameApp::s_CollisionSystem;
+
 GameApp::GameApp(int width, int height, const char* title)
 {
     SDL_Init(SDL_INIT_VIDEO);
@@ -53,21 +55,19 @@ void GameApp::Run()
         if (dt > 1 / 60.f) dt = 1 / 60.f;
         m_LastTime = current;
 
+        GameApp::GetCollisionSystem()->Run();
         Update(dt);
-
 
         Renderer2D::BeginScene();
         Draw();
+        //Renderer2D::DrawRectOutline(Rect(0, 0, 100, 100));
         Renderer2D::EndScene();
 
         SDL_GL_SwapWindow(m_Window);
     }
 }
 
-void GameApp::OnUpdate(float dt)
+CollisionSystem* GameApp::GetCollisionSystem()
 {
-}
-
-void GameApp::OnDraw()
-{
+    return &s_CollisionSystem;
 }

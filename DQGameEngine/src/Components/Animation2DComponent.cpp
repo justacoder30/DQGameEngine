@@ -36,14 +36,14 @@ Rect Animation2DComponent::GetSrcRect()
 
 void Animation2DComponent::SetPosition(float x, float y)
 {
-    dst.x = x;
-    dst.y = y;
+    position.x = x;
+    position.y = y;
 }
 
 void Animation2DComponent::SetSize(float w, float h)
 {
-    dst.w = w;
-    dst.h = h;
+    size.x = w;
+    size.y = h;
 }
 
 void Animation2DComponent::OnUpdate(float dt)
@@ -52,6 +52,7 @@ void Animation2DComponent::OnUpdate(float dt)
     animationClip.Update(dt);
 
     src = animationClip.getRect();
+	dst = Rect(position, size);
 }
 
 void Animation2DComponent::OnDraw()

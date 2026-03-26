@@ -30,6 +30,11 @@ Player::Player()
 	SetPosition(900, 400);
 
 	SetSize(400, 400);
+	auto rect1 = new RectangleComponent(Vector(0, 0), Vector(100, 100));
+	auto rect2 = new RectangleComponent(Vector(200, 0), Vector(100, 100));
+
+	Add(rect1);
+	Add(rect2);
 }
 
 void Player::OnUpdate(float dt)
@@ -38,7 +43,7 @@ void Player::OnUpdate(float dt)
 
 	if (Key[SDL_SCANCODE_A]) {
 		Play(Run);
-		dst.x -= speed * dt;
+		position.x -= speed * dt;
 		if(direction != Left) {
 			direction = Left;
 			animationClip.flip = true; 
@@ -46,21 +51,26 @@ void Player::OnUpdate(float dt)
 	} 
 	else if (Key[SDL_SCANCODE_D]) {
 		Play(Run);
-		dst.x += speed * dt;
+		position.x += speed * dt;
 		if(direction != Right) {
 			direction = Right;
 			animationClip.flip = false; 
 		}
 	}
 	else if (Key[SDL_SCANCODE_W]) {
-		dst.y -= speed * dt;
+		position.y -= speed * dt;
 	}
 	else if (Key[SDL_SCANCODE_S]) {
-		dst.y += speed * dt;
+		position.y += speed * dt;
 	}
 	else {
 		Play(Idle);
 	}
 
 	Animation2DComponent::OnUpdate(dt);
+}
+
+void Player::OnCollision(ShapeComponent* shape, Component* other)
+{
+	std::cout << "Collided with " << typeid(*other).name() << ", Shape: " << typeid(*shape).name() << std::endl;
 }

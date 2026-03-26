@@ -88,7 +88,7 @@ Shader::Shader(
 
         void main()
         {
-            vec4 result = vec4(1.0, 0.0, 1.0, 1.0); // debug màu tím nếu lỗi
+            vec4 result = vec4(1.0, 0.0, 1.0, 1.0); 
 
             switch(v_TexIndex)
             {
@@ -125,7 +125,8 @@ Shader::Shader(
                 case 30: result = texture(u_Textures[30], v_TexCoord); break;
                 case 31: result = texture(u_Textures[31], v_TexCoord); break;
             }
-
+            
+            //result = texture(u_Textures[v_TexIndex], v_TexCoord); 
             color = result;
         }
     )";

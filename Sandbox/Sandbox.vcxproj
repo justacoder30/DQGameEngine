@@ -150,6 +150,7 @@ SDL3_test.lib
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Background.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
@@ -160,6 +161,7 @@ SDL3_test.lib
     <None Include="assets\demo.tmx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Background.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

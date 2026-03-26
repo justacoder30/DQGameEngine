@@ -16,13 +16,12 @@ class Renderer2D
 public:
 
     static void Init();
-
     static void BeginScene();
     static void EndScene();
-
     static void SetViewport(float width, float height);
-
     static void Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip = false, float angle = 0.0f, Vector centerP = Vector::Zero());
+    static void DrawRect(const Rect& rect);
+    static void DrawRectOutline(const Rect& rect, float thickness = 2.0f);
 
 private:
     static void Flush();

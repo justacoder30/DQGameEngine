@@ -131,6 +131,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\CollisionSystem.h" />
+    <ClInclude Include="src\Core\CollisionCallbacks.h" />
+    <ClInclude Include="src\Components\RectangleComponent.h" />
+    <ClInclude Include="src\Components\ShapeComponent.h" />
+    <ClInclude Include="src\Components\PositionComponent.h" />
     <ClInclude Include="src\Core\Input.h" />
     <ClInclude Include="src\Components\Animation2DComponent.h" />
     <ClInclude Include="src\Components\AnimationClip.h" />
@@ -150,6 +155,11 @@
     <ClInclude Include="src\Components\TiltedMapComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\CollisionSystem.cpp" />
+    <ClCompile Include="src\Core\CollisionCallbacks.cpp" />
+    <ClCompile Include="src\Components\RectangleComponent.cpp" />
+    <ClCompile Include="src\Components\ShapeComponent.cpp" />
+    <ClCompile Include="src\Components\PositionComponent.cpp" />
     <ClCompile Include="src\Core\Input.cpp" />
     <ClCompile Include="src\Components\Animation2DComponent.cpp" />
     <ClCompile Include="src\Components\AnimationClip.cpp" />
