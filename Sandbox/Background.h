@@ -10,8 +10,10 @@ public:
 		size.y = 1080;
 
 		auto rect = new RectangleComponent(Vector(700, 200), Vector(100, 100));
+		auto rect1 = new RectangleComponent(Vector(700, 100), Vector(100, 100));
 
 		Add(rect);
+		Add(rect1);
 	}
 };
 

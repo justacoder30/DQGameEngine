@@ -10,6 +10,8 @@ public:
 	Rect(const float& _x, const float& _y, const float& _w, const float& _h);
 	bool CheckCollide(const Rect& other);
 	Vector GetOverlap(const Rect& other);
+	Vector GetCenter();
+	Vector GetMTV(const Rect& other);
 	
 	Vector pos, size;
 	float x, y, w, h;

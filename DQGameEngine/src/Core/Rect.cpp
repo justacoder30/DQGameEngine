@@ -43,11 +43,22 @@ bool Rect::CheckCollide(const Rect& other)
 
 Vector Rect::GetOverlap(const Rect& other)
 {
-	float dx = (x + w / 2) - (other.x + other.w / 2);
-	float dy = (y + h / 2) - (other.y + other.h / 2);
+	float overlapX = std::min(right, other.right) - std::max(left, other.left);
+	float overlapY = std::min(bottom, other.bottom) - std::max(top, other.top);
 
-	float px = (w + other.w) / 2 - abs(dx);
-	float py = (h + other.h) / 2 - abs(dy);
+	return Vector(overlapX, overlapY);	
+}
 
-	return Vector(px, py);
+Vector Rect::GetCenter()
+{
+	return Vector(x + w / 2, y + h / 2);
+}
+
+Vector Rect::GetMTV(const Rect& other)
+{
+	Vector overlap = GetOverlap(other);
+	if (overlap.x < overlap.y)
+		return Vector((x < other.x) ? -overlap.x : overlap.x, 0);
+	else
+		return Vector(0, (y < other.y) ? -overlap.y : overlap.y);
 }

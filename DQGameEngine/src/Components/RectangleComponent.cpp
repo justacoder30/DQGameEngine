@@ -30,7 +30,9 @@ bool RectangleComponent::CheckCollide(ShapeComponent* other)
 
     if (!rectOther) return false;
 
-    return GetWorldBounds().CheckCollide(rectOther->GetWorldBounds());
+    isColliding = GetWorldBounds().CheckCollide(rectOther->GetWorldBounds());
+
+    return isColliding;
 }
 
 void RectangleComponent::OnDraw()
