@@ -4,24 +4,15 @@
 #include "Core\CollisionCallbacks.h"
 #include <iostream>
 
-class Background : public SpriteComponent, public CollisionCallbacks
+class Background : public SpriteComponent
 {
 
 public:
 	Background() : SpriteComponent(new Texture("resource/img/Background/background.png")) {
-		size.x = 1920;   
-		size.y = 1080;
+		size = Renderer2D::GetViewportSize();
 
-		auto rect = new RectangleComponent(Vector(700, 200), Vector(100, 100));
-		auto rect1 = new RectangleComponent(Vector(700, 100), Vector(100, 100));
-
-		Add(rect);
-		Add(rect1);
-	}
-
-	void OnCollision(ShapeComponent* shape, Component* other) override
-	{
-		RemoveFromParent();
+		position = Vector(0, 0);
+		anchor = Vector(0.5, 0.5);
 	}
 };
 

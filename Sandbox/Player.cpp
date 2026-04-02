@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Coin.h"
 #include <iostream>
 
 enum State
@@ -17,7 +18,7 @@ enum Direction
 };
 
 Direction direction = Right;
-auto rect1 = new RectangleComponent(Vector(0, 0), Vector(100, 100));
+auto rect1 = new RectangleComponent(Vector(21, 64), Vector(22, 64));
 
 Player::Player()
 {
@@ -27,10 +28,8 @@ Player::Player()
 	AddAnimation(Jump, Animation("resource/img/Knight/Jump.png", 2, 0.12));
 
 	Play(Idle);
-
-	SetPosition(900, 400);
-
-	SetSize(400, 400);
+	std::cout << size.x << " " << size.y << std::endl;
+	position = Vector(100, 100);
 	
 	//auto rect2 = new RectangleComponent(Vector(200, 0), Vector(100, 100));
 
@@ -44,19 +43,19 @@ void Player::OnUpdate(float dt)
 	Vector velocity(0, 0);
 
 	if (Key[SDL_SCANCODE_A]) {
-		//Play(Run);
+		Play(Run);
 		velocity.x = -speed;
 		if(direction != Left) {
 			direction = Left;
-			animationClip.flip = true; 
+			HorizontalFlip();
 		}
 	} 
 	else if (Key[SDL_SCANCODE_D]) {
-		//Play(Run);
+		Play(Run);
 		velocity.x = speed;
 		if(direction != Right) {
 			direction = Right;
-			animationClip.flip = false; 
+			HorizontalFlip();
 		}
 	}
 	if (Key[SDL_SCANCODE_W]) {
@@ -65,12 +64,8 @@ void Player::OnUpdate(float dt)
 	if (Key[SDL_SCANCODE_S]) {
 		velocity.y = speed;
 	}
-	else {
-		Play(Idle);
-	}
-	Play(Idle);
+	if (velocity.x == 0) Play(Idle);
 
-	if (rect1->isColliding) velocity = Vector(0, 0);
 	position += velocity * dt;	
 
 	Animation2DComponent::OnUpdate(dt);
@@ -78,14 +73,21 @@ void Player::OnUpdate(float dt)
 
 void Player::OnCollision(ShapeComponent* shape, Component* other)
 {
+
 	Rect r = rect1->GetWorldBounds();
 	auto shape1 = dynamic_cast<RectangleComponent*>(shape);
+	auto other1 = dynamic_cast<Coin*>(other);
 
 	if (shape1)
 	{
+		if (other1)
+		{
+			//std::cout << "Coin collected!" << std::endl;
+			//other->RemoveFromParent();
+			return;
+		}
 		Rect otherRect = shape1->GetWorldBounds();
 		Vector overlap = r.GetOverlap(otherRect);
-		//std::cout << "Overlap: " << overlap.x << ", " << overlap.y << std::endl;
 		Vector mtv = r.GetMTV(otherRect);
 		position.x += mtv.x;
 		position.y += mtv.y;

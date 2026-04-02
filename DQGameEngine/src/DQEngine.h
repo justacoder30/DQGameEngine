@@ -4,6 +4,7 @@
 #include "Components/SpriteComponent.h"
 #include "Components/Animation2DComponent.h"
 #include "Components/RectangleComponent.h"
+#include "Components/CameraComponent.h"
 
 #include "Core/Input.h"
 #include "Core/CollisionCallbacks.h"

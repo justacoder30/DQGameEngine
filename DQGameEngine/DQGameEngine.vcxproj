@@ -131,6 +131,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components\CameraComponent.h" />
+    <ClInclude Include="src\Core\Flip.h" />
     <ClInclude Include="src\Core\CollisionSystem.h" />
     <ClInclude Include="src\Core\CollisionCallbacks.h" />
     <ClInclude Include="src\Components\RectangleComponent.h" />
@@ -155,6 +157,7 @@
     <ClInclude Include="src\Components\TiltedMapComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\CameraComponent.cpp" />
     <ClCompile Include="src\Core\CollisionSystem.cpp" />
     <ClCompile Include="src\Core\CollisionCallbacks.cpp" />
     <ClCompile Include="src\Components\RectangleComponent.cpp" />

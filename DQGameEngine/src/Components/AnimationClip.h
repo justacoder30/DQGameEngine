@@ -1,6 +1,7 @@
 #pragma once
 #include "Animation.h"
 #include "Core/Rect.h"
+#include "Core/Flip.h"
 
 class AnimationClip
 {
@@ -11,7 +12,7 @@ private:
 public:
 	Animation animation;
 	bool loop;
-	bool flip;
+	Flip flip;
 
 	AnimationClip();
 	AnimationClip(Animation Animation);

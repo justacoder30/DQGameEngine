@@ -15,6 +15,9 @@ void CollisionSystem::Run()
             auto a = colliders[i];
             auto b = colliders[j];
 
+            if (!a->GetParent() || !b->GetParent())
+                continue;
+
             if (a->CheckCollide(b))
             {
                 HandleCollision(a, b);
@@ -28,7 +31,7 @@ void CollisionSystem::HandleCollision(ShapeComponent* a, ShapeComponent* b)
     auto ca = dynamic_cast<CollisionCallbacks*>(a->GetParent());
     auto cb = dynamic_cast<CollisionCallbacks*>(b->GetParent());
 
-    if (ca) ca->OnCollision(b, b->GetParent());
+	if (ca) ca->OnCollision(b, b->GetParent()); 
     if (cb) cb->OnCollision(a, a->GetParent());
 }
 

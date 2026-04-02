@@ -7,6 +7,7 @@
 #include <tmxlite/Map.hpp>
 #include <tmxlite/TileLayer.hpp>
 #include "PositionComponent.h"
+#include "Core/Flip.h"
 
 #include <vector>
 #include <string>
@@ -21,14 +22,15 @@ private:
         Rect src;
         Rect dst;
 
-        bool flip = false;
-        float rotation = 0.0f;
+        Flip flip = None;
+        float angle = 0.0f;
     };
 
 private:
 
     void Load(const std::string& path);
     void BuildTiles();
+	void GetAngleAndFlip(uint8_t flags, float& angle, Flip& flip);
 
     inline static tmx::Map m_Map;
     std::vector<Texture> m_Textures;

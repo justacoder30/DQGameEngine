@@ -10,14 +10,15 @@ RectangleComponent::RectangleComponent(const Vector& position, const Vector& siz
 Rect RectangleComponent::GetWorldBounds()
 {
     Vector worldPos = position;
-
     Component* p = GetParent();
     while (p)
     {
         auto t = dynamic_cast<PositionComponent*>(p);
-        if (t)
-            worldPos += t->position;
-
+        if (t) {
+            worldPos += t->position;  
+        }
+            
+		
         p = p->GetParent();
     }
 
@@ -37,5 +38,5 @@ bool RectangleComponent::CheckCollide(ShapeComponent* other)
 
 void RectangleComponent::OnDraw()
 {
-	Renderer2D::DrawRectOutline(GetWorldBounds());
+	Renderer2D::DrawRectOutline(GetWorldBounds(), 1.f);
 }

@@ -9,6 +9,11 @@ Animation2DComponent::Animation2DComponent()
 void Animation2DComponent::AddAnimation(int id, const Animation& animation)
 {
     animations[id] = animation;
+	if (size == Vector::Zero())
+    {
+        size.x = animation.FrameWidth;
+        size.y = animation.FrameHeight;
+    }
 }
 
 void Animation2DComponent::Play(int id)
@@ -34,16 +39,46 @@ Rect Animation2DComponent::GetSrcRect()
     return animationClip.getRect();
 }
 
-void Animation2DComponent::SetPosition(float x, float y)
-{
-    position.x = x;
-    position.y = y;
-}
-
 void Animation2DComponent::SetSize(float w, float h)
 {
     size.x = w;
     size.y = h;
+}
+
+void Animation2DComponent::HorizontalFlip()
+{
+    switch (animationClip.flip) {
+	    case None:
+            animationClip.flip = Horizontal;
+            break;
+        case Horizontal:
+			animationClip.flip = None;
+            break;
+        case Vertical:
+			animationClip.flip = Diagonal;
+            break;
+        case Diagonal:
+			animationClip.flip = Vertical;
+            break;
+    }
+}
+
+void Animation2DComponent::VerticalFlip()
+{
+    switch (animationClip.flip) {
+        case None:
+            animationClip.flip = Vertical;
+            break;
+        case Horizontal:
+            animationClip.flip = Diagonal;
+            break;
+        case Vertical:
+            animationClip.flip = None;
+            break;
+        case Diagonal:
+            animationClip.flip = Horizontal;
+            break;
+    }
 }
 
 void Animation2DComponent::OnUpdate(float dt)
@@ -64,6 +99,6 @@ void Animation2DComponent::OnDraw()
         *animationClip.animation.texture,
         src,
         dst,
-        animationClip.IsFlip()
+        animationClip.flip
     );
 }

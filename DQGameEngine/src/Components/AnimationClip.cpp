@@ -8,7 +8,7 @@ AnimationClip::AnimationClip(Animation Animation)
 {
 	animation = Animation;
 	loop = false;
-	flip = SDL_FLIP_NONE;
+	flip = None;
 }
 
 void AnimationClip::Play(Animation _animation)
@@ -47,7 +47,7 @@ void AnimationClip::stop()
 	animation.CurrentFrame = animation.LastFrame();
 	loop = false;
 	timer = 0;
-	flip = false;
+	flip = None;
 }
 
 bool AnimationClip::IsFlip()

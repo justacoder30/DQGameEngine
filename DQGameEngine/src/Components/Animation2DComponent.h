@@ -15,8 +15,9 @@ public:
     void Stop();
     bool IsPlaying(int id);
     Rect GetSrcRect();
-    void SetPosition(float x, float y);
     void SetSize(float w, float h);
+	void HorizontalFlip();
+	void VerticalFlip();
 
 protected:
 

@@ -1,6 +1,7 @@
 ﻿#include "DQEngine.h"
 #include "Player.h"
 #include "Background.h"
+#include "Coin.h"
 #include <iostream>
 
 int main(int argc, char** argv) {
@@ -10,19 +11,26 @@ int main(int argc, char** argv) {
 
 	auto player = new Player(); 
 
-    auto tilemap = new TiltedMapComponent("assets/demo.tmx");
-	auto sprite1 = new SpriteComponent(new Texture("assets/images/tilemap/tileset.png"));
+    auto tilemap = new TiltedMapComponent("resource/Map/map_test.tmx");
+    auto cam = new CameraComponent(784, 441);
     auto bg = new Background();
 
-	bg->size.x = 1920;   
-	bg->size.y = 1080;
-    
-    sprite1->position.x = 0;
-    sprite1->position.y = 0;
+    auto rect = new RectangleComponent(Vector(700, 200), Vector(100, 100));
+    auto rect1 = new RectangleComponent(Vector(700, 100), Vector(100, 100));
 
-	app.Add(bg);
+    app.Add(cam);
+    app.Add(rect);
+    app.Add(rect1);
+
+    cam->Follow(player);
+	cam->SetBackdrop(bg);
     app.Add(tilemap);
-
+	app.Add(new Coin(32.00, 304.00));
+	app.Add(new Coin(32.00 * 2, 304.00));
+	app.Add(new Coin(32.00 * 3, 304.00));
+	app.Add(new Coin(32.00 * 4, 304.00));
+	app.Add(new Coin(32.00 * 5, 304.00));
+	app.Add(new Coin(32.00 * 6, 304.00));
     app.Add(player);
 
     app.Run();

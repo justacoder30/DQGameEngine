@@ -450,8 +450,7 @@ void TestTexture()
         SDL_WINDOW_OPENGL
     );
 
-    // Tạo OpenGL context
-    SDL_GLContext context = SDL_GL_CreateContext(window);
+   SDL_GLContext context = SDL_GL_CreateContext(window);
 
     // Load OpenGL functions
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
@@ -463,8 +462,8 @@ void TestTexture()
 
     std::cout << "OpenGL: " << glGetString(GL_VERSION) << std::endl;
 
-    Renderer2D::Init();
-    Renderer2D::SetViewport(1920, 1080);
+    Renderer2D::InitRenderer();
+    Renderer2D::SetViewport(800, 600);
 
     Texture tex = Texture("assets/images/tilemap/tileset.png");
     Texture tex2 = Texture("assets/images/tilemap/Run.png");

@@ -8,8 +8,13 @@ public:
 
 	PositionComponent() : position(0), size(0) {}
 	PositionComponent(const Vector& position, const Vector& size = 0) : position(position), size(size) {}	
+
+	Vector GetWoldPosition();
+	void SetPosition(float x, float y);
+	void SetAnchor(float x, float y);
 	
 	Vector position;
 	Vector size;
+	Vector anchor;
 };
 

@@ -10,6 +10,8 @@ public:
 	Vector& operator+=(Vector const& v2);
 	bool operator!=(Vector const& v2);
 	Vector operator+(Vector const& v2);
+	Vector operator-(Vector const& v2);
+	bool operator==(Vector const& v2);
 	Vector operator+(const float& num);
 	Vector operator*(const float& num);
 	Vector operator/(const float& num);

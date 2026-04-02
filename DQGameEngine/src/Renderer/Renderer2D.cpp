@@ -28,7 +28,34 @@ struct RendererData
 
 static RendererData s_Data;
 
-void Renderer2D::Init()
+SDL_Window* Renderer2D::m_Window;
+SDL_GLContext Renderer2D::m_Context;
+float Renderer2D::m_WindowWidth;
+float Renderer2D::m_WindowHeight;
+float Renderer2D::gameWidth;
+float Renderer2D::gameHeight;
+
+void Renderer2D::InitWindow(float windowWidth, float windowHeight, const char* title)
+{
+    SDL_Init(SDL_INIT_VIDEO);
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+	Renderer2D::m_WindowWidth = windowWidth;
+	Renderer2D::m_WindowHeight = windowHeight;
+    m_Window = SDL_CreateWindow(title, windowWidth, windowHeight, SDL_WINDOW_OPENGL);
+
+    m_Context = SDL_GL_CreateContext(m_Window);
+
+    if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
+    {
+        std::cout << "Failed to init GLAD\n";
+    }
+}
+
+void Renderer2D::InitRenderer()
 {
     uint32_t color = 0xffff0000;
 
@@ -107,7 +134,7 @@ void Renderer2D::BeginScene()
     StartBatch();
 }
 
-void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, float angle, Vector centerP)
+void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, Flip flip, float angle, Vector centerP)
 {
     if (s_Data.IndexCount + 6 > MaxIndices)
     {
@@ -121,7 +148,6 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, f
         NextBatch();
     }
 
-    // --- 1. Quản lý Texture Slot (giống hàm cũ) ---
     int texIndex = 0;
 
     for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++) {
@@ -140,27 +166,29 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, f
         s_Data.TextureSlots[s_Data.TextureSlotIndex] = &texture;
         s_Data.TextureSlotIndex++;
     }
-
-    // --- 2. Tính toán tọa độ Texture (UV Mapping) ---
-    // Chuyển đổi từ pixel (srcrect) sang dải 0.0 -> 1.0 của OpenGL
     float texW = (float)texture.GetWidth();
     float texH = (float)texture.GetHeight();
 
-    float u_eps = 0.5f / texW; // Khoảng eps tính bằng 0.5 pixel
+    float u_eps = 0.5f / texW; 
     float v_eps = 0.5f / texH;
-
-    // Tính toán lại UV cho chuẩn
-    //float u0 = srcrect.x / texW;
-    //float v1 = 1.0f - (srcrect.y / texH); // Đảo ngược trục V
-    //float u1 = (srcrect.x + srcrect.w) / texW;
-    //float v0 = 1.0f - ((srcrect.y + srcrect.h) / texH);
 
     float u0 = (srcrect.x / texW) + u_eps;
     float v1 = 1.0f - (srcrect.y / texH) - v_eps;
     float u1 = ((srcrect.x + srcrect.w) / texW) - u_eps;
     float v0 = 1.0f - ((srcrect.y + srcrect.h) / texH) + v_eps;
 
-    if (flip) std::swap(u0, u1);
+    switch (flip) {
+        case Horizontal:
+            std::swap(u0, u1);
+            break;
+        case Vertical:
+            std::swap(v0, v1);
+            break;
+        case Diagonal:
+            std::swap(u0, u1);
+            std::swap(v0, v1);
+            break;
+    }
 
     float texCoords[4][2] = {
         { u0, v1 }, // Top-Left
@@ -169,8 +197,6 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, bool flip, f
         { u0, v0 }  // Bottom-Left
     };
 
-    // --- 3. Tính toán vị trí đỉnh và Xoay (Transformations) ---
-    // Tâm của vật thể (để xoay quanh tâm)
     if (centerP != Vector::Zero()) {
         centerP.x = dstrect.x + centerP.x;
         centerP.y = dstrect.y + centerP.y;
@@ -279,6 +305,12 @@ void Renderer2D::DrawRectOutline(const Rect& rect, float thickness)
     DrawRect(Rect(rect.x + rect.w - thickness, rect.y, thickness, rect.h));
 }
 
+void Renderer2D::SetCamera(const glm::mat4& viewProj)
+{
+    s_Data.ShaderPtr->Bind();
+    s_Data.ShaderPtr->SetMat4("u_ViewProjection", viewProj);
+}
+
 void Renderer2D::EndScene()
 {
     GLsizeiptr size = (uint8_t*)s_Data.VertexBufferPtr - (uint8_t*)s_Data.VertexBufferBase;
@@ -290,19 +322,36 @@ void Renderer2D::EndScene()
     glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Data.VertexBufferBase);
 
     Flush();
+
+    SDL_GL_SwapWindow(m_Window);
 }
 
-void Renderer2D::SetViewport(float width, float height)
+void Renderer2D::Destroy()
 {
-    // Tạo ma trận đưa hệ tọa độ về: trái=0, phải=width, dưới=height, trên=0
-    // Điều này giúp bạn vẽ DrawQuad(100, 100, 50, tex) sẽ ra đúng 50 pixel
-    glm::mat4 proj = glm::ortho(0.0f, width, height, 0.0f, -1.0f, 1.0f);
+    SDL_GL_DestroyContext(m_Context);
+    SDL_DestroyWindow(m_Window);
+    SDL_Quit();
+}
+
+void Renderer2D::SetViewport(float gameWidth, float gameHeight)
+{
+	Renderer2D::gameWidth = gameWidth;  
+	Renderer2D::gameHeight = gameHeight;    
+
+    float scale = std::min(m_WindowWidth / gameWidth, m_WindowHeight / gameHeight);
+
+    float vpWidth = gameWidth * scale;
+    float vpHeight = gameHeight * scale;
+
+    float vpX = (m_WindowWidth - vpWidth) * 0.5f;
+    float vpY = (m_WindowHeight - vpHeight) * 0.5f;
+
+    glViewport((int)vpX, (int)vpY, (int)vpWidth, (int)vpHeight);
+
+    glm::mat4 proj = glm::ortho(0.0f, gameWidth, gameHeight, 0.0f, -1.0f, 1.0f);
 
     s_Data.ShaderPtr->Bind();
-    // Truyền ma trận vào Shader (bạn cần viết thêm hàm SetMat4 trong Shader class)
     s_Data.ShaderPtr->SetMat4("u_ViewProjection", proj);
-
-    glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 }
 
 void Renderer2D::Flush()

@@ -13,7 +13,7 @@ Vector Vector::All(const float& size)
 
 Vector& Vector::operator+=(Vector const& v2)
 {
-    x += +v2.x;
+    x += v2.x;
     y += v2.y;
     return *this;
 }
@@ -26,6 +26,16 @@ bool Vector::operator!=(Vector const& v2)
 Vector Vector::operator+(Vector const& v2)
 {
     return Vector(x + v2.x, y + v2.y);
+}
+
+Vector Vector::operator-(Vector const& v2)
+{
+	return Vector(x - v2.x, y - v2.y);
+}
+
+bool Vector::operator==(Vector const& v2)
+{
+	return (x == v2.x && y == v2.y);
 }
 
 Vector Vector::operator+(const float& num)

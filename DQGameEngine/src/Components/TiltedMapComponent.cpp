@@ -75,8 +75,7 @@ void TiltedMapComponent::BuildTiles()
                 {
                     auto& ts = tileSets[i];
 
-                    if (tile.ID < ts.getFirstGID() ||
-                        tile.ID >= ts.getFirstGID() + ts.getTileCount())
+                    if (tile.ID < ts.getFirstGID() ||  tile.ID >= ts.getFirstGID() + ts.getTileCount())
                         continue;
 
                     int localID = tile.ID - ts.getFirstGID();
@@ -105,6 +104,7 @@ void TiltedMapComponent::BuildTiles()
                     t.texture = &tex;
                     t.src = src;
                     t.dst = dst;
+					GetAngleAndFlip(tile.flipFlags, t.angle, t.flip);
 
                     m_Tiles.push_back(t);
 
@@ -112,6 +112,25 @@ void TiltedMapComponent::BuildTiles()
                 }
             }
         }
+    }
+}
+
+void TiltedMapComponent::GetAngleAndFlip(uint8_t flags, float& angle, Flip& flip)
+{
+    bool h = flags & tmx::TileLayer::FlipFlag::Horizontal;
+    bool v = flags & tmx::TileLayer::FlipFlag::Vertical;
+    bool d = flags & tmx::TileLayer::FlipFlag::Diagonal;
+
+    if (d) {
+        if (h && !v) angle = 90.f;
+        else if (!h && v) angle = 270.f;
+        else if (h && v) { angle = 270.f; flip = Vertical; }
+        else { angle = 90.f; flip = Vertical; }
+    }
+    else {
+        if (h && v) angle = 180.f;
+        else if (h) { angle = 0.f; flip = Horizontal; }
+        else if (v) { angle = 0.f; flip = Vertical; }
     }
 }
 
@@ -124,7 +143,7 @@ void TiltedMapComponent::OnDraw()
             tile.src,
             tile.dst,
             tile.flip,
-            tile.rotation
+            tile.angle
         );
     }
 }

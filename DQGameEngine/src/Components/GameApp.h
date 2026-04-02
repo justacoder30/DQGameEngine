@@ -22,8 +22,6 @@ protected:
 
 private:
     static CollisionSystem s_CollisionSystem;
-    SDL_Window* m_Window = nullptr;
-    SDL_GLContext m_Context = nullptr;
 
     bool m_Running = true;
 

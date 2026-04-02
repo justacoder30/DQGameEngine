@@ -9,7 +9,6 @@ Texture::Texture(const std::string& path)
     unsigned char* data = stbi_load(path.c_str(), &m_Width, &m_Height, &channels, 4);
 
     if (!data) std::cout << "Failed to load texture: " << path << std::endl;
-    //else std::cout << "Loaded texture: " << path << " " << m_Width << "x" << m_Height << std::endl;
 
     glGenTextures(1, &m_ID);
 

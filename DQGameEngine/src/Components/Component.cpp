@@ -14,7 +14,7 @@ void Component::Load()
 
     for (auto& child : m_Children)
     {
-        child->OnLoad();
+        child->Load();
     }
 }
 
