@@ -6,3 +6,8 @@ void ShapeComponent::OnAttach()
 {
 	GameApp::GetCollisionSystem()->Add(this);
 }
+
+void ShapeComponent::OnDetach()
+{
+	GameApp::GetCollisionSystem()->Remove(this);
+}

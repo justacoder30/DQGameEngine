@@ -38,6 +38,18 @@ GameApp::~GameApp()
 
 void GameApp::Run()
 {
+	Load();
+
+    GameLoop();
+}
+
+CollisionSystem* GameApp::GetCollisionSystem()
+{
+    return &s_CollisionSystem;
+}
+
+void GameApp::GameLoop()
+{
     while (m_Running)
     {
         SDL_Event e;
@@ -47,8 +59,8 @@ void GameApp::Run()
                 m_Running = false;
         }
 
-		Input.Update();
-        
+        Input.Update();
+
 
         Uint64 current = SDL_GetPerformanceCounter();
         float dt = (float)(current - m_LastTime) / SDL_GetPerformanceFrequency();
@@ -65,9 +77,4 @@ void GameApp::Run()
 
         SDL_GL_SwapWindow(m_Window);
     }
-}
-
-CollisionSystem* GameApp::GetCollisionSystem()
-{
-    return &s_CollisionSystem;
 }

@@ -1,7 +1,10 @@
 #pragma once
 #include "Components\SpriteComponent.h"
 #include "Components\RectangleComponent.h"
-class Background : public SpriteComponent
+#include "Core\CollisionCallbacks.h"
+#include <iostream>
+
+class Background : public SpriteComponent, public CollisionCallbacks
 {
 
 public:
@@ -14,6 +17,11 @@ public:
 
 		Add(rect);
 		Add(rect1);
+	}
+
+	void OnCollision(ShapeComponent* shape, Component* other) override
+	{
+		RemoveFromParent();
 	}
 };
 

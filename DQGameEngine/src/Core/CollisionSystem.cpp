@@ -31,3 +31,11 @@ void CollisionSystem::HandleCollision(ShapeComponent* a, ShapeComponent* b)
     if (ca) ca->OnCollision(b, b->GetParent());
     if (cb) cb->OnCollision(a, a->GetParent());
 }
+
+void CollisionSystem::Remove(ShapeComponent* c)
+{
+    colliders.erase(
+        std::remove(colliders.begin(), colliders.end(), c),
+        colliders.end()
+    );
+}

@@ -10,12 +10,19 @@ public:
     virtual ~Component() = default;
 
     void Add(Component *component);
+	void Load();    
     void Update(float dt);
     void Draw();
+
+    void RemoveFromParent();
+    void ClearChildren();
+
 	Component* GetParent() { return m_Parent; }
 
 protected:
 
+    virtual void OnDetach() {}
+    virtual void OnLoad() {}
     virtual void OnUpdate(float dt) {}
     virtual void OnDraw() {}
     virtual void OnAttach() {}
@@ -23,6 +30,6 @@ protected:
     Component* m_Parent = nullptr;
 
 private:
-	
+    bool m_IsRemoved = false;
     std::vector<Component*> m_Children;
 };

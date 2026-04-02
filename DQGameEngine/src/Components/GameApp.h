@@ -15,6 +15,8 @@ public:
     static CollisionSystem* GetCollisionSystem();
 
 protected:
+
+    void GameLoop();
     void OnUpdate(float dt) override {}
     void OnDraw() override {}
 

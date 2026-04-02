@@ -8,13 +8,39 @@ void Component::Add(Component* component)
 	component->OnAttach();
 }
 
+void Component::Load()
+{
+	OnLoad();
+
+    for (auto& child : m_Children)
+    {
+        child->OnLoad();
+    }
+}
+
 void Component::Update(float dt)
 {
     OnUpdate(dt);
 
-    for (auto& child : m_Children)
+    for (auto it = m_Children.begin(); it != m_Children.end(); )
     {
+        Component* child = *it;
+
         child->Update(dt);
+        //++it;
+        if (child->m_IsRemoved)
+        {
+            child->ClearChildren();
+            child->OnDetach();
+            child->m_Parent = nullptr;
+
+            delete child;                
+            it = m_Children.erase(it); 
+        }
+        else
+        {
+            ++it;
+        }
     }
 }
 
@@ -26,4 +52,20 @@ void Component::Draw()
     {
         child->Draw();
     }
+}
+
+void Component::RemoveFromParent()
+{
+    m_IsRemoved = true;
+}
+
+void Component::ClearChildren()
+{
+    for (auto child : m_Children)
+    {
+        child->OnDetach();     // 👈 thêm
+        child->m_Parent = nullptr;
+        delete child;
+    }
+    m_Children.clear();
 }

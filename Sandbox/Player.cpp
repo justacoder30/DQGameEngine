@@ -85,7 +85,7 @@ void Player::OnCollision(ShapeComponent* shape, Component* other)
 	{
 		Rect otherRect = shape1->GetWorldBounds();
 		Vector overlap = r.GetOverlap(otherRect);
-		std::cout << "Overlap: " << overlap.x << ", " << overlap.y << std::endl;
+		//std::cout << "Overlap: " << overlap.x << ", " << overlap.y << std::endl;
 		Vector mtv = r.GetMTV(otherRect);
 		position.x += mtv.x;
 		position.y += mtv.y;
