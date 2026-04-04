@@ -11,6 +11,8 @@ GameApp::GameApp(int width, int height, const char* title)
     Renderer2D::InitRenderer();
     Renderer2D::SetViewport(width, height);
 
+    //SDL_GL_SetSwapInterval(true);
+
     m_LastTime = SDL_GetPerformanceCounter();
     std::cout << "OpenGL: " << glGetString(GL_VERSION) << std::endl;
 }
@@ -22,6 +24,7 @@ GameApp::~GameApp()
 
 void GameApp::Run()
 {
+    SDL_GL_SetSwapInterval(false);
 	Load();
     GameLoop();
 }
@@ -47,7 +50,8 @@ void GameApp::GameLoop()
 
         Uint64 current = SDL_GetPerformanceCounter();
         float dt = (float)(current - m_LastTime) / SDL_GetPerformanceFrequency();
-        if (dt > 1 / 60.f) dt = 1 / 60.f;
+		std::cout << "FPS: " << 1 / dt << std::endl;    
+        //if (dt > 1 / 60.f) dt = 1 / 60.f;
         m_LastTime = current;
 
         Update(dt);

@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "Texture.h"
+#include "Core/TextureManager.h"
 
 Texture::Texture(const std::string& path)
 {
-	m_Path = path;  
-    int channels;
+	int channels;
     stbi_set_flip_vertically_on_load(true);
     unsigned char* data = stbi_load(path.c_str(), &m_Width, &m_Height, &channels, 4);
 
@@ -59,4 +59,9 @@ void Texture::Bind(uint32_t slot) const
 {
     glActiveTexture(GL_TEXTURE0 + slot);
     glBindTexture(GL_TEXTURE_2D, m_ID);
+}
+
+void Texture::Load(const std::string& path)
+{
+	TextureManager::Load(path); 
 }

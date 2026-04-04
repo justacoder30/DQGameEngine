@@ -127,7 +127,7 @@ int Test()
         return -1;
     }
 
-    SDL_GL_SetSwapInterval(-1);
+
     std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
     // Quad vertices

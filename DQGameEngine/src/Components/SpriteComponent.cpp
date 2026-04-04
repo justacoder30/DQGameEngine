@@ -1,10 +1,12 @@
 #include "pch.h"
 #include "SpriteComponent.h"
+#include "Core/TextureManager.h"
 
-SpriteComponent::SpriteComponent(Texture* tex) : m_Texture(tex)
+SpriteComponent::SpriteComponent(const std::string& path)
 {
+	m_Texture = TextureManager::Load(path);
 	position.x = 0, position.y = 0;
-	size.x = tex->GetWidth()/3, size.y = tex->GetHeight()/3;
+	size.x = m_Texture->GetWidth() / 3, size.y = m_Texture->GetHeight() / 3;
 }
 
 void SpriteComponent::OnDraw()

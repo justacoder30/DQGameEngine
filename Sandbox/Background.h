@@ -8,7 +8,7 @@ class Background : public SpriteComponent
 {
 
 public:
-	Background() : SpriteComponent(new Texture("resource/img/Background/background.png")) {
+	Background() : SpriteComponent("resource/img/Background/background.png") {
 		size = Renderer2D::GetViewportSize();
 
 		position = Vector(0, 0);

@@ -155,6 +155,7 @@
     <ClInclude Include="src\Renderer\Texture.h" />
     <ClInclude Include="src\Core\Vector.h" />
     <ClInclude Include="src\Components\TiltedMapComponent.h" />
+    <ClInclude Include="src\Core\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Components\CameraComponent.cpp" />
@@ -189,6 +190,7 @@
     <ClCompile Include="src\Renderer\Texture.cpp" />
     <ClCompile Include="src\Core\Vector.cpp" />
     <ClCompile Include="src\Components\TiltedMapComponent.cpp" />
+    <ClCompile Include="src\Core\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\vertex.glsl">

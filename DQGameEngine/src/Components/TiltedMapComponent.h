@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Renderer/Texture.h"
 #include "Core/Rect.h"
 #include "Core/Vector.h"
+#include "Core/TextureManager.h"
 
 #include <tmxlite/Map.hpp>
 #include <tmxlite/TileLayer.hpp>
@@ -33,7 +33,7 @@ private:
 	void GetAngleAndFlip(uint8_t flags, float& angle, Flip& flip);
 
     inline static tmx::Map m_Map;
-    std::vector<Texture> m_Textures;
+    std::vector<Texture*> m_Textures;
     std::vector<Tile> m_Tiles;
     int m_TileSize = 0;
     float m_Width = 0;

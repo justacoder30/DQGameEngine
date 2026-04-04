@@ -23,7 +23,7 @@ public:
     static void EndScene();
 	static void Destroy();
     static void SetViewport(float gameWidth, float gameHeight);
-    static void Draw(Texture& texture, Rect srcrect, Rect dstrect, Flip flip = None, float angle = 0.0f, Vector centerP = Vector::Zero());
+    static void Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect, const Flip& flip = None, const float& angle = 0.0f, const Vector& centerP = Vector::Zero());
     static void DrawRect(const Rect& rect);
     static void DrawRectOutline(const Rect& rect, float thickness = 2.0f);
 	static Vector GetViewportSize() { return Vector(gameWidth, gameHeight); }

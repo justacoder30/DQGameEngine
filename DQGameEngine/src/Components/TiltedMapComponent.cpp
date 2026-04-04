@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Components/TiltedMapComponent.h"
+#include "Core/TextureManager.h"
 #include "Renderer/Renderer2D.h"
 #include <filesystem>
 
@@ -31,7 +32,7 @@ void TiltedMapComponent::Load(const std::string& path)
 
     for (auto& ts : tileSets)
     {
-        m_Textures.emplace_back(ts.getImagePath());
+        m_Textures.push_back(TextureManager::Load(ts.getImagePath()));
     }
 
     m_TileSize = m_Map.getTileSize().x;
@@ -80,9 +81,9 @@ void TiltedMapComponent::BuildTiles()
 
                     int localID = tile.ID - ts.getFirstGID();
 
-                    Texture& tex = m_Textures[i];
+                    Texture* tex = m_Textures[i];
 
-                    int tileCountX = tex.GetWidth() / m_TileSize;
+                    int tileCountX = tex->GetWidth() / m_TileSize;
 
                     Rect src;
 
@@ -101,7 +102,7 @@ void TiltedMapComponent::BuildTiles()
 
                     Tile t;
 
-                    t.texture = &tex;
+                    t.texture = tex;
                     t.src = src;
                     t.dst = dst;
 					GetAngleAndFlip(tile.flipFlags, t.angle, t.flip);

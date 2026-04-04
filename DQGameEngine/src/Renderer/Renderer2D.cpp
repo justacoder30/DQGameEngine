@@ -2,7 +2,7 @@
 #include "Renderer2D.h"
 #include "Shader.h"
 
-static const uint32_t MaxQuads = 10000;
+static const uint32_t MaxQuads = 100000;
 static const uint32_t MaxVertices = MaxQuads * 4;
 static const uint32_t MaxIndices = MaxQuads * 6;
 static const uint32_t MaxTextureSlots = 32;
@@ -134,7 +134,7 @@ void Renderer2D::BeginScene()
     StartBatch();
 }
 
-void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, Flip flip, float angle, Vector centerP)
+void Renderer2D::Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect, const Flip& flip, const float& angle, const Vector& centerP)
 {
     if (s_Data.IndexCount + 6 > MaxIndices)
     {
@@ -197,16 +197,17 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, Flip flip, f
         { u0, v0 }  // Bottom-Left
     };
 
-    if (centerP != Vector::Zero()) {
-        centerP.x = dstrect.x + centerP.x;
-        centerP.y = dstrect.y + centerP.y;
+	Vector center_point = centerP;
+
+    if (center_point != Vector::Zero()) {
+        center_point.x = dstrect.x + centerP.x;
+        center_point.y = dstrect.y + centerP.y;
     }
     else {
-        centerP.x = dstrect.x + dstrect.w / 2.0f;
-        centerP.y = dstrect.y + dstrect.h / 2.0f;
+        center_point.x = dstrect.x + dstrect.w / 2.0f;
+        center_point.y = dstrect.y + dstrect.h / 2.0f;
     }
 
-    // 4 đỉnh tương đối so với tâm (Local Space)
     float localVertices[4][2] = {
         { -dstrect.w / 2.0f, -dstrect.h / 2.0f },
         {  dstrect.w / 2.0f, -dstrect.h / 2.0f },
@@ -220,13 +221,11 @@ void Renderer2D::Draw(Texture& texture, Rect srcrect, Rect dstrect, Flip flip, f
 
     for (int i = 0; i < 4; i++)
     {
-        // Xoay đỉnh bằng công thức Rotation Matrix
         float rotatedX = localVertices[i][0] * cosA - localVertices[i][1] * sinA;
         float rotatedY = localVertices[i][0] * sinA + localVertices[i][1] * cosA;
 
-        // Đưa về vị trí thế giới (World Space) và lưu vào Buffer
-        s_Data.VertexBufferPtr->Position[0] = rotatedX + centerP.x;
-        s_Data.VertexBufferPtr->Position[1] = rotatedY + centerP.y;
+        s_Data.VertexBufferPtr->Position[0] = rotatedX + center_point.x;
+        s_Data.VertexBufferPtr->Position[1] = rotatedY + center_point.y;
         s_Data.VertexBufferPtr->Position[2] = 0.0f;
 
         s_Data.VertexBufferPtr->TexCoord[0] = texCoords[i][0];
@@ -317,6 +316,7 @@ void Renderer2D::EndScene()
 
     if (size == 0)
         return; 
+
     glBindVertexArray(s_Data.VAO);
     glBindBuffer(GL_ARRAY_BUFFER, s_Data.VBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Data.VertexBufferBase);
@@ -376,6 +376,6 @@ void Renderer2D::StartBatch()
 
 void Renderer2D::NextBatch()
 {
-    EndScene();
+    Flush();
     StartBatch();
 }

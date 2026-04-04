@@ -6,7 +6,7 @@
 class SpriteComponent : public PositionComponent
 {
 public:
-    SpriteComponent(Texture* tex);
+    SpriteComponent(const std::string& path);
 
 protected:
 
