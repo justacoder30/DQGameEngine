@@ -18,6 +18,7 @@ public:
     void ClearChildren();
 
 	Component* GetParent() { return m_Parent; }
+	std::vector<Component*> GetChildren() { return m_Children; }
 
 protected:
 

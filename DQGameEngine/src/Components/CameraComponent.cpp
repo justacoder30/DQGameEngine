@@ -21,35 +21,78 @@ void CameraComponent::SetBackdrop(PositionComponent* backdrop)
     m_Backdrop->Load();
 }
 
+Rect CameraComponent::GetViewBounds()
+{
+    //return Rect(
+    //    m_Position.x - m_HalfSize.x,
+    //    m_Position.y - m_HalfSize.y,
+    //    m_HalfSize.x * 2,
+    //    m_HalfSize.y * 2
+    //);
+
+    float w = m_Width / m_Zoom;
+    float h = m_Height / m_Zoom;
+
+    return Rect(
+        m_Position.x - w * 0.5f,
+        m_Position.y - h * 0.5f,
+        w,
+        h
+    );
+}
+
+bool CameraComponent::CanSee(PositionComponent* component)
+{
+    auto pos = component->GetWorldPosition();
+	Rect compBounds(pos, component->size);  
+    Rect view = GetViewBounds();
+
+	return view.CheckCollide(compBounds);
+}
+
+bool CameraComponent::CanSee(const Rect& bounds)
+{
+    Rect view = GetViewBounds();
+
+	return view.CheckCollide(bounds);
+}
+
 void CameraComponent::OnUpdate(float dt)
 {
     if (m_Target)
     {
-        auto targetPos = m_Target->GetWoldPosition();
+        auto targetPos = m_Target->GetWorldPosition();
         m_Position.x += (targetPos.x - m_Position.x) * m_SmoothSpeed * dt;
         m_Position.y += (targetPos.y - m_Position.y) * m_SmoothSpeed * dt;
     }
 
     RecalculateMatrix();
-    Renderer2D::SetCamera(m_ViewProjection);
 }
 
 void CameraComponent::OnDraw()
 {
     if (!m_Backdrop) return;
 
-    m_Backdrop->SetPosition(m_Position.x, m_Position.y);
+    Renderer2D::SetCamera(m_BackdropMatrix);
     m_Backdrop->Draw();
+    Renderer2D::EndBatch();
+	Renderer2D::StartBatch();   
+    Renderer2D::SetCamera(m_ViewProjection);
+}
+
+void CameraComponent::OnAttach()
+{
+	Renderer2D::SetCamera(this);
 }
 
 void CameraComponent::RecalculateMatrix()
 {
-    float halfW = (m_Width * 0.5f) / m_Zoom;
-    float halfH = (m_Height * 0.5f) / m_Zoom;
+    m_HalfSize.x = (m_Width * 0.5f) / m_Zoom;
+    m_HalfSize.y = (m_Height * 0.5f) / m_Zoom;
 
     glm::mat4 proj = glm::ortho(
-        -halfW, halfW,
-        halfH, -halfH,
+        -m_HalfSize.x, m_HalfSize.x,
+        m_HalfSize.y, -m_HalfSize.y,
         -1.0f, 1.0f
     );
 
@@ -58,5 +101,6 @@ void CameraComponent::RecalculateMatrix()
         glm::vec3(-m_Position.x, -m_Position.y, 0.0f)
     );
 
-    m_ViewProjection = proj * view;
+    m_BackdropMatrix = proj;
+    m_ViewProjection = m_BackdropMatrix * view;
 }

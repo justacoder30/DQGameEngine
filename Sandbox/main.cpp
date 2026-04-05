@@ -11,8 +11,8 @@ int main(int argc, char** argv) {
 
 	auto player = new Player(); 
 
-    auto tilemap = new TiltedMapComponent("resource/Map/map_test.tmx");
-    //auto tilemap = new TiltedMapComponent("resource/Map/map1.tmx");
+    //auto tilemap = new TiltedMapComponent("resource/Map/map_test.tmx");
+    auto tilemap = new TiltedMapComponent("resource/Map/map1.tmx");
     auto cam = new CameraComponent(784, 441);
     auto bg = new Background();
 

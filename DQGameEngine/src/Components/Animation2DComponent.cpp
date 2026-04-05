@@ -47,36 +47,36 @@ void Animation2DComponent::SetSize(float w, float h)
 
 void Animation2DComponent::HorizontalFlip()
 {
-    switch (animationClip.flip) {
+    switch (flip) {
 	    case None:
-            animationClip.flip = Horizontal;
+            flip = Horizontal;
             break;
         case Horizontal:
-			animationClip.flip = None;
+			flip = None;
             break;
         case Vertical:
-			animationClip.flip = Diagonal;
+			flip = Diagonal;
             break;
         case Diagonal:
-			animationClip.flip = Vertical;
+			flip = Vertical;
             break;
     }
 }
 
 void Animation2DComponent::VerticalFlip()
 {
-    switch (animationClip.flip) {
+    switch (flip) {
         case None:
-            animationClip.flip = Vertical;
+            flip = Vertical;
             break;
         case Horizontal:
-            animationClip.flip = Diagonal;
+            flip = Diagonal;
             break;
         case Vertical:
-            animationClip.flip = None;
+            flip = None;
             break;
         case Diagonal:
-            animationClip.flip = Horizontal;
+            flip = Horizontal;
             break;
     }
 }
@@ -95,10 +95,14 @@ void Animation2DComponent::OnDraw()
     if (animationClip.animation.texture == nullptr) return;
 	
 
-    Renderer2D::Draw(
-        *animationClip.animation.texture,
+    Renderer2D::Submit({
+        CommandType::Sprite,
+        animationClip.animation.texture,
         src,
         dst,
-        animationClip.flip
-    );
+        flip,
+        angle,
+		Vector(0, 0),
+        layer
+    });
 }

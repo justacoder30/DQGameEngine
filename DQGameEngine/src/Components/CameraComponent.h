@@ -1,6 +1,7 @@
 #pragma once
 #include "PositionComponent.h"
 #include "Core/Vector.h"
+#include "Core/Rect.h"
 #include <glm/glm.hpp>
 
 class CameraComponent : public Component
@@ -12,17 +13,24 @@ public:
     void SetZoom(float zoom) { m_Zoom = zoom; }
     void Follow(PositionComponent* target, float smooth = 5.0f);
     void SetBackdrop(PositionComponent* backdrop);
+    Rect GetViewBounds();
+	bool CanSee(PositionComponent* component);
+	bool CanSee(const Rect& bounds);
 
     glm::mat4 GetViewProjection() const { return m_ViewProjection; }
+    glm::mat4 GetBackdropMatrix() const { return m_BackdropMatrix; }
+
 
 protected:
     void OnUpdate(float dt) override;
     void OnDraw() override;
+	void OnAttach() override;
 
 private:
     void RecalculateMatrix();
 
     Vector m_Position;
+	Vector m_HalfSize;
     PositionComponent* m_Target = nullptr;
     PositionComponent* m_Backdrop = nullptr;
 
@@ -31,5 +39,6 @@ private:
     float m_SmoothSpeed = 5.0f;
 
     glm::mat4 m_ViewProjection;
+    glm::mat4 m_BackdropMatrix;
 };
 

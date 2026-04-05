@@ -20,6 +20,8 @@ protected:
     void OnUpdate(float dt) override {}
     void OnDraw() override {}
 
+    void Draw();
+
 private:
     static CollisionSystem s_CollisionSystem;
 

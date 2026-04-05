@@ -34,6 +34,12 @@ float Renderer2D::m_WindowWidth;
 float Renderer2D::m_WindowHeight;
 float Renderer2D::gameWidth;
 float Renderer2D::gameHeight;
+CameraComponent* Renderer2D::s_Camera;
+
+std::vector<RenderCommand> Renderer2D::s_BackgroundQueue;
+std::vector<RenderCommand> Renderer2D::s_WorldQueue;
+std::vector<RenderCommand> Renderer2D::s_UIQueue;
+
 
 void Renderer2D::InitWindow(float windowWidth, float windowHeight, const char* title)
 {
@@ -130,8 +136,6 @@ void Renderer2D::BeginScene()
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-
-    StartBatch();
 }
 
 void Renderer2D::Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect, const Flip& flip, const float& angle, const Vector& centerP)
@@ -292,37 +296,105 @@ void Renderer2D::DrawRect(const Rect& rect)
 void Renderer2D::DrawRectOutline(const Rect& rect, float thickness)
 {
     // Top
-    DrawRect(Rect(rect.x, rect.y, rect.w, thickness));
+    //DrawRect(Rect(rect.x, rect.y, rect.w, thickness));
+	Renderer2D::SubmitRect(Rect(rect.x, rect.y, rect.w, thickness), RenderLayer::World);
 
     // Bottom
-    DrawRect(Rect(rect.x, rect.y + rect.h - thickness, rect.w, thickness));
+    //DrawRect(Rect(rect.x, rect.y + rect.h - thickness, rect.w, thickness));
+	Renderer2D::SubmitRect(Rect(rect.x, rect.y + rect.h - thickness, rect.w, thickness), RenderLayer::World);
 
     // Left
-    DrawRect(Rect(rect.x, rect.y, thickness, rect.h));
+    //DrawRect(Rect(rect.x, rect.y, thickness, rect.h));
+	Renderer2D::SubmitRect(Rect(rect.x, rect.y, thickness, rect.h), RenderLayer::World);
 
     // Right
     DrawRect(Rect(rect.x + rect.w - thickness, rect.y, thickness, rect.h));
+	Renderer2D::SubmitRect(Rect(rect.x + rect.w - thickness, rect.y, thickness, rect.h), RenderLayer::World);
 }
 
 void Renderer2D::SetCamera(const glm::mat4& viewProj)
 {
-    s_Data.ShaderPtr->Bind();
     s_Data.ShaderPtr->SetMat4("u_ViewProjection", viewProj);
+}
+
+void Renderer2D::Submit(const RenderCommand& cmd)
+{
+    switch (cmd.layer)
+    {
+        case RenderLayer::Background: 
+            s_BackgroundQueue.push_back(cmd);
+            break;
+        case RenderLayer::World:
+            s_WorldQueue.push_back(cmd);
+            break;
+        case RenderLayer::UI: 
+            s_UIQueue.push_back(cmd);
+            break;
+    }
+}
+
+void Renderer2D::SubmitRect(const Rect& rect, RenderLayer layer)
+{
+    RenderCommand cmd;
+    cmd.type = CommandType::Rect;
+    cmd.dst = rect;
+
+    switch (layer)
+    {
+    case RenderLayer::Background:
+        s_BackgroundQueue.push_back(cmd);
+        break;
+    case RenderLayer::World:
+        s_WorldQueue.push_back(cmd);
+        break;
+    case RenderLayer::UI:
+        s_UIQueue.push_back(cmd);
+        break;
+    }
+}
+
+void Renderer2D::FlushLayer(const RenderLayer& layer)
+{
+    auto queue = GetQueue(layer);
+
+    for (auto& cmd : queue)
+    {
+        if (cmd.type == CommandType::Sprite)
+        {
+            Draw(*cmd.texture, cmd.src, cmd.dst, cmd.flip, cmd.angle, cmd.center);
+        }
+        else if (cmd.type == CommandType::Rect)
+        {
+            DrawRect(cmd.dst); 
+        }
+    }
+
+}
+
+void Renderer2D::ClearCommandQueue()
+{
+    s_BackgroundQueue.clear();
+    s_WorldQueue.clear();
+    s_UIQueue.clear();
+}
+
+std::vector<RenderCommand> Renderer2D::GetQueue(const RenderLayer& layer)
+{
+    switch (layer)
+    {
+        case RenderLayer::Background:
+		    return s_BackgroundQueue;
+
+        case RenderLayer::World:
+		    return s_WorldQueue;
+
+        case RenderLayer::UI:
+		    return s_UIQueue;
+    }
 }
 
 void Renderer2D::EndScene()
 {
-    GLsizeiptr size = (uint8_t*)s_Data.VertexBufferPtr - (uint8_t*)s_Data.VertexBufferBase;
-
-    if (size == 0)
-        return; 
-
-    glBindVertexArray(s_Data.VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, s_Data.VBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Data.VertexBufferBase);
-
-    Flush();
-
     SDL_GL_SwapWindow(m_Window);
 }
 
@@ -356,13 +428,20 @@ void Renderer2D::SetViewport(float gameWidth, float gameHeight)
 
 void Renderer2D::Flush()
 {
+    GLsizeiptr size = (uint8_t*)s_Data.VertexBufferPtr - (uint8_t*)s_Data.VertexBufferBase;
+
+    if (size == 0)
+        return;
+
+    glBindVertexArray(s_Data.VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, s_Data.VBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Data.VertexBufferBase);
+
     s_Data.ShaderPtr->Bind();
     for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
     {
         s_Data.TextureSlots[i]->Bind(i);
     }
-
-    glBindVertexArray(s_Data.VAO);
 
     glDrawElements( GL_TRIANGLES, s_Data.IndexCount, GL_UNSIGNED_INT, nullptr);
 }
@@ -374,8 +453,13 @@ void Renderer2D::StartBatch()
     s_Data.TextureSlotIndex = 1;
 }
 
-void Renderer2D::NextBatch()
+void Renderer2D::EndBatch()
 {
     Flush();
+}
+
+void Renderer2D::NextBatch()
+{
+	EndBatch();
     StartBatch();
 }

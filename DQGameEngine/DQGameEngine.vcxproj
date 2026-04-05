@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Components\CameraComponent.h" />
     <ClInclude Include="src\Core\Flip.h" />
     <ClInclude Include="src\Core\CollisionSystem.h" />

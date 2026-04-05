@@ -57,10 +57,29 @@ void GameApp::GameLoop()
         Update(dt);
         GameApp::GetCollisionSystem()->Run();
 
-        Renderer2D::BeginScene();
-        Draw();
-        Renderer2D::EndScene();
-
-        
+		Draw();
     }
+}
+
+void GameApp::Draw()
+{
+    Component::Draw();
+
+    Renderer2D::BeginScene();
+
+    Renderer2D::StartBatch();
+    Renderer2D::FlushLayer(RenderLayer::Background);
+    Renderer2D::EndBatch();
+
+    Renderer2D::StartBatch();
+	Renderer2D::FlushLayer(RenderLayer::World);
+    Renderer2D::EndBatch();
+
+    Renderer2D::StartBatch();
+    Renderer2D::FlushLayer(RenderLayer::UI);
+    Renderer2D::EndBatch();
+
+    Renderer2D::EndScene();
+
+	Renderer2D::ClearCommandQueue();
 }

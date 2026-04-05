@@ -8,7 +8,6 @@ AnimationClip::AnimationClip(Animation Animation)
 {
 	animation = Animation;
 	loop = false;
-	flip = None;
 }
 
 void AnimationClip::Play(Animation _animation)
@@ -47,14 +46,6 @@ void AnimationClip::stop()
 	animation.CurrentFrame = animation.LastFrame();
 	loop = false;
 	timer = 0;
-	flip = None;
-}
-
-bool AnimationClip::IsFlip()
-{
-	if (flip != false)
-		return true;
-	return false;
 }
 
 bool AnimationClip::IsDone()

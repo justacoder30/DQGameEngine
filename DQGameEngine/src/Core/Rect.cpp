@@ -30,14 +30,20 @@ Rect::Rect(const float& _x, const float& _y, const float& _w, const float& _h) :
 {
 	this->pos = Vector(x, y);
 	this->size = Vector(w, h);
+
+	x = pos.x;
+	y = pos.y;
+	w = size.x;
+	h = size.y;
+
 	setRect();
 }
 
 bool Rect::CheckCollide(const Rect& other)
 {
-	return (top < other.bottom and
-		bottom > other.top and
-		left < other.right and
+	return (top < other.bottom &&
+		bottom > other.top &&
+		left < other.right &&
 		right > other.left);
 }
 

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Components/TiltedMapComponent.h"
+#include "Components/CameraComponent.h"
 #include "Core/TextureManager.h"
 #include "Renderer/Renderer2D.h"
 #include <filesystem>
@@ -85,26 +86,26 @@ void TiltedMapComponent::BuildTiles()
 
                     int tileCountX = tex->GetWidth() / m_TileSize;
 
-                    Rect src;
+					float _x, _y, _w, _h;
 
-                    src.w = m_TileSize;
-                    src.h = m_TileSize;
+                    _x = (localID % tileCountX) * m_TileSize;
+                    _y = (localID / tileCountX) * m_TileSize;
+                    _w = m_TileSize;
+                    _h = m_TileSize;
+                    Rect src = Rect(_x, _y, _w, _h);
 
-                    src.x = (localID % tileCountX) * m_TileSize;
-                    src.y = (localID / tileCountX) * m_TileSize;
-
-                    Rect dst;
-
-                    dst.x = x * m_TileSize;
-                    dst.y = y * m_TileSize;
-                    dst.w = m_TileSize;
-                    dst.h = m_TileSize;
+                    _x = x * m_TileSize;
+                    _y = y * m_TileSize;
+                    _w = m_TileSize;
+                    _h = m_TileSize;
+                    Rect dst = Rect(_x, _y, _w, _h);
 
                     Tile t;
 
                     t.texture = tex;
                     t.src = src;
                     t.dst = dst;
+
 					GetAngleAndFlip(tile.flipFlags, t.angle, t.flip);
 
                     m_Tiles.push_back(t);
@@ -137,14 +138,25 @@ void TiltedMapComponent::GetAngleAndFlip(uint8_t flags, float& angle, Flip& flip
 
 void TiltedMapComponent::OnDraw()
 {
-    for (auto& tile : m_Tiles)
-    {
-        Renderer2D::Draw(
-            *tile.texture,
+    auto cam = Renderer2D::GetCamera();
+    if (!cam) return;
+
+    Rect camRect = cam->GetViewBounds();
+
+    for (auto& tile : m_Tiles) {
+
+        if (!camRect.CheckCollide(tile.dst))
+            continue;
+
+        Renderer2D::Submit({
+            CommandType::Sprite,
+            tile.texture,
             tile.src,
             tile.dst,
             tile.flip,
-            tile.angle
-        );
+            tile.angle,
+			Vector(0, 0),
+            layer
+        });
     }
 }

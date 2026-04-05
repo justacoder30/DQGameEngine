@@ -12,7 +12,6 @@ private:
 public:
 	Animation animation;
 	bool loop;
-	Flip flip;
 
 	AnimationClip();
 	AnimationClip(Animation Animation);
@@ -20,7 +19,6 @@ public:
 	void ResetFrame();
 	void Update(const float& dt);
 	void stop();
-	bool IsFlip();
 	bool IsDone();
 	Rect getRect();
 };

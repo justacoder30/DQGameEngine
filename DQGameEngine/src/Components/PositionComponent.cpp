@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "PositionComponent.h"
 
-Vector PositionComponent::GetWoldPosition()
+Vector PositionComponent::GetWorldPosition()
 {
     Vector worldPos = position;
 

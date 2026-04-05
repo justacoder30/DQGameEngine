@@ -16,5 +16,14 @@ void SpriteComponent::OnDraw()
 	Rect m_Src(0, 0, m_Texture->GetWidth(), m_Texture->GetHeight());
 	Rect m_Dst(position.x - anchorOffset.x, position.y - anchorOffset.y, size.x, size.y);
 
-	Renderer2D::Draw(*m_Texture, m_Src, m_Dst);
+	Renderer2D::Submit({
+		CommandType::Sprite,
+		m_Texture,
+		m_Src,
+		m_Dst,
+		flip,
+		angle,
+		Vector(0, 0),
+		layer
+	});
 }
