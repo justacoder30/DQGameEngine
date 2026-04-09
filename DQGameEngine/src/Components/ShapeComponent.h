@@ -1,9 +1,9 @@
 #pragma once
 #include "PositionComponent.h"
 
-enum Layer
+enum class Layer : uint32_t
 {
-	Empty = 0,
+	None = 0,
 	Player = 1 << 0,
 	Enemy = 1 << 1,
 	Ground = 1 << 2,
@@ -11,6 +11,16 @@ enum Layer
 	Sensor = 1 << 4,
 	Item = 1 << 5,
 };
+
+inline uint32_t ToMask(Layer layer)
+{
+	return static_cast<uint32_t>(layer);
+}
+
+inline bool HasLayer(uint32_t mask, Layer layer)
+{
+	return (mask & ToMask(layer)) != 0;
+}
 
 class ShapeComponent : public PositionComponent
 {
@@ -25,8 +35,9 @@ public:
 	void OnDetach() override;
 
 	uint32_t mask = 0;
-	Layer layer = Layer::Empty;
+	Layer layer = Layer::None;
 	bool isTrigger = false;
 	bool hasPhysics = true;
+	bool active = true;
 };
 

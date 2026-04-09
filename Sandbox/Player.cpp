@@ -32,6 +32,9 @@ Player::Player()
 	Play(Idle);
 	position = Vector(100, 100);
 	anchor = Vector(0.25, 0.75);
+	rect1->layer = Layer::Player;
+	rect1->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item);
+	rect1->hasPhysics = true;
 	//anchor = Vector(0.25, 0.75);
 	//anchor = Vector(0.5, 0.5);
 	

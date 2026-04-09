@@ -1,6 +1,9 @@
 #pragma once
 #include "Components/ShapeComponent.h"  
 
+class ShapeComponent;
+class Component;
+
 class CollisionCallbacks
 {
 public:

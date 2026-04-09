@@ -16,12 +16,7 @@ int main(int argc, char** argv) {
     auto cam = new CameraComponent(784, 441);
     auto bg = new Background();
 
-    auto rect = new RectangleComponent(Vector(700, 200), Vector(100, 100));
-    auto rect1 = new RectangleComponent(Vector(700, 100), Vector(100, 100));
-
     app.Add(cam);
-    app.Add(rect);
-    app.Add(rect1);
 
     cam->Follow(player);
 	app.Add(bg);

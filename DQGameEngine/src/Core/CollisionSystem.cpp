@@ -85,8 +85,8 @@ void CollisionSystem::HandleCollisionEnd(ShapeComponent* a, ShapeComponent* b)
 
 bool CollisionSystem::ShouldCollide(ShapeComponent* a, ShapeComponent* b)
 {
-    if ((a->mask & b->layer) == 0 &&
-        (b->mask & a->layer) == 0)
+    if ((a->mask & ToMask(b->layer)) == 0 &&
+        (b->mask & ToMask(a->layer)) == 0)
         return false;
 
     return true;
@@ -110,14 +110,14 @@ void CollisionSystem::ResolveCollision(ShapeComponent* a, ShapeComponent* b)
     if (!pa && !pb) return;
 
     if (a->hasPhysics && !b->hasPhysics) {
-        pa->position += mtv;
+        if (pa)pa->position += mtv;
     } 
     else if (!a->hasPhysics && b->hasPhysics) {
-        pb->position -= mtv;
+        if (pb) pb->position -= mtv;
     }
     else if (a->hasPhysics && b->hasPhysics) {
-        pa->position += mtv * 0.5f;
-        pb->position -= mtv * 0.5f;
+        if (pa) pa->position += mtv * 0.5f;
+        if (pb) pb->position -= mtv * 0.5f;
     }
 }
 
