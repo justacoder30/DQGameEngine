@@ -45,55 +45,27 @@ void Animation2DComponent::SetSize(float w, float h)
     size.y = h;
 }
 
-void Animation2DComponent::HorizontalFlip()
-{
-    switch (flip) {
-	    case None:
-            flip = Horizontal;
-            break;
-        case Horizontal:
-			flip = None;
-            break;
-        case Vertical:
-			flip = Diagonal;
-            break;
-        case Diagonal:
-			flip = Vertical;
-            break;
-    }
-}
-
-void Animation2DComponent::VerticalFlip()
-{
-    switch (flip) {
-        case None:
-            flip = Vertical;
-            break;
-        case Horizontal:
-            flip = Diagonal;
-            break;
-        case Vertical:
-            flip = None;
-            break;
-        case Diagonal:
-            flip = Horizontal;
-            break;
-    }
-}
-
 void Animation2DComponent::OnUpdate(float dt)
 {
     animationClip.Play(animations[currentAnimation]);
     animationClip.Update(dt);
-
     src = animationClip.getRect();
-	dst = Rect(position, size);
+
+    dst = Rect(position, size);
+
+    dst.x = position.x - anchor.x * size.x;
+    dst.y = position.y - anchor.y * size.y;
+
+    if (flip == Flip::Horizontal || flip == Flip::Diagonal)
+		dst.x -= size.x * (1.0f - anchor.x * 2.0f);
+
+    if (flip == Flip::Vertical || flip == Flip::Diagonal)
+        dst.y -= size.y * (1.0f - anchor.y * 2.0f);
 }
 
 void Animation2DComponent::OnDraw()
 {
     if (animationClip.animation.texture == nullptr) return;
-	
 
     Renderer2D::Submit({
         CommandType::Sprite,
@@ -102,7 +74,9 @@ void Animation2DComponent::OnDraw()
         dst,
         flip,
         angle,
-		Vector(0, 0),
+        Vector(0, 0),
         layer
     });
+
+    Renderer2D::DrawRectOutline(dst, 1.f);
 }

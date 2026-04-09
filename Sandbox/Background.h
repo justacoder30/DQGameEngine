@@ -12,7 +12,8 @@ public:
 		size = Renderer2D::GetViewportSize();
 
 		position = Vector(0, 0);
-		anchor = Vector(0.5, 0.5);
+		anchor = Vector(0.5f, 0.5f);
+		layer = RenderLayer::Background;
 	}
 };
 

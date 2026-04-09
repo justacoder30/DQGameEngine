@@ -14,7 +14,9 @@ enum State
 enum Direction
 {
 	Left,
-	Right
+	Right,
+	Up,
+	Down
 };
 
 Direction direction = Right;
@@ -28,13 +30,13 @@ Player::Player()
 	AddAnimation(Jump, Animation("resource/img/Knight/Jump.png", 2, 0.12));
 
 	Play(Idle);
-	std::cout << size.x << " " << size.y << std::endl;
 	position = Vector(100, 100);
+	anchor = Vector(0.25, 0.75);
+	//anchor = Vector(0.25, 0.75);
+	//anchor = Vector(0.5, 0.5);
 	
-	//auto rect2 = new RectangleComponent(Vector(200, 0), Vector(100, 100));
 
 	Add(rect1);
-	//Add(rect2);
 }
 
 void Player::OnUpdate(float dt)
@@ -80,12 +82,6 @@ void Player::OnCollision(ShapeComponent* shape, Component* other)
 
 	if (shape1)
 	{
-		if (other1)
-		{
-			//std::cout << "Coin collected!" << std::endl;
-			//other->RemoveFromParent();
-			return;
-		}
 		Rect otherRect = shape1->GetWorldBounds();
 		Vector overlap = r.GetOverlap(otherRect);
 		Vector mtv = r.GetMTV(otherRect);

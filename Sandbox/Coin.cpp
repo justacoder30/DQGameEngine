@@ -12,6 +12,7 @@ void Coin::OnLoad()
 
 	
 	Add(new RectangleComponent(Vector(0, 0), Vector(16, 16)));
+	anchor = Vector(0.5f, 0.5f);
 	Play(0);
 }
 

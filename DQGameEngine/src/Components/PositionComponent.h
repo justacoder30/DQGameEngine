@@ -14,13 +14,18 @@ public:
 	Vector GetWorldPosition();
 	void SetPosition(float x, float y);
 	void SetAnchor(float x, float y);
+	void HorizontalFlip();
+	void VerticalFlip();
 	
 	Vector position;
 	Vector size;
 	Vector anchor;
-	Flip flip;
+	Flip flip  = Flip::None;
 	float angle = 0.0f;
-
 	RenderLayer layer = RenderLayer::World;
+
+private:
+
+	Vector m_AnchorOffset;
 };
 

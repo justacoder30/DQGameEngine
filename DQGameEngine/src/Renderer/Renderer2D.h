@@ -24,7 +24,7 @@ public:
     static void InitRenderer();
     static void BeginScene();
     static void EndScene();
-    static void StartBatch();
+    static void StartBatch(CameraComponent* camera = nullptr);
     static void EndBatch();
 	static void Destroy();
 
@@ -33,7 +33,7 @@ public:
     static void Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect, const Flip& flip = None, const float& angle = 0.0f, const Vector& centerP = Vector::Zero());
     static void DrawRect(const Rect& rect);
     static void DrawRectOutline(const Rect& rect, float thickness = 2.0f);
-    static void SetCamera(const glm::mat4& viewProj);
+    static void SetMatrix(const glm::mat4& viewProj);
 	static void SetCamera(CameraComponent* camera) { s_Camera = camera; }
 	static CameraComponent* GetCamera() { return s_Camera; }
 

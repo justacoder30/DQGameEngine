@@ -18,6 +18,13 @@ Vector& Vector::operator+=(Vector const& v2)
     return *this;
 }
 
+Vector& Vector::operator-=(Vector const& v2)
+{
+    x -= v2.x;
+    y -= v2.y;
+    return *this;
+}
+
 bool Vector::operator!=(Vector const& v2)
 {
 	return (x != v2.x || y != v2.y);

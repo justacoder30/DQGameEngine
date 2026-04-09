@@ -16,8 +16,6 @@ public:
     bool IsPlaying(int id);
     Rect GetSrcRect();
     void SetSize(float w, float h);
-	void HorizontalFlip();
-	void VerticalFlip();
 
 protected:
 

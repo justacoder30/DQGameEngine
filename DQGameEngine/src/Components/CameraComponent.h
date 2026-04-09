@@ -12,7 +12,6 @@ public:
     void SetPosition(const Vector& pos) { m_Position = pos; }
     void SetZoom(float zoom) { m_Zoom = zoom; }
     void Follow(PositionComponent* target, float smooth = 5.0f);
-    void SetBackdrop(PositionComponent* backdrop);
     Rect GetViewBounds();
 	bool CanSee(PositionComponent* component);
 	bool CanSee(const Rect& bounds);
@@ -23,7 +22,6 @@ public:
 
 protected:
     void OnUpdate(float dt) override;
-    void OnDraw() override;
 	void OnAttach() override;
 
 private:
@@ -32,7 +30,6 @@ private:
     Vector m_Position;
 	Vector m_HalfSize;
     PositionComponent* m_Target = nullptr;
-    PositionComponent* m_Backdrop = nullptr;
 
     float m_Width, m_Height;
     float m_Zoom = 1.0f;

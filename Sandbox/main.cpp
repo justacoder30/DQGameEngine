@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
 
     auto anim = new Animation2DComponent();
 
-	auto player = new Player(); 
+    auto player = new Player();
 
     //auto tilemap = new TiltedMapComponent("resource/Map/map_test.tmx");
     auto tilemap = new TiltedMapComponent("resource/Map/map1.tmx");
@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     app.Add(rect1);
 
     cam->Follow(player);
-	cam->SetBackdrop(bg);
+	app.Add(bg);
     app.Add(tilemap);
 	app.Add(new Coin(32.00, 304.00));
 	app.Add(new Coin(32.00 * 2, 304.00));

@@ -181,18 +181,11 @@ void Renderer2D::Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect
     float u1 = ((srcrect.x + srcrect.w) / texW) - u_eps;
     float v0 = 1.0f - ((srcrect.y + srcrect.h) / texH) + v_eps;
 
-    switch (flip) {
-        case Horizontal:
-            std::swap(u0, u1);
-            break;
-        case Vertical:
-            std::swap(v0, v1);
-            break;
-        case Diagonal:
-            std::swap(u0, u1);
-            std::swap(v0, v1);
-            break;
-    }
+    if (flip == Horizontal || flip == Diagonal)
+        std::swap(u0, u1);
+
+    if (flip == Vertical || flip == Diagonal)
+        std::swap(v0, v1);
 
     float texCoords[4][2] = {
         { u0, v1 }, // Top-Left
@@ -211,6 +204,9 @@ void Renderer2D::Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect
         center_point.x = dstrect.x + dstrect.w / 2.0f;
         center_point.y = dstrect.y + dstrect.h / 2.0f;
     }
+
+    //center_point.x = dstrect.x + dstrect.w / 2.0f;
+    //center_point.y = dstrect.y + dstrect.h / 2.0f;
 
     float localVertices[4][2] = {
         { -dstrect.w / 2.0f, -dstrect.h / 2.0f },
@@ -291,28 +287,26 @@ void Renderer2D::DrawRect(const Rect& rect)
     }
 
     s_Data.IndexCount += 6;
+
+    //memcpy(s_Data.VertexBufferPtr->Color, color, sizeof(float) * 4);
 }
 
 void Renderer2D::DrawRectOutline(const Rect& rect, float thickness)
 {
     // Top
-    //DrawRect(Rect(rect.x, rect.y, rect.w, thickness));
 	Renderer2D::SubmitRect(Rect(rect.x, rect.y, rect.w, thickness), RenderLayer::World);
 
     // Bottom
-    //DrawRect(Rect(rect.x, rect.y + rect.h - thickness, rect.w, thickness));
 	Renderer2D::SubmitRect(Rect(rect.x, rect.y + rect.h - thickness, rect.w, thickness), RenderLayer::World);
 
     // Left
-    //DrawRect(Rect(rect.x, rect.y, thickness, rect.h));
 	Renderer2D::SubmitRect(Rect(rect.x, rect.y, thickness, rect.h), RenderLayer::World);
 
     // Right
-    DrawRect(Rect(rect.x + rect.w - thickness, rect.y, thickness, rect.h));
 	Renderer2D::SubmitRect(Rect(rect.x + rect.w - thickness, rect.y, thickness, rect.h), RenderLayer::World);
 }
 
-void Renderer2D::SetCamera(const glm::mat4& viewProj)
+void Renderer2D::SetMatrix(const glm::mat4& viewProj)
 {
     s_Data.ShaderPtr->SetMat4("u_ViewProjection", viewProj);
 }
@@ -446,11 +440,14 @@ void Renderer2D::Flush()
     glDrawElements( GL_TRIANGLES, s_Data.IndexCount, GL_UNSIGNED_INT, nullptr);
 }
 
-void Renderer2D::StartBatch()
+void Renderer2D::StartBatch(CameraComponent* camera)
 {
     s_Data.IndexCount = 0;
     s_Data.VertexBufferPtr = s_Data.VertexBufferBase;
     s_Data.TextureSlotIndex = 1;
+
+    if(camera) SetMatrix(camera->GetViewProjection());
+    else SetMatrix(s_Camera->GetBackdropMatrix());
 }
 
 void Renderer2D::EndBatch()

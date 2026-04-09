@@ -9,20 +9,31 @@ RectangleComponent::RectangleComponent(const Vector& position, const Vector& siz
 
 Rect RectangleComponent::GetWorldBounds()
 {
-    Vector worldPos = position;
     Component* p = GetParent();
-    while (p)
-    {
-        auto t = dynamic_cast<PositionComponent*>(p);
-        if (t) {
-            worldPos += t->position;  
-        }
-            
-		
-        p = p->GetParent();
-    }
+    auto t = dynamic_cast<PositionComponent*>(p);
+	if (!t) return Rect(GetWorldPosition(), size);
+    Vector spriteSize = t->size;
+    Vector anchor = t->anchor;
 
-    return Rect(worldPos, size);
+    Vector pivot = t->GetWorldPosition();
+    Flip flip = t->flip;
+
+    float offsetX = bounds.x - anchor.x * spriteSize.x;
+    float offsetY = bounds.y - anchor.y * spriteSize.y;
+
+    if (flip == Flip::Horizontal || flip == Flip::Diagonal)
+        offsetX = -offsetX - bounds.w;
+
+    if (flip == Flip::Vertical || flip == Flip::Diagonal)
+        offsetY = -offsetY - bounds.h;
+
+    return Rect(
+        pivot.x + offsetX,
+        pivot.y + offsetY,
+        bounds.w,
+        bounds.h
+    );
+    
 }
 
 bool RectangleComponent::CheckCollide(ShapeComponent* other)

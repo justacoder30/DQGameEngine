@@ -15,21 +15,8 @@ void CameraComponent::Follow(PositionComponent* target, float smooth)
     m_SmoothSpeed = smooth;
 }
 
-void CameraComponent::SetBackdrop(PositionComponent* backdrop)
-{
-	m_Backdrop = backdrop;
-    m_Backdrop->Load();
-}
-
 Rect CameraComponent::GetViewBounds()
 {
-    //return Rect(
-    //    m_Position.x - m_HalfSize.x,
-    //    m_Position.y - m_HalfSize.y,
-    //    m_HalfSize.x * 2,
-    //    m_HalfSize.y * 2
-    //);
-
     float w = m_Width / m_Zoom;
     float h = m_Height / m_Zoom;
 
@@ -67,17 +54,6 @@ void CameraComponent::OnUpdate(float dt)
     }
 
     RecalculateMatrix();
-}
-
-void CameraComponent::OnDraw()
-{
-    if (!m_Backdrop) return;
-
-    Renderer2D::SetCamera(m_BackdropMatrix);
-    m_Backdrop->Draw();
-    Renderer2D::EndBatch();
-	Renderer2D::StartBatch();   
-    Renderer2D::SetCamera(m_ViewProjection);
 }
 
 void CameraComponent::OnAttach()

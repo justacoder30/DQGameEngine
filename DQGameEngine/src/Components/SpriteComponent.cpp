@@ -11,10 +11,8 @@ SpriteComponent::SpriteComponent(const std::string& path)
 
 void SpriteComponent::OnDraw()
 {
-	Vector anchorOffset(size.x * anchor.x, size.y * anchor.y);
-
 	Rect m_Src(0, 0, m_Texture->GetWidth(), m_Texture->GetHeight());
-	Rect m_Dst(position.x - anchorOffset.x, position.y - anchorOffset.y, size.x, size.y);
+	Rect m_Dst(position.x, position.y, size.x, size.y);
 
 	Renderer2D::Submit({
 		CommandType::Sprite,
@@ -23,7 +21,7 @@ void SpriteComponent::OnDraw()
 		m_Dst,
 		flip,
 		angle,
-		Vector(0, 0),
+		anchor,
 		layer
 	});
 }
