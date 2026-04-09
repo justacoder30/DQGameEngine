@@ -12,13 +12,17 @@ void Coin::OnLoad()
 
 	auto r = new RectangleComponent(Vector(0, 0), Vector(16, 16));
 	r->layer = Layer::Item;	
-	r->mask = ToMask(Layer::Player);
+	r->mask = ToMask(Layer::Player) | ToMask(Layer::Item) | ToMask(Layer::Item);
 	//r->hasPhysics = true;
+	auto rb = new RigidbodyComponent();
+	rb->bodyType = BodyType::Dynamic;
+
 	Add(r);
+	Add(rb);
 	Play(0);
 }
 
-void Coin::OnCollision(ShapeComponent* shape, Component* other)
+void Coin::OnCollision(ShapeComponent* self, ShapeComponent* otherShape, Component* other)
 {
 	//std::cout << "Coin collected!" << std::endl;
 	//RemoveFromParent();

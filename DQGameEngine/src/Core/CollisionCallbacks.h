@@ -7,8 +7,8 @@ class Component;
 class CollisionCallbacks
 {
 public:
-    virtual void OnCollisionStart(ShapeComponent* shape, Component* other) {}
-    virtual void OnCollision(ShapeComponent* shape, Component* other) {}
-    virtual void OnCollisionEnd(ShapeComponent* shape, Component* other) {}
+    virtual void OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape, Component* other) {}
+    virtual void OnCollision(ShapeComponent* self, ShapeComponent* otherShape, Component* other) {}
+    virtual void OnCollisionEnd(ShapeComponent* self, ShapeComponent* otherShape, Component* other) {}
 };
 

@@ -152,7 +152,9 @@ SDL3_test.lib
   <ItemGroup>
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Coin.cpp" />
+    <ClCompile Include="GameTest.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +166,8 @@ SDL3_test.lib
   <ItemGroup>
     <ClInclude Include="Background.h" />
     <ClInclude Include="Coin.h" />
+    <ClInclude Include="GameTest.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

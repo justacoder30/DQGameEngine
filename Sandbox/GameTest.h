@@ -1,0 +1,11 @@
+#pragma once
+#include "DQEngine.h"	
+
+class GameTest : public GameApp
+{
+public:
+	GameTest(int width, int height, const char* title) : GameApp(width, height, title) {}
+
+	void OnLoad() override;
+};
+

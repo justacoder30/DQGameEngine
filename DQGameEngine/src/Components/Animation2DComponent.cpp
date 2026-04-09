@@ -78,5 +78,5 @@ void Animation2DComponent::OnDraw()
         layer
     });
 
-    Renderer2D::DrawRectOutline(dst, 1.f);
+    //Renderer2D::DrawRectOutline(dst, 1.f);
 }

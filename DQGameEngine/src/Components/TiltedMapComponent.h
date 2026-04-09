@@ -48,4 +48,5 @@ public:
 
     float GetWidth() const { return m_Width; }
     float GetHeight() const { return m_Height; }
+    std::vector<Rect> GetObjectGroup(const std::string& name);
 };

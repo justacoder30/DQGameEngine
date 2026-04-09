@@ -16,6 +16,8 @@ public:
 
     void RemoveFromParent();
     void ClearChildren();
+    template<typename T>
+    T* GetComponent();
 
 	Component* GetParent() { return m_Parent; }
 	std::vector<Component*> GetChildren() { return m_Children; }
@@ -34,3 +36,14 @@ private:
     bool m_IsRemoved = false;
     std::vector<Component*> m_Children;
 };
+
+template<typename T>
+inline T* Component::GetComponent()
+{
+    for (auto c : m_Children)
+    {
+        if (auto t = dynamic_cast<T*>(c))
+            return t;
+    }
+    return nullptr;
+}

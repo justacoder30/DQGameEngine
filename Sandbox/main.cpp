@@ -1,34 +1,9 @@
 ﻿#include "DQEngine.h"
-#include "Player.h"
-#include "Background.h"
-#include "Coin.h"
+#include "GameTest.h"
 #include <iostream>
 
 int main(int argc, char** argv) {
-    GameApp app(1920, 1080, "My Game");
-
-    auto anim = new Animation2DComponent();
-
-    auto player = new Player();
-
-    //auto tilemap = new TiltedMapComponent("resource/Map/map_test.tmx");
-    auto tilemap = new TiltedMapComponent("resource/Map/map1.tmx");
-    auto cam = new CameraComponent(784, 441);
-    auto bg = new Background();
-
-    app.Add(cam);
-
-    cam->Follow(player);
-	app.Add(bg);
-    app.Add(tilemap);
-	app.Add(new Coin(32.00, 304.00));
-	app.Add(new Coin(32.00 * 2, 304.00));
-	app.Add(new Coin(32.00 * 3, 304.00));
-	app.Add(new Coin(32.00 * 4, 304.00));
-	app.Add(new Coin(32.00 * 5, 304.00));
-	app.Add(new Coin(32.00 * 6, 304.00));
-    app.Add(player);
-
-    app.Run();
+	GameTest game(1920, 1080, "DQ Game Engine - Sandbox");
+	game.Run();
     return 0;
 }

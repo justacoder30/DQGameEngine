@@ -1,8 +1,7 @@
 #include "pch.h"
 #include "CollisionSystem.h"
 #include "Components/RectangleComponent.h"
-
-#include "CollisionLayer.h"
+#include "Components/RigidbodyComponent.h"
 
 void CollisionSystem::Add(ShapeComponent* c)
 {
@@ -62,8 +61,8 @@ void CollisionSystem::HandleCollision(ShapeComponent* a, ShapeComponent* b)
     auto ca = dynamic_cast<CollisionCallbacks*>(a->GetParent());
     auto cb = dynamic_cast<CollisionCallbacks*>(b->GetParent());
 
-	if (ca) ca->OnCollision(b, b->GetParent()); 
-    if (cb) cb->OnCollision(a, a->GetParent());
+	if (ca) ca->OnCollision(a, b, b->GetParent());
+    if (cb) cb->OnCollision(b, a, a->GetParent());
 }
 
 void CollisionSystem::HandleCollisionStart(ShapeComponent* a, ShapeComponent* b)
@@ -71,25 +70,24 @@ void CollisionSystem::HandleCollisionStart(ShapeComponent* a, ShapeComponent* b)
     auto ca = dynamic_cast<CollisionCallbacks*>(a->GetParent());
     auto cb = dynamic_cast<CollisionCallbacks*>(b->GetParent());
 
-    if (ca) ca->OnCollisionStart(b, b->GetParent());
-    if (cb) cb->OnCollisionStart(a, a->GetParent());
+    if (ca) ca->OnCollisionStart(a, b, b->GetParent());
+    if (cb) cb->OnCollisionStart(b, a, a->GetParent());
 }
 
 void CollisionSystem::HandleCollisionEnd(ShapeComponent* a, ShapeComponent* b)
 {
     auto ca = dynamic_cast<CollisionCallbacks*>(a->GetParent());
     auto cb = dynamic_cast<CollisionCallbacks*>(b->GetParent());
-    if (ca) ca->OnCollisionEnd(b, b->GetParent());
-	if (cb) cb->OnCollisionEnd(a, a->GetParent());
+    if (ca) ca->OnCollisionEnd(a, b, b->GetParent());
+	if (cb) cb->OnCollisionEnd(b, a, a->GetParent());
 }
 
 bool CollisionSystem::ShouldCollide(ShapeComponent* a, ShapeComponent* b)
 {
-    if ((a->mask & ToMask(b->layer)) == 0 &&
-        (b->mask & ToMask(a->layer)) == 0)
-        return false;
+    bool aCanHitB = (a->mask & ToMask(b->layer)) != 0;
+    bool bCanHitA = (b->mask & ToMask(a->layer)) != 0;
 
-    return true;
+    return aCanHitB && bCanHitA;
 }
 
 void CollisionSystem::ResolveCollision(ShapeComponent* a, ShapeComponent* b)
@@ -107,17 +105,45 @@ void CollisionSystem::ResolveCollision(ShapeComponent* a, ShapeComponent* b)
     auto pa = dynamic_cast<PositionComponent*>(a->GetParent());
     auto pb = dynamic_cast<PositionComponent*>(b->GetParent());
 
+    auto rba = a->GetParent()->GetComponent<RigidbodyComponent>();
+    auto rbb = b->GetParent()->GetComponent<RigidbodyComponent>();
+
+
     if (!pa && !pb) return;
 
-    if (a->hasPhysics && !b->hasPhysics) {
-        if (pa)pa->position += mtv;
-    } 
-    else if (!a->hasPhysics && b->hasPhysics) {
-        if (pb) pb->position -= mtv;
+    bool isVertical = abs(mtv.y) < abs(mtv.x);
+
+    if (rba && rba->bodyType == BodyType::Dynamic && (!rbb || rbb->bodyType == BodyType::Static))
+    {
+        pa->position += mtv;
+
+        if (isVertical)
+            rba->velocity.y = 0;
+        else
+            rba->velocity.x = 0;
     }
-    else if (a->hasPhysics && b->hasPhysics) {
-        if (pa) pa->position += mtv * 0.5f;
-        if (pb) pb->position -= mtv * 0.5f;
+    else if (rbb && rbb->bodyType == BodyType::Dynamic && (!rba || rba->bodyType == BodyType::Static))
+    {
+        pb->position -= mtv;
+
+        if (isVertical)
+            rbb->velocity.y = 0;
+        else
+            rbb->velocity.x = 0;
+    }
+    else if (rba && rbb && rba->bodyType == BodyType::Dynamic && rbb->bodyType == BodyType::Dynamic)
+    {
+        pa->position += mtv * 0.5f;
+        pb->position -= mtv * 0.5f;
+
+        if (isVertical) {
+            rba->velocity.y = 0;
+            rbb->velocity.y = 0;
+        }
+        else {
+            rba->velocity.x = 0;
+            rbb->velocity.x = 0;
+        }
     }
 }
 

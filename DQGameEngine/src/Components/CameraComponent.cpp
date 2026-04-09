@@ -15,6 +15,12 @@ void CameraComponent::Follow(PositionComponent* target, float smooth)
     m_SmoothSpeed = smooth;
 }
 
+void CameraComponent::SetBounds(const Rect& bounds)
+{
+    m_Bounds = bounds;
+    m_UseBounds = true;
+}
+
 Rect CameraComponent::GetViewBounds()
 {
     float w = m_Width / m_Zoom;
@@ -51,6 +57,21 @@ void CameraComponent::OnUpdate(float dt)
         auto targetPos = m_Target->GetWorldPosition();
         m_Position.x += (targetPos.x - m_Position.x) * m_SmoothSpeed * dt;
         m_Position.y += (targetPos.y - m_Position.y) * m_SmoothSpeed * dt;
+    }
+
+    if (m_UseBounds)
+    {
+        float halfW = m_Width * 0.5f / m_Zoom;
+        float halfH = m_Height * 0.5f / m_Zoom;
+
+        float minX = m_Bounds.x + halfW;
+        float maxX = m_Bounds.x + m_Bounds.w - halfW;
+
+        float minY = m_Bounds.y + halfH;
+        float maxY = m_Bounds.y + m_Bounds.h - halfH;
+
+        m_Position.x = std::clamp(m_Position.x, minX, maxX);
+        m_Position.y = std::clamp(m_Position.y, minY, maxY);
     }
 
     RecalculateMatrix();

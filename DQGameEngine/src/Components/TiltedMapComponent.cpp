@@ -160,3 +160,18 @@ void TiltedMapComponent::OnDraw()
         });
     }
 }
+
+std::vector<Rect> TiltedMapComponent::GetObjectGroup(const std::string& name)
+{
+    std::vector<Rect> rects;
+    const auto& mapLayers = m_Map.getLayers();
+    for (const auto& layer : mapLayers) {
+        if (layer->getName() == name) {
+            for (const auto& obj : layer->getLayerAs<tmx::ObjectGroup>().getObjects()) {
+                rects.emplace_back(obj.getPosition().x, obj.getPosition().y,
+                    obj.getAABB().width, obj.getAABB().height);
+            }
+        }
+    }
+    return rects;
+}

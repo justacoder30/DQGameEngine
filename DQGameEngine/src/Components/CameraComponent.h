@@ -12,6 +12,7 @@ public:
     void SetPosition(const Vector& pos) { m_Position = pos; }
     void SetZoom(float zoom) { m_Zoom = zoom; }
     void Follow(PositionComponent* target, float smooth = 5.0f);
+    void SetBounds(const Rect& bounds);
     Rect GetViewBounds();
 	bool CanSee(PositionComponent* component);
 	bool CanSee(const Rect& bounds);
@@ -34,6 +35,8 @@ private:
     float m_Width, m_Height;
     float m_Zoom = 1.0f;
     float m_SmoothSpeed = 5.0f;
+    bool m_UseBounds = false;
+    Rect m_Bounds;
 
     glm::mat4 m_ViewProjection;
     glm::mat4 m_BackdropMatrix;
