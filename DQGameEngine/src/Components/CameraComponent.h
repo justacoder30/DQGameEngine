@@ -13,9 +13,10 @@ public:
     void SetZoom(float zoom) { m_Zoom = zoom; }
     void Follow(PositionComponent* target, float smooth = 5.0f);
     void SetBounds(const Rect& bounds);
-    Rect GetViewBounds();
+    const Rect& GetViewBounds() const;
 	bool CanSee(PositionComponent* component);
 	bool CanSee(const Rect& bounds);
+    void SetBackdropMatrix(const glm::mat4& backdropMatrix) { m_BackdropMatrix = backdropMatrix; }
 
     glm::mat4 GetViewProjection() const { return m_ViewProjection; }
     glm::mat4 GetBackdropMatrix() const { return m_BackdropMatrix; }

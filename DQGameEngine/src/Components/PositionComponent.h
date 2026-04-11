@@ -11,7 +11,9 @@ public:
 	PositionComponent() : position(0), size(0) {}
 	PositionComponent(const Vector& position, const Vector& size = 0) : position(position), size(size) {}	
 
-	Vector GetWorldPosition();
+	void OnUpdate(float dt) override;
+
+	const Vector& GetWorldPosition();
 	void SetPosition(float x, float y);
 	void SetAnchor(float x, float y);
 	void HorizontalFlip();
@@ -24,8 +26,8 @@ public:
 	float angle = 0.0f;
 	RenderLayer layer = RenderLayer::World;
 
-private:
-
-	Vector m_AnchorOffset;
+	Rect src;
+	Rect dst;
+protected:
 };
 

@@ -12,13 +12,15 @@ SpriteComponent::SpriteComponent(const std::string& path)
 void SpriteComponent::OnDraw()
 {
 	Rect m_Src(0, 0, m_Texture->GetWidth(), m_Texture->GetHeight());
-	Rect m_Dst(position.x, position.y, size.x, size.y);
+
+	if (layer == RenderLayer::World && !Renderer2D::GetCamera()->CanSee(dst))
+		return;
 
 	Renderer2D::Submit({
 		CommandType::Sprite,
 		m_Texture,
 		m_Src,
-		m_Dst,
+		dst,
 		flip,
 		angle,
 		anchor,

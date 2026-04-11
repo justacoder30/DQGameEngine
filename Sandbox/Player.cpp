@@ -60,8 +60,11 @@ void Player::OnUpdate(float dt)
 {
 	rb->velocity.x = 0;
 
-	if (!onGround) rb->velocity.y += rb->gravity * dt;
-	else rb->velocity.y = 0;
+	//if (!onGround) rb->velocity.y += rb->gravity * dt;
+
+	if (Key[SDL_SCANCODE_J]) {
+		angle += 90 * dt;
+	}
 
 	if (Key[SDL_SCANCODE_A]) {
 		if (rb->velocity.y == 0) Play(Run);
@@ -80,6 +83,19 @@ void Player::OnUpdate(float dt)
 		}
 	}
 
+	if (Key[SDL_SCANCODE_W]) {
+		if (direction != Up) {
+			direction = Up;
+			VerticalFlip();
+		}
+	}
+	else if (Key[SDL_SCANCODE_S]) {
+		if (direction != Down) {
+			direction = Down;
+			VerticalFlip();
+		}
+	}
+
 	if (Key[SDL_SCANCODE_SPACE] && onGround) {
 		rb->velocity.y = -rb->jump;
 		Play(Jump);
@@ -87,7 +103,7 @@ void Player::OnUpdate(float dt)
 	if (rb->velocity.y > 0) Play(Fall);
 
 	if (rb->velocity.x == 0 && rb->velocity.y == 0) Play(Idle);
-	std::cout << "Velocity: " << rb->velocity.x << ", " << rb->velocity.y << std::endl;	
+	//std::cout << "Velocity: " << rb->velocity.x << ", " << rb->velocity.y << std::endl;	
 
 	position += rb->velocity * dt;
 

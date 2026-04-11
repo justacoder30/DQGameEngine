@@ -50,22 +50,15 @@ void Animation2DComponent::OnUpdate(float dt)
     animationClip.Play(animations[currentAnimation]);
     animationClip.Update(dt);
     src = animationClip.getRect();
-
-    dst = Rect(position, size);
-
-    dst.x = position.x - anchor.x * size.x;
-    dst.y = position.y - anchor.y * size.y;
-
-    if (flip == Flip::Horizontal || flip == Flip::Diagonal)
-		dst.x -= size.x * (1.0f - anchor.x * 2.0f);
-
-    if (flip == Flip::Vertical || flip == Flip::Diagonal)
-        dst.y -= size.y * (1.0f - anchor.y * 2.0f);
+	PositionComponent::OnUpdate(dt);    
 }
 
 void Animation2DComponent::OnDraw()
 {
     if (animationClip.animation.texture == nullptr) return;
+    
+    if (layer == RenderLayer::World && !Renderer2D::GetCamera()->CanSee(dst))
+        return;
 
     Renderer2D::Submit({
         CommandType::Sprite,
@@ -74,7 +67,8 @@ void Animation2DComponent::OnDraw()
         dst,
         flip,
         angle,
-        Vector(0, 0),
+        anchor,
+        //Vector(0, 0),
         layer
     });
 

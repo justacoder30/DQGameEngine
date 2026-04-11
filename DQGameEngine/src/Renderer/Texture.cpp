@@ -61,7 +61,3 @@ void Texture::Bind(uint32_t slot) const
     glBindTexture(GL_TEXTURE_2D, m_ID);
 }
 
-void Texture::Load(const std::string& path)
-{
-	TextureManager::Load(path); 
-}

@@ -5,7 +5,19 @@
 CameraComponent::CameraComponent(float width, float height)
     : m_Width(width), m_Height(height)
 {
-    Renderer2D::SetViewport(width, height);
+    Vector windowSize = Renderer2D::GetWindowSize();
+
+    float scale = std::min(windowSize.x / width, windowSize.y / height);
+
+    float vpWidth = width * scale;
+    float vpHeight = height * scale;
+
+    float vpX = (windowSize.x - vpWidth) * 0.5f;
+    float vpY = (windowSize.y - vpHeight) * 0.5f;
+
+    glViewport((int)vpX, (int)vpY, (int)vpWidth, (int)vpHeight);
+
+    glm::mat4 proj = glm::ortho(0.0f, width, height, 0.0f, -1.0f, 1.0f);
     RecalculateMatrix();
 }
 
@@ -21,7 +33,7 @@ void CameraComponent::SetBounds(const Rect& bounds)
     m_UseBounds = true;
 }
 
-Rect CameraComponent::GetViewBounds()
+const Rect& CameraComponent::GetViewBounds() const
 {
     float w = m_Width / m_Zoom;
     float h = m_Height / m_Zoom;

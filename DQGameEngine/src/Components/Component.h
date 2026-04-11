@@ -20,7 +20,7 @@ public:
     T* GetComponent();
 
 	Component* GetParent() { return m_Parent; }
-	std::vector<Component*> GetChildren() { return m_Children; }
+    const std::vector<Component*>& GetChildren() const { return m_Children; }
 
 protected:
 

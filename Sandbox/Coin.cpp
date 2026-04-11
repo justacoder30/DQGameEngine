@@ -21,9 +21,3 @@ void Coin::OnLoad()
 	Add(rb);
 	Play(0);
 }
-
-void Coin::OnCollision(ShapeComponent* self, ShapeComponent* otherShape, Component* other)
-{
-	//std::cout << "Coin collected!" << std::endl;
-	//RemoveFromParent();
-}

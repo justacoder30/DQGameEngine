@@ -1,5 +1,6 @@
 #pragma once
 #include "DQEngine.h"	
+#include "Background.h"
 
 class GameTest : public GameApp
 {

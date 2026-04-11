@@ -32,8 +32,6 @@ SDL_Window* Renderer2D::m_Window;
 SDL_GLContext Renderer2D::m_Context;
 float Renderer2D::m_WindowWidth;
 float Renderer2D::m_WindowHeight;
-float Renderer2D::gameWidth;
-float Renderer2D::gameHeight;
 CameraComponent* Renderer2D::s_Camera;
 
 std::vector<RenderCommand> Renderer2D::s_BackgroundQueue;
@@ -195,25 +193,45 @@ void Renderer2D::Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect
     };
 
 	Vector center_point = centerP;
+    center_point.x = dstrect.x + dstrect.w * centerP.x;
+    center_point.y = dstrect.y + dstrect.h * centerP.y;
 
-    if (center_point != Vector::Zero()) {
-        center_point.x = dstrect.x + centerP.x;
-        center_point.y = dstrect.y + centerP.y;
-    }
-    else {
-        center_point.x = dstrect.x + dstrect.w / 2.0f;
-        center_point.y = dstrect.y + dstrect.h / 2.0f;
-    }
+    //if (center_point != Vector::Zero()) {
+    //    center_point.x = dstrect.x + centerP.x;
+    //    center_point.y = dstrect.y + centerP.y;
+    //}
+    //else {
+    //    center_point.x = dstrect.x + dstrect.w / 2.0f;
+    //    center_point.y = dstrect.y + dstrect.h / 2.0f;
+    //}
 
-    //center_point.x = dstrect.x + dstrect.w / 2.0f;
-    //center_point.y = dstrect.y + dstrect.h / 2.0f;
+    //Vector center_point;
+    //center_point.x = dstrect.x + dstrect.w * (anchor.x);
+    //center_point.y = dstrect.y + dstrect.h * (anchor.y);
+
+
+    float x = dstrect.x;
+    float y = dstrect.y;
+    float w = dstrect.w;
+    float h = dstrect.h;
+
+    Vector pivot;
+    pivot.x = dstrect.w * centerP.x;
+    pivot.y = dstrect.h * centerP.y;
 
     float localVertices[4][2] = {
-        { -dstrect.w / 2.0f, -dstrect.h / 2.0f },
-        {  dstrect.w / 2.0f, -dstrect.h / 2.0f },
-        {  dstrect.w / 2.0f,  dstrect.h / 2.0f },
-        { -dstrect.w / 2.0f,  dstrect.h / 2.0f }
+        { -pivot.x,         -pivot.y },
+        {  w - pivot.x,     -pivot.y },
+        {  w - pivot.x,      h - pivot.y },
+        { -pivot.x,          h - pivot.y }
     };
+
+    //float localVertices[4][2] = {
+    //    { -dstrect.w / 2.0f, -dstrect.h / 2.0f },
+    //    {  dstrect.w / 2.0f, -dstrect.h / 2.0f },
+    //    {  dstrect.w / 2.0f,  dstrect.h / 2.0f },
+    //    { -dstrect.w / 2.0f,  dstrect.h / 2.0f }
+    //};
 
     float rad = glm::radians(angle);
     float cosA = cos(rad);
@@ -401,23 +419,7 @@ void Renderer2D::Destroy()
 
 void Renderer2D::SetViewport(float gameWidth, float gameHeight)
 {
-	Renderer2D::gameWidth = gameWidth;  
-	Renderer2D::gameHeight = gameHeight;    
-
-    float scale = std::min(m_WindowWidth / gameWidth, m_WindowHeight / gameHeight);
-
-    float vpWidth = gameWidth * scale;
-    float vpHeight = gameHeight * scale;
-
-    float vpX = (m_WindowWidth - vpWidth) * 0.5f;
-    float vpY = (m_WindowHeight - vpHeight) * 0.5f;
-
-    glViewport((int)vpX, (int)vpY, (int)vpWidth, (int)vpHeight);
-
-    glm::mat4 proj = glm::ortho(0.0f, gameWidth, gameHeight, 0.0f, -1.0f, 1.0f);
-
-    s_Data.ShaderPtr->Bind();
-    s_Data.ShaderPtr->SetMat4("u_ViewProjection", proj);
+	s_Camera = new CameraComponent(gameWidth, gameHeight);
 }
 
 void Renderer2D::Flush()

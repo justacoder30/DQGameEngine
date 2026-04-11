@@ -11,11 +11,10 @@ public:
 
     void Bind(uint32_t slot = 0) const;
     void Unbind() const;
-	static void Load(const std::string& path);
 
-    uint32_t GetID() const { return m_ID; }
-    int GetWidth() const { return m_Width; }
-    int GetHeight() const { return m_Height; }
+    const uint32_t& GetID() { return m_ID; }
+    const int& GetWidth() { return m_Width; }
+    const int& GetHeight() { return m_Height; }
 
 	bool Compare(Texture* other) const { return m_ID == other->GetID(); }
 

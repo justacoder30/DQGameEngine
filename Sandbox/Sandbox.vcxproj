@@ -150,7 +150,6 @@ SDL3_test.lib
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Background.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="GameTest.cpp" />
     <ClCompile Include="main.cpp" />

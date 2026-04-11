@@ -9,7 +9,6 @@ public:
 	void OnLoad() override
 	{
 		std::vector<Rect> groundRects = GetObjectGroup("Collision");
-		std::cout << "Ground rects: " << groundRects.size() << std::endl;
 		for (const auto& rect : groundRects) {
 			auto r = new RectangleComponent(Vector(rect.x, rect.y), Vector(rect.w, rect.h));
 			r->layer = Layer::Ground;

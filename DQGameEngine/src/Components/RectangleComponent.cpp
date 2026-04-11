@@ -11,7 +11,7 @@ Rect RectangleComponent::GetWorldBounds()
 {
     Component* p = GetParent();
     auto t = dynamic_cast<PositionComponent*>(p);
-	if (!t) return Rect(GetWorldPosition(), size);
+	if (!t) return Rect(Vector(bounds.x, bounds.y), size);
     Vector spriteSize = t->size;
     Vector anchor = t->anchor;
 
@@ -21,12 +21,16 @@ Rect RectangleComponent::GetWorldBounds()
     float offsetX = bounds.x - anchor.x * spriteSize.x;
     float offsetY = bounds.y - anchor.y * spriteSize.y;
 
-    if (flip == Flip::Horizontal || flip == Flip::Diagonal)
+    if (flip == Flip::Horizontal || flip == Flip::Diagonal) {
+        offsetX = bounds.x - (1 - anchor.x) * spriteSize.x;
         offsetX = -offsetX - bounds.w;
-
-    if (flip == Flip::Vertical || flip == Flip::Diagonal)
+    }
+        
+    if (flip == Flip::Vertical || flip == Flip::Diagonal) {
+        offsetY = bounds.y - (1 - anchor.y) * spriteSize.y;
         offsetY = -offsetY - bounds.h;
-
+    }
+        
     return Rect(
         pivot.x + offsetX,
         pivot.y + offsetY,
@@ -49,5 +53,5 @@ bool RectangleComponent::CheckCollide(ShapeComponent* other)
 
 void RectangleComponent::OnDraw()
 {
-	Renderer2D::DrawRectOutline(GetWorldBounds(), 1.f);
+	//Renderer2D::DrawRectOutline(GetWorldBounds(), 1.f);
 }

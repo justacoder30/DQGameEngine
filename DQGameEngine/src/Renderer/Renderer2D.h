@@ -28,7 +28,8 @@ public:
     static void EndBatch();
 	static void Destroy();
 
-	static Vector GetViewportSize() { return Vector(gameWidth, gameHeight); }
+	static Vector GetViewportSize() { return Vector(s_Camera->GetViewBounds().w, s_Camera->GetViewBounds().h); }
+	static Vector GetWindowSize() { return Vector(m_WindowWidth, m_WindowHeight); }
     static void SetViewport(float gameWidth, float gameHeight);
     static void Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect, const Flip& flip = None, const float& angle = 0.0f, const Vector& centerP = Vector::Zero());
     static void DrawRect(const Rect& rect);
@@ -50,13 +51,11 @@ private:
     static void Flush();
     static void NextBatch();
 
+    static CameraComponent* s_Camera;
     static float m_WindowWidth;
     static float m_WindowHeight;
-    static float gameWidth;
-    static float gameHeight;
     
     static SDL_GLContext m_Context;
-    static CameraComponent* s_Camera;
     static std::vector<RenderCommand> s_BackgroundQueue;
     static std::vector<RenderCommand> s_WorldQueue;
     static std::vector<RenderCommand> s_UIQueue;

@@ -1,20 +1,34 @@
 #include "pch.h"
 #include "PositionComponent.h"
 
-Vector PositionComponent::GetWorldPosition()
+void PositionComponent::OnUpdate(float dt)
+{
+    if (flip == Flip::Horizontal || flip == Flip::Diagonal) {
+        dst.x -= size.x * (1.0f - anchor.x * 2.0f);
+    }
+
+    if (flip == Flip::Vertical || flip == Flip::Diagonal) {
+        dst.y -= size.y * (1.0f - anchor.y * 2.0f);
+    }
+
+    Vector worldPos = GetWorldPosition();
+
+    dst.x = worldPos.x - anchor.x * size.x;
+    dst.y = worldPos.y - anchor.y * size.y;
+
+	dst = Rect(dst.x, dst.y, size.x, size.y);
+}
+
+const Vector& PositionComponent::GetWorldPosition()
 {
     Vector worldPos = position;
 
     Component* p = GetParent();
-    while (p)
-    {
-        auto t = dynamic_cast<PositionComponent*>(p);
-        if (t)
-            worldPos += t->position;
-
-        p = p->GetParent();
+    auto t = dynamic_cast<PositionComponent*>(p);
+    if (t) {
+        worldPos.x = t->dst.x;
+        worldPos.y = t->dst.y;
     }
-
     return worldPos;
 }
 
@@ -46,6 +60,7 @@ void PositionComponent::HorizontalFlip()
             flip = Vertical;
             break;
     }
+    anchor.x = 1.0f - anchor.x;
 }
 
 void PositionComponent::VerticalFlip()
@@ -64,4 +79,6 @@ void PositionComponent::VerticalFlip()
             flip = Horizontal;
             break;
     }
+    
+    anchor.y = 1.0f - anchor.y;
 }

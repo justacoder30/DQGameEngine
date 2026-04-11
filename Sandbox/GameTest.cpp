@@ -11,12 +11,13 @@ void GameTest::OnLoad()
     auto anim = new Animation2DComponent();
 
     auto player = new Player();
-
-    //auto tilemap = new TiltedMapComponent("resource/Map/map_test.tmx");
+    auto bg = new Background();
+    //auto map = new Map("resource/Map/map_test.tmx");
     auto map = new Map("resource/Map/map2.tmx");
     Add(map);
     auto cam = new CameraComponent(784, 441);
-    auto bg = new Background();
+    
+	bg->size = Vector(784, 441);
 
     for (auto obj : objects_pos) {
         auto positions = map->GetObjectGroup(obj);
@@ -42,6 +43,5 @@ void GameTest::OnLoad()
 
     Add(cam);
     Add(bg);
-    
-    Add(player);
+    Add(player);//std::cout << bg->coin->position.x << ", " << bg->coin->position.y << std::endl;
 }

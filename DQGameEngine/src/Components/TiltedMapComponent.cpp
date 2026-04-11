@@ -155,7 +155,8 @@ void TiltedMapComponent::OnDraw()
             tile.dst,
             tile.flip,
             tile.angle,
-			Vector(0, 0),
+			Vector(0.5, 0.5),
+			//Vector(0, 0),
             layer
         });
     }

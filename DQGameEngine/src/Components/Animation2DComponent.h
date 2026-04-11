@@ -29,6 +29,4 @@ private:
 
     std::unordered_map<int, Animation> animations;
     bool playing = false;
-    Rect src;
-    Rect dst;
 };
