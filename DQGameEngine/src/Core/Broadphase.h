@@ -1,14 +1,15 @@
 #pragma once
 #include "Components/ShapeComponent.h"  
+#include "Board.h"
 #include "CollisionCallbacks.h" 
 #include <set>
 #include <utility>
 
-class CollisionSystem
+class Boardphase
 {
 public:
 
-	CollisionSystem() = default;
+    Boardphase();
 
     void Add(ShapeComponent* c);
     void Run();
@@ -18,6 +19,7 @@ public:
     bool ShouldCollide(ShapeComponent* a, ShapeComponent* b);
 	void ResolveCollision(ShapeComponent* a, ShapeComponent* b);
     void Remove(ShapeComponent* c);
+	inline void SetBoard(Board* b) { board = b; }
 
 private:
     std::pair<ShapeComponent*, ShapeComponent*> MakePair(ShapeComponent* a, ShapeComponent* b);
@@ -25,5 +27,6 @@ private:
     std::vector<ShapeComponent*> colliders;
     std::set<std::pair<ShapeComponent*, ShapeComponent*>> currentCollisions;
     std::set<std::pair<ShapeComponent*, ShapeComponent*>> previousCollisions;
+    Board* board;
 };
 

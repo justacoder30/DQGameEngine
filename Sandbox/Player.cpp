@@ -51,9 +51,14 @@ Player::Player()
 	jumpHeight = 100.f;
 	rb->SetJump(jumpHeight, jumpTime);
 
+	auto atkBox = new RectangleComponent(Vector(hitbox_bounds.x + hitbox_bounds.w, hitbox_bounds.y), Vector(32, hitbox_bounds.y));
+	atkBox->layer = Layer::Player;
+	atkBox->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item);
+
 	Add(hitbox);
 	Add(groundBox);
 	Add(rb);
+	Add(atkBox);
 }
 
 void Player::OnUpdate(float dt)

@@ -5,6 +5,7 @@
 RectangleComponent::RectangleComponent(const Vector& position, const Vector& size) : ShapeComponent(position, size)
 {
     bounds = Rect(position, size);
+	shapeType = ShapeType::Rectangle;
 }
 
 Rect RectangleComponent::GetWorldBounds()
@@ -42,10 +43,9 @@ Rect RectangleComponent::GetWorldBounds()
 
 bool RectangleComponent::CheckCollide(ShapeComponent* other)
 {
-    auto rectOther = dynamic_cast<RectangleComponent*>(other);
+	if (other->shapeType != ShapeType::Rectangle) return false;
 
-    if (!rectOther) return false;
-
+	auto rectOther = dynamic_cast<RectangleComponent*>(other);
     isColliding = GetWorldBounds().CheckCollide(rectOther->GetWorldBounds());
 
     return isColliding;
@@ -53,5 +53,5 @@ bool RectangleComponent::CheckCollide(ShapeComponent* other)
 
 void RectangleComponent::OnDraw()
 {
-	//Renderer2D::DrawRectOutline(GetWorldBounds(), 1.f);
+	Renderer2D::DrawRectOutline(GetWorldBounds(), 1.f);
 }

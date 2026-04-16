@@ -4,10 +4,16 @@
 
 void ShapeComponent::OnAttach()
 {
-	GameApp::GetCollisionSystem()->Add(this);
+	GameApp::GetBoardphase()->Add(this);
+	if (m_Parent) {
+		auto callbacks = dynamic_cast<CollisionCallbacks*>(m_Parent);
+		if (callbacks) {
+			callback = callbacks;
+		}
+	}
 }
 
 void ShapeComponent::OnDetach()
 {
-	GameApp::GetCollisionSystem()->Remove(this);
+	GameApp::GetBoardphase()->Remove(this);
 }

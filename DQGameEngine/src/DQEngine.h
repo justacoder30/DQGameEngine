@@ -9,6 +9,7 @@
 
 #include "Core/Input.h"
 #include "Core/CollisionCallbacks.h"
+#include "Core/SpatialGrid.h"
 
 int Test();
 int Test1();

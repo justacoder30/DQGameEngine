@@ -2,7 +2,7 @@
 
 #include "Component.h"
 #include <SDL3/SDL.h>
-#include "Core/CollisionSystem.h"
+#include "Core/Broadphase.h"
 
 class GameApp : public Component
 {
@@ -12,18 +12,18 @@ public:
 
     void Run();
 
-    static CollisionSystem* GetCollisionSystem();
+    static Boardphase* GetBoardphase();
 
 protected:
 
     void GameLoop();
     void OnUpdate(float dt) override {}
     void OnDraw() override {}
-
     void Draw();
 
+    static Boardphase s_Boardphase;
+
 private:
-    static CollisionSystem s_CollisionSystem;
 
     bool m_Running = true;
 

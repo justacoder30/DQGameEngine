@@ -6,6 +6,8 @@
 
 void GameTest::OnLoad()
 {
+	
+
     std::string objects_pos[] = { "PlayerPosition", "CoinPosition", "EnemyPosition", "EnemyPosition 1", "HeartPosition", "FlagPosition", "BossPosition", };
 
     auto anim = new Animation2DComponent();
@@ -44,4 +46,8 @@ void GameTest::OnLoad()
     Add(cam);
     Add(bg);
     Add(player);//std::cout << bg->coin->position.x << ", " << bg->coin->position.y << std::endl;
+    
+    SpatialGrid* grid = new SpatialGrid();
+    grid->Init(256.f);
+    s_Boardphase.SetBoard(grid);
 }

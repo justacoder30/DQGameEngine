@@ -3,7 +3,7 @@
 #include "Renderer/Renderer2D.h"
 #include "Core/Input.h" 
 
-CollisionSystem GameApp::s_CollisionSystem;
+Boardphase GameApp::s_Boardphase;
 
 GameApp::GameApp(int width, int height, const char* title)
 {
@@ -30,9 +30,9 @@ void GameApp::Run()
     GameLoop();
 }
 
-CollisionSystem* GameApp::GetCollisionSystem()
+Boardphase* GameApp::GetBoardphase()
 {
-    return &s_CollisionSystem;
+    return &s_Boardphase;
 }
 
 void GameApp::GameLoop()
@@ -55,8 +55,8 @@ void GameApp::GameLoop()
         //if (dt > 1 / 60.f) dt = 1 / 60.f;
         m_LastTime = current;
 
+        GameApp::GetBoardphase()->Run();
         Update(dt);
-        GameApp::GetCollisionSystem()->Run();
 
 		Draw();
     }

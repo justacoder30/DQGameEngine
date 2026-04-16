@@ -1,5 +1,6 @@
 #pragma once
 #include "PositionComponent.h"
+#include "Core/CollisionCallbacks.h"
 
 enum class Layer : uint32_t
 {
@@ -22,6 +23,13 @@ inline bool HasLayer(uint32_t mask, Layer layer)
 	return (mask & ToMask(layer)) != 0;
 }
 
+enum ShapeType
+{
+	Rectangle,
+	Circle,
+	Polygon
+};	
+
 class ShapeComponent : public PositionComponent
 {
 public:
@@ -39,5 +47,7 @@ public:
 	bool isTrigger = false;
 	bool hasPhysics = true;
 	bool active = true;
+	ShapeType shapeType = ShapeType::Rectangle;
+	CollisionCallbacks* callback = nullptr;
 };
 

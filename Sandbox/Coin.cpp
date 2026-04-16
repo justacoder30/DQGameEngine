@@ -12,7 +12,7 @@ void Coin::OnLoad()
 
 	auto r = new RectangleComponent(Vector(0, 0), Vector(16, 16));
 	r->layer = Layer::Item;	
-	r->mask = ToMask(Layer::Player) | ToMask(Layer::Item) | ToMask(Layer::Item);
+	r->mask = ToMask(Layer::Player);
 	//r->hasPhysics = true;
 	auto rb = new RigidbodyComponent();
 	rb->bodyType = BodyType::Dynamic;

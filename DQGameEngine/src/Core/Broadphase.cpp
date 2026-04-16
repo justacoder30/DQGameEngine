@@ -1,23 +1,34 @@
 #include "pch.h"
-#include "CollisionSystem.h"
+#include "Broadphase.h"
+#include "BaseBoard.h"
 #include "Components/RectangleComponent.h"
 #include "Components/RigidbodyComponent.h"
 
-void CollisionSystem::Add(ShapeComponent* c)
+Boardphase::Boardphase()
+{
+	board = new BaseBoard();
+}
+
+void Boardphase::Add(ShapeComponent* c)
 {
 	colliders.push_back(c);
 }
 
-void CollisionSystem::Run()
+void Boardphase::Run()
 {
     currentCollisions.clear();
+    board->Clear();
 
-    for (int i = 0; i < colliders.size(); i++)
+    for (auto* c : colliders)
+        board->Insert(c);
+
+    for (auto* a : colliders)
     {
-        for (int j = i + 1; j < colliders.size(); j++)
+        auto neighbors = board->Query(a);
+
+        for (auto* b : neighbors)
         {
-            auto a = colliders[i];
-            auto b = colliders[j];
+            if (a >= b) continue; 
 
             if (!a->GetParent() || !b->GetParent())
                 continue;
@@ -29,18 +40,14 @@ void CollisionSystem::Run()
             {
                 auto pair = MakePair(a, b);
                 bool isTrigger = a->isTrigger || b->isTrigger;
+
                 currentCollisions.insert(pair);
 
-                if (previousCollisions.count(pair)) {
-                    HandleCollision(a, b);
-                } else {
-                    HandleCollisionStart(a, b);
-                }
+                if (previousCollisions.count(pair)) HandleCollision(a, b);
+                else HandleCollisionStart(a, b);
 
                 if (!isTrigger && (a->hasPhysics || b->hasPhysics))
-                {
                     ResolveCollision(a, b);
-                }
             }
         }
     }
@@ -48,41 +55,40 @@ void CollisionSystem::Run()
     for (auto& pair : previousCollisions)
     {
         if (!currentCollisions.count(pair))
-        {
             HandleCollisionEnd(pair.first, pair.second);
-        }
     }
 
     previousCollisions = currentCollisions;
 }
 
-void CollisionSystem::HandleCollision(ShapeComponent* a, ShapeComponent* b)
+void Boardphase::HandleCollision(ShapeComponent* a, ShapeComponent* b)
 {
-    auto ca = dynamic_cast<CollisionCallbacks*>(a->GetParent());
-    auto cb = dynamic_cast<CollisionCallbacks*>(b->GetParent());
+    if (a->callback)
+        a->callback->OnCollision(a, b, b->GetParent());
 
-	if (ca) ca->OnCollision(a, b, b->GetParent());
-    if (cb) cb->OnCollision(b, a, a->GetParent());
+    if (b->callback)
+        b->callback->OnCollision(b, a, a->GetParent());
 }
 
-void CollisionSystem::HandleCollisionStart(ShapeComponent* a, ShapeComponent* b)
+void Boardphase::HandleCollisionStart(ShapeComponent* a, ShapeComponent* b)
 {
-    auto ca = dynamic_cast<CollisionCallbacks*>(a->GetParent());
-    auto cb = dynamic_cast<CollisionCallbacks*>(b->GetParent());
+    if (a->callback)
+        a->callback->OnCollisionStart(a, b, b->GetParent());
 
-    if (ca) ca->OnCollisionStart(a, b, b->GetParent());
-    if (cb) cb->OnCollisionStart(b, a, a->GetParent());
+    if (b->callback)
+        b->callback->OnCollisionStart(b, a, a->GetParent());
 }
 
-void CollisionSystem::HandleCollisionEnd(ShapeComponent* a, ShapeComponent* b)
+void Boardphase::HandleCollisionEnd(ShapeComponent* a, ShapeComponent* b)
 {
-    auto ca = dynamic_cast<CollisionCallbacks*>(a->GetParent());
-    auto cb = dynamic_cast<CollisionCallbacks*>(b->GetParent());
-    if (ca) ca->OnCollisionEnd(a, b, b->GetParent());
-	if (cb) cb->OnCollisionEnd(b, a, a->GetParent());
+    if (a->callback)
+        a->callback->OnCollisionEnd(a, b, b->GetParent());
+
+    if (b->callback)
+        b->callback->OnCollisionEnd(b, a, a->GetParent());
 }
 
-bool CollisionSystem::ShouldCollide(ShapeComponent* a, ShapeComponent* b)
+bool Boardphase::ShouldCollide(ShapeComponent* a, ShapeComponent* b)
 {
     bool aCanHitB = (a->mask & ToMask(b->layer)) != 0;
     bool bCanHitA = (b->mask & ToMask(a->layer)) != 0;
@@ -90,7 +96,7 @@ bool CollisionSystem::ShouldCollide(ShapeComponent* a, ShapeComponent* b)
     return aCanHitB && bCanHitA;
 }
 
-void CollisionSystem::ResolveCollision(ShapeComponent* a, ShapeComponent* b)
+void Boardphase::ResolveCollision(ShapeComponent* a, ShapeComponent* b)
 {
     auto ra = dynamic_cast<RectangleComponent*>(a);
     auto rb = dynamic_cast<RectangleComponent*>(b);
@@ -147,7 +153,7 @@ void CollisionSystem::ResolveCollision(ShapeComponent* a, ShapeComponent* b)
     }
 }
 
-void CollisionSystem::Remove(ShapeComponent* c)
+void Boardphase::Remove(ShapeComponent* c)
 {
     colliders.erase(
         std::remove(colliders.begin(), colliders.end(), c),
@@ -168,7 +174,7 @@ void CollisionSystem::Remove(ShapeComponent* c)
     removeIfContains(previousCollisions);
 }
 
-std::pair<ShapeComponent*, ShapeComponent*> CollisionSystem::MakePair(ShapeComponent* a, ShapeComponent* b)
+std::pair<ShapeComponent*, ShapeComponent*> Boardphase::MakePair(ShapeComponent* a, ShapeComponent* b)
 {
     if (a < b)
         return { a, b };
