@@ -1,25 +1,24 @@
 #pragma once
 #include "DQEngine.h"
 
-class Player : public Animation2DComponent, public CollisionCallbacks
+class Skeleton : public Animation2DComponent, public CollisionCallbacks
 {
 public:
-	Player();	
+	Skeleton(const Vector& pos);
 
+	void OnLoad() override;	
 	void OnUpdate(float dt) override;
-	//void OnCollision(ShapeComponent* shape, Component* other) override;
 	void OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape, Component* other) override;
 	void OnCollision(ShapeComponent* self, ShapeComponent* otherShape, Component* other) override;
 	void OnCollisionEnd(ShapeComponent* self, ShapeComponent* otherShape, Component* other) override;
-	void SetSpawnPoint(const Vector& spawnPoint);	
 
-	float jumpTime = 0.5;
-	float jumpHeight = 100;
-	float speed = 200;
-
-private:
-
+	RectangleComponent* sensor_ground;
+	RectangleComponent* sensor_wall;
+	RectangleComponent* sensor_edge;
+	RectangleComponent* hitbox;
+	CharacterController* controller;
 	bool onGround = false;
-	RigidbodyComponent* rb;
+	float speed = 80.f;	
+	bool flip = false;	
 };
 

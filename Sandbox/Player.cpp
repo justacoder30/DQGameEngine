@@ -21,6 +21,7 @@ enum Direction
 
 Direction direction = Right;
 auto hitbox = new RectangleComponent(Vector(21, 64), Vector(22, 64));
+auto controller = new CharacterController();
 
 Player::Player()
 {
@@ -38,10 +39,9 @@ Player::Player()
 	hitbox->layer = Layer::Player;
 	hitbox->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item);
 	hitbox->hasPhysics = true;
-	//hitbox->bodyType = BodyType::Dynamic;
 	
 	auto hitbox_bounds = hitbox->GetBounds();
-	auto groundBox = new RectangleComponent(Vector(hitbox_bounds.x+2, hitbox_bounds.y + hitbox_bounds.h), Vector(hitbox_bounds.w/2, 1));
+	auto groundBox = new RectangleComponent(Vector(hitbox_bounds.x + hitbox_bounds.w/4, hitbox_bounds.y + hitbox_bounds.h), Vector(hitbox_bounds.w/2, 2));
 	groundBox->layer = Layer::Sensor;
 	groundBox->mask = ToMask(Layer::Ground);
 	groundBox->isTrigger = true;	
@@ -55,33 +55,40 @@ Player::Player()
 	atkBox->layer = Layer::Player;
 	atkBox->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item);
 
+		
+	controller->collider = hitbox;
+	controller->gravity = rb->gravity;
+	controller->jumpForce = rb->jump;
+
+	Add(controller);
+
 	Add(hitbox);
 	Add(groundBox);
 	Add(rb);
-	Add(atkBox);
+	//Add(atkBox);
 }
 
 void Player::OnUpdate(float dt)
 {
-	rb->velocity.x = 0;
+	controller->velocity.x = 0;
 
-	//if (!onGround) rb->velocity.y += rb->gravity * dt;
+	if (!onGround) controller->velocity.y += controller->gravity * dt;
 
 	if (Key[SDL_SCANCODE_J]) {
 		angle += 90 * dt;
 	}
 
 	if (Key[SDL_SCANCODE_A]) {
-		if (rb->velocity.y == 0) Play(Run);
-		rb->velocity.x = -speed;
+		if (controller->velocity.y == 0) Play(Run);
+		controller->velocity.x = -speed;
 		if (direction != Left) {
 			direction = Left;
 			HorizontalFlip();
 		}
 	}
 	else if (Key[SDL_SCANCODE_D]) {
-		if (rb->velocity.y == 0) Play(Run);
-		rb->velocity.x = speed;
+		if (controller->velocity.y == 0) Play(Run);
+		controller->velocity.x = speed;
 		if (direction != Right) {
 			direction = Right;
 			HorizontalFlip();
@@ -102,20 +109,28 @@ void Player::OnUpdate(float dt)
 	}
 
 	if (Key[SDL_SCANCODE_SPACE] && onGround) {
-		rb->velocity.y = -rb->jump;
+		controller->velocity.y = -controller->jumpForce;
 		Play(Jump);
 	}
-	if (rb->velocity.y > 0) Play(Fall);
+	if (controller->velocity.y > 0) Play(Fall);
 
-	if (rb->velocity.x == 0 && rb->velocity.y == 0) Play(Idle);
+	if (controller->velocity.x == 0 && controller->velocity.y == 0) Play(Idle);
 	//std::cout << "Velocity: " << rb->velocity.x << ", " << rb->velocity.y << std::endl;	
 
-	position += rb->velocity * dt;
+	//position += controller->velocity * dt;
 
 	Animation2DComponent::OnUpdate(dt);
 }
 
 void Player::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape, Component* other)
+{
+	if (self->layer == Layer::Sensor && otherShape->layer == Layer::Ground)
+	{
+		onGround = true;
+	}
+}
+
+void Player::OnCollision(ShapeComponent* self, ShapeComponent* otherShape, Component* other)
 {
 	if (self->layer == Layer::Sensor && otherShape->layer == Layer::Ground)
 	{

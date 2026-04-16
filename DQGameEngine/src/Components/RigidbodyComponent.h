@@ -12,9 +12,7 @@ enum class BodyType
 class RigidbodyComponent : public Component
 {
 public:
-    Vector velocity;
-    float gravityScale = 1.0f;
-    bool useGravity = true;
+
     BodyType bodyType = BodyType::Dynamic;
 
     void SetJump(float jumpHeight, float jumpTime)

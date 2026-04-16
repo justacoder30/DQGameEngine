@@ -17,8 +17,10 @@ public:
     void HandleCollisionStart(ShapeComponent* a, ShapeComponent* b);
     void HandleCollisionEnd(ShapeComponent* a, ShapeComponent* b);
     bool ShouldCollide(ShapeComponent* a, ShapeComponent* b);
-	void ResolveCollision(ShapeComponent* a, ShapeComponent* b);
+	//void ResolveCollision(ShapeComponent* a, ShapeComponent* b);
     void Remove(ShapeComponent* c);
+	std::vector<ShapeComponent*> GetColliders() { return colliders; }
+	Board* GetBoard() { return board; }
 	inline void SetBoard(Board* b) { board = b; }
 
 private:

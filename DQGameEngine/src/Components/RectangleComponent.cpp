@@ -46,9 +46,14 @@ bool RectangleComponent::CheckCollide(ShapeComponent* other)
 	if (other->shapeType != ShapeType::Rectangle) return false;
 
 	auto rectOther = dynamic_cast<RectangleComponent*>(other);
-    isColliding = GetWorldBounds().CheckCollide(rectOther->GetWorldBounds());
+	bool collided = GetWorldBounds().CheckCollide(rectOther->GetWorldBounds());
+    
+    if (collided) {
+        isColliding = true;
+		other->isColliding = true;
+    }
 
-    return isColliding;
+    return collided;
 }
 
 void RectangleComponent::OnDraw()

@@ -17,3 +17,8 @@ void ShapeComponent::OnDetach()
 {
 	GameApp::GetBoardphase()->Remove(this);
 }
+
+void ShapeComponent::OnUpdate(float dt)
+{
+	isColliding = false;
+}

@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components\CharacterController.h" />
     <ClInclude Include="src\Core\BaseBoard.h" />
     <ClInclude Include="src\Core\Board.h" />
     <ClInclude Include="src\Core\SpatialGrid.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="src\Core\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\CharacterController.cpp" />
     <ClCompile Include="src\Core\BaseBoard.cpp" />
     <ClCompile Include="src\Core\SpatialGrid.cpp" />
     <ClCompile Include="src\Components\CameraComponent.cpp" />

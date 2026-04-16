@@ -14,8 +14,6 @@ public:
 
 	void OnDraw() override;
 
-	bool isColliding = false;
-
 private:
 	Rect bounds;
 };

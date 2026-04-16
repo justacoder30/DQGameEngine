@@ -41,12 +41,16 @@ public:
 	
 	void OnAttach() override;
 	void OnDetach() override;
+	void OnUpdate(float dt) override;
 
 	uint32_t mask = 0;
 	Layer layer = Layer::None;
+
 	bool isTrigger = false;
 	bool hasPhysics = true;
 	bool active = true;
+	bool isColliding = false;
+
 	ShapeType shapeType = ShapeType::Rectangle;
 	CollisionCallbacks* callback = nullptr;
 };

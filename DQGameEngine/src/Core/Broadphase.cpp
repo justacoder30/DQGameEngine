@@ -45,9 +45,6 @@ void Boardphase::Run()
 
                 if (previousCollisions.count(pair)) HandleCollision(a, b);
                 else HandleCollisionStart(a, b);
-
-                if (!isTrigger && (a->hasPhysics || b->hasPhysics))
-                    ResolveCollision(a, b);
             }
         }
     }
@@ -96,62 +93,62 @@ bool Boardphase::ShouldCollide(ShapeComponent* a, ShapeComponent* b)
     return aCanHitB && bCanHitA;
 }
 
-void Boardphase::ResolveCollision(ShapeComponent* a, ShapeComponent* b)
-{
-    auto ra = dynamic_cast<RectangleComponent*>(a);
-    auto rb = dynamic_cast<RectangleComponent*>(b);
-
-    if (!ra || !rb) return;
-
-    Rect rectA = ra->GetWorldBounds();
-    Rect rectB = rb->GetWorldBounds();
-
-    Vector mtv = rectA.GetMTV(rectB);
-
-    auto pa = dynamic_cast<PositionComponent*>(a->GetParent());
-    auto pb = dynamic_cast<PositionComponent*>(b->GetParent());
-
-    auto rba = a->GetParent()->GetComponent<RigidbodyComponent>();
-    auto rbb = b->GetParent()->GetComponent<RigidbodyComponent>();
-
-
-    if (!pa && !pb) return;
-
-    bool isVertical = abs(mtv.y) < abs(mtv.x);
-
-    if (rba && rba->bodyType == BodyType::Dynamic && (!rbb || rbb->bodyType == BodyType::Static))
-    {
-        pa->position += mtv;
-
-        if (isVertical)
-            rba->velocity.y = 0;
-        else
-            rba->velocity.x = 0;
-    }
-    else if (rbb && rbb->bodyType == BodyType::Dynamic && (!rba || rba->bodyType == BodyType::Static))
-    {
-        pb->position -= mtv;
-
-        if (isVertical)
-            rbb->velocity.y = 0;
-        else
-            rbb->velocity.x = 0;
-    }
-    else if (rba && rbb && rba->bodyType == BodyType::Dynamic && rbb->bodyType == BodyType::Dynamic)
-    {
-        pa->position += mtv * 0.5f;
-        pb->position -= mtv * 0.5f;
-
-        if (isVertical) {
-            rba->velocity.y = 0;
-            rbb->velocity.y = 0;
-        }
-        else {
-            rba->velocity.x = 0;
-            rbb->velocity.x = 0;
-        }
-    }
-}
+//void Boardphase::ResolveCollision(ShapeComponent* a, ShapeComponent* b)
+//{
+//    auto ra = dynamic_cast<RectangleComponent*>(a);
+//    auto rb = dynamic_cast<RectangleComponent*>(b);
+//
+//    if (!ra || !rb) return;
+//
+//    Rect rectA = ra->GetWorldBounds();
+//    Rect rectB = rb->GetWorldBounds();
+//
+//    Vector mtv = rectA.GetMTV(rectB);
+//
+//    auto pa = dynamic_cast<PositionComponent*>(a->GetParent());
+//    auto pb = dynamic_cast<PositionComponent*>(b->GetParent());
+//
+//    auto rba = a->GetParent()->GetComponent<RigidbodyComponent>();
+//    auto rbb = b->GetParent()->GetComponent<RigidbodyComponent>();
+//
+//
+//    if (!pa && !pb) return;
+//
+//    bool isVertical = abs(mtv.y) < abs(mtv.x);
+//
+//    if (rba && rba->bodyType == BodyType::Dynamic && (!rbb || rbb->bodyType == BodyType::Static))
+//    {
+//        pa->position += mtv;
+//
+//        if (isVertical)
+//            rba->velocity.y = 0;
+//        else
+//            rba->velocity.x = 0;
+//    }
+//    else if (rbb && rbb->bodyType == BodyType::Dynamic && (!rba || rba->bodyType == BodyType::Static))
+//    {
+//        pb->position -= mtv;
+//
+//        if (isVertical)
+//            rbb->velocity.y = 0;
+//        else
+//            rbb->velocity.x = 0;
+//    }
+//    else if (rba && rbb && rba->bodyType == BodyType::Dynamic && rbb->bodyType == BodyType::Dynamic)
+//    {
+//        pa->position += mtv * 0.5f;
+//        pb->position -= mtv * 0.5f;
+//
+//        if (isVertical) {
+//            rba->velocity.y = 0;
+//            rbb->velocity.y = 0;
+//        }
+//        else {
+//            rba->velocity.x = 0;
+//            rbb->velocity.x = 0;
+//        }
+//    }
+//}
 
 void Boardphase::Remove(ShapeComponent* c)
 {

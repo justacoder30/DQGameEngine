@@ -3,12 +3,11 @@
 #include "Background.h"
 #include "Coin.h"
 #include "Map.h"
+#include "Skeleton.h"
 
 void GameTest::OnLoad()
 {
-	
-
-    std::string objects_pos[] = { "PlayerPosition", "CoinPosition", "EnemyPosition", "EnemyPosition 1", "HeartPosition", "FlagPosition", "BossPosition", };
+	std::string objects_pos[] = { "PlayerPosition", "CoinPosition", "EnemyPosition", "EnemyPosition 1", "HeartPosition", "FlagPosition", "BossPosition", };
 
     auto anim = new Animation2DComponent();
 
@@ -29,12 +28,19 @@ void GameTest::OnLoad()
         if (obj == "PlayerPosition") {
             for (auto pos : positions) {
 				player->SetSpawnPoint(Vector(pos.x, pos.y));
-				std::cout << "Player spawn point: " << player->position.x << ", " << player->position.y << std::endl;
+				
             }
         }
         else if (obj == "CoinPosition") {
             for (auto pos : positions) {
                 Add(new Coin(pos.x, pos.y));
+            }
+        }
+        else if (obj == "EnemyPosition") {
+            for (auto pos : positions) {
+				auto skeleton = new Skeleton(Vector(pos.x, pos.y));
+                Add(skeleton);
+                std::cout << "Skeleton spawn point: " << skeleton->position.x << ", " << skeleton->position.y << std::endl;
             }
         }
     }

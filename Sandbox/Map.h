@@ -12,7 +12,7 @@ public:
 		for (const auto& rect : groundRects) {
 			auto r = new RectangleComponent(Vector(rect.x, rect.y), Vector(rect.w, rect.h));
 			r->layer = Layer::Ground;
-			r->mask = ToMask(Layer::Player);
+			r->mask = ToMask(Layer::Player) | ToMask(Layer::Sensor) | ToMask(Layer::Enemy);
 			Add(r);
 		}
 	}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="414" height="85" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="247">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="414" height="85" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="248">
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer id="1" name="Terrain" width="414" height="85">
   <data encoding="csv">
@@ -250,7 +250,7 @@
   <object id="239" x="3456" y="672" width="16" height="48"/>
  </objectgroup>
  <objectgroup id="2" name="PlayerPosition">
-  <object id="240" x="352" y="992" width="22" height="64"/>
+  <object id="247" x="1328" y="880" width="22" height="64"/>
  </objectgroup>
  <objectgroup id="7" name="EnemyPosition">
   <object id="75" x="704" y="960" width="16" height="48"/>
