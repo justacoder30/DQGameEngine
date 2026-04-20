@@ -2,6 +2,7 @@
 #include "Components/Component.h"
 #include "Core/Vector.h"
 #include "Core/Broadphase.h"
+#include <unordered_set>
 
 class ShapeComponent;
 
@@ -13,15 +14,17 @@ public:
     float gravity = 0.f;
     float jumpForce = 0.f;
 
-    ShapeComponent* collider = nullptr;
+    ShapeComponent* hitbox = nullptr;
 
-	void OnUpdate(float dt) override;   
 	void OnLoad() override; 
+	void OnUpdate(float dt) override;
+    void MoveX(const float& dx = 0);
+    void MoveY(const float& dy = 0);
 
 private:
-    void MoveX(float dx);
-    void MoveY(float dy);
 
-	std::vector<ShapeComponent*> colliders;
+    bool Push(ShapeComponent* target, const Vector& mtv, std::unordered_set<ShapeComponent*>& visited);
+
+    std::vector<ShapeComponent*> colliders;
 	Board* board;
 };

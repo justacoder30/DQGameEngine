@@ -16,7 +16,6 @@ public:
     void HandleCollision(ShapeComponent* a, ShapeComponent* b);
     void HandleCollisionStart(ShapeComponent* a, ShapeComponent* b);
     void HandleCollisionEnd(ShapeComponent* a, ShapeComponent* b);
-    bool ShouldCollide(ShapeComponent* a, ShapeComponent* b);
 	//void ResolveCollision(ShapeComponent* a, ShapeComponent* b);
     void Remove(ShapeComponent* c);
 	std::vector<ShapeComponent*> GetColliders() { return colliders; }
@@ -31,4 +30,8 @@ private:
     std::set<std::pair<ShapeComponent*, ShapeComponent*>> previousCollisions;
     Board* board;
 };
+
+
+bool ShouldCollide(ShapeComponent* a, ShapeComponent* b);
+
 

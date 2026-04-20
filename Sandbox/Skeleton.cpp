@@ -32,18 +32,21 @@ void Skeleton::OnLoad()
 	sensor_edge->isTrigger = true;
 
 	hitbox->layer = Layer::Enemy;
-	hitbox->mask = ToMask(Layer::Ground);
+	hitbox->mask = ToMask(Layer::Ground) | ToMask(Layer::Attack);
 
 	RigidbodyComponent* rb = new RigidbodyComponent();
 	//jumpTime = 0.5f;
 	//jumpHeight = 100.f;
-	rb->SetJump(0.5f, 100.f);
-	rb->bodyType = BodyType::Dynamic;
+	//rb->SetJump(0.5f, 100.f);
+	//rb->bodyType = BodyType::Dynamic;
+
+	float jumpTime = 0.5f;
+	float jumpHeight = 100.f;
 
 	controller = new CharacterController();
-	controller->collider = hitbox;
-	controller->gravity = rb->gravity;
-	controller->jumpForce = rb->jump;
+	controller->hitbox = hitbox;
+	controller->gravity = (2 * jumpHeight) / (jumpTime * jumpTime);
+	controller->jumpForce = 2 * jumpHeight / jumpTime;
 
 	Add(hitbox);
 	Add(sensor_ground);
@@ -57,9 +60,14 @@ void Skeleton::OnLoad()
 void Skeleton::OnUpdate(float dt)
 {
 	if (!sensor_edge->isColliding) {
-		controller->velocity.x = -controller->velocity.x;
+		speed *= -1;
 		HorizontalFlip();
 	}
+	controller->velocity.x = speed;
+	if (!onGround) controller->velocity.y += controller->gravity * dt;
+
+	//if (controller->velocity.x != 0) controller->MoveX(controller->velocity.x * dt);
+	//if (controller->velocity.y != 0) controller->MoveY(controller->velocity.y * dt);
 
 	Animation2DComponent::OnUpdate(dt);
 }
@@ -72,7 +80,7 @@ void Skeleton::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape
 	}
 	else if (self == sensor_wall && otherShape->layer == Layer::Ground)
 	{
-		controller->velocity.x = -controller->velocity.x;
+		speed *= -1;
 		HorizontalFlip();
 	}
 }

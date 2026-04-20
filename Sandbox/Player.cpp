@@ -37,8 +37,10 @@ Player::Player()
 	//anchor = Vector(0.5, 0.5);
 	
 	hitbox->layer = Layer::Player;
+	//hitbox->layer = Direction::Down;
 	hitbox->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item);
 	hitbox->hasPhysics = true;
+	hitbox->bodyType = BodyType::Dynamic;
 	
 	auto hitbox_bounds = hitbox->GetBounds();
 	auto groundBox = new RectangleComponent(Vector(hitbox_bounds.x + hitbox_bounds.w/4, hitbox_bounds.y + hitbox_bounds.h), Vector(hitbox_bounds.w/2, 2));
@@ -49,23 +51,23 @@ Player::Player()
 	rb = new RigidbodyComponent();
 	jumpTime = 0.5f;
 	jumpHeight = 100.f;
-	rb->SetJump(jumpHeight, jumpTime);
 
 	auto atkBox = new RectangleComponent(Vector(hitbox_bounds.x + hitbox_bounds.w, hitbox_bounds.y), Vector(32, hitbox_bounds.y));
-	atkBox->layer = Layer::Player;
+	atkBox->layer = Layer::Attack;
 	atkBox->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item);
+	atkBox->bodyType = BodyType::NoneType;
 
 		
-	controller->collider = hitbox;
-	controller->gravity = rb->gravity;
-	controller->jumpForce = rb->jump;
+	controller->hitbox = hitbox;
+	controller->gravity = (2 * jumpHeight) / (jumpTime * jumpTime);
+	controller->jumpForce = 2 * jumpHeight / jumpTime;
 
 	Add(controller);
 
 	Add(hitbox);
 	Add(groundBox);
 	Add(rb);
-	//Add(atkBox);
+	Add(atkBox);
 }
 
 void Player::OnUpdate(float dt)
@@ -118,6 +120,9 @@ void Player::OnUpdate(float dt)
 	//std::cout << "Velocity: " << rb->velocity.x << ", " << rb->velocity.y << std::endl;	
 
 	//position += controller->velocity * dt;
+
+	//if (controller->velocity.x != 0) controller->MoveX(controller->velocity.x * dt);
+	//if (controller->velocity.y != 0) controller->MoveY(controller->velocity.y * dt);
 
 	Animation2DComponent::OnUpdate(dt);
 }

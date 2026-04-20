@@ -85,14 +85,6 @@ void Boardphase::HandleCollisionEnd(ShapeComponent* a, ShapeComponent* b)
         b->callback->OnCollisionEnd(b, a, a->GetParent());
 }
 
-bool Boardphase::ShouldCollide(ShapeComponent* a, ShapeComponent* b)
-{
-    bool aCanHitB = (a->mask & ToMask(b->layer)) != 0;
-    bool bCanHitA = (b->mask & ToMask(a->layer)) != 0;
-
-    return aCanHitB && bCanHitA;
-}
-
 //void Boardphase::ResolveCollision(ShapeComponent* a, ShapeComponent* b)
 //{
 //    auto ra = dynamic_cast<RectangleComponent*>(a);
@@ -176,4 +168,12 @@ std::pair<ShapeComponent*, ShapeComponent*> Boardphase::MakePair(ShapeComponent*
     if (a < b)
         return { a, b };
     return { b, a };
+}
+
+bool ShouldCollide(ShapeComponent* a, ShapeComponent* b)
+{
+    bool aCanHitB = (a->mask & ToMask(b->layer)) != 0;
+    bool bCanHitA = (b->mask & ToMask(a->layer)) != 0;
+
+    return aCanHitB && bCanHitA;
 }

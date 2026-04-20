@@ -2,18 +2,11 @@
 #include "Components/Component.h"
 #include "Core/Vector.h"
 
-enum class BodyType
-{
-    Static,
-    Dynamic,
-    Kinematic
-};
-
 class RigidbodyComponent : public Component
 {
 public:
 
-    BodyType bodyType = BodyType::Dynamic;
+    
 
     void SetJump(float jumpHeight, float jumpTime)
     {

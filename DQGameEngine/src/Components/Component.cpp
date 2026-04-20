@@ -6,6 +6,7 @@ void Component::Add(Component* component)
 	component->m_Parent = this; 
     m_Children.push_back(component);
 	component->OnAttach();
+    m_ComponentMap[std::type_index(typeid(*component))] = component;
 }
 
 void Component::Load()
@@ -69,3 +70,5 @@ void Component::ClearChildren()
     }
     m_Children.clear();
 }
+
+

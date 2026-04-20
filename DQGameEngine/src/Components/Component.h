@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
-#include <memory>
+#include <unordered_map>
+#include <typeindex>
 
 class Component
 {
@@ -16,8 +16,16 @@ public:
 
     void RemoveFromParent();
     void ClearChildren();
+
     template<typename T>
-    T* GetComponent();
+    inline T* GetComponent()
+    {
+        auto it = m_ComponentMap.find(std::type_index(typeid(T)));
+        if (it != m_ComponentMap.end())
+            return static_cast<T*>(it->second);
+
+        return nullptr;
+    }
 
 	Component* GetParent() { return m_Parent; }
     const std::vector<Component*>& GetChildren() const { return m_Children; }
@@ -35,15 +43,7 @@ protected:
 private:
     bool m_IsRemoved = false;
     std::vector<Component*> m_Children;
+    std::unordered_map<std::type_index, Component*> m_ComponentMap;
 };
 
-template<typename T>
-inline T* Component::GetComponent()
-{
-    for (auto c : m_Children)
-    {
-        if (auto t = dynamic_cast<T*>(c))
-            return t;
-    }
-    return nullptr;
-}
+

@@ -13,6 +13,7 @@ public:
 			auto r = new RectangleComponent(Vector(rect.x, rect.y), Vector(rect.w, rect.h));
 			r->layer = Layer::Ground;
 			r->mask = ToMask(Layer::Player) | ToMask(Layer::Sensor) | ToMask(Layer::Enemy);
+			r->bodyType = BodyType::Static;
 			Add(r);
 		}
 	}

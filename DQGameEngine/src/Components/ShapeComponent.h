@@ -30,6 +30,14 @@ enum ShapeType
 	Polygon
 };	
 
+enum BodyType
+{
+	Static,
+	Dynamic,
+	Kinematic,
+	NoneType
+};
+
 class ShapeComponent : public PositionComponent
 {
 public:
@@ -51,7 +59,8 @@ public:
 	bool active = true;
 	bool isColliding = false;
 
-	ShapeType shapeType = ShapeType::Rectangle;
 	CollisionCallbacks* callback = nullptr;
+	ShapeType shapeType = ShapeType::Rectangle;
+	BodyType bodyType = BodyType::NoneType;
 };
 

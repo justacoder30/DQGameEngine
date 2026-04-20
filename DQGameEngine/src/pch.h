@@ -21,6 +21,7 @@
 #include<queue>
 #include<map>
 #include<stack>
+#include <typeindex>
 
 // Extenal libraries
 

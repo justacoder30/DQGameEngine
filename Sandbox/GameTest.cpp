@@ -38,9 +38,7 @@ void GameTest::OnLoad()
         }
         else if (obj == "EnemyPosition") {
             for (auto pos : positions) {
-				auto skeleton = new Skeleton(Vector(pos.x, pos.y));
-                Add(skeleton);
-                std::cout << "Skeleton spawn point: " << skeleton->position.x << ", " << skeleton->position.y << std::endl;
+                Add(new Skeleton(Vector(pos.x, pos.y)));
             }
         }
     }
