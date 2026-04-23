@@ -17,7 +17,7 @@ public:
 	RectangleComponent* sensor_edge;
 	RectangleComponent* hitbox;
 	CharacterController* controller;
-	bool onGround = false;
+	bool onGround = true;
 	float speed = 80.f;	
 	bool flip = false;	
 };

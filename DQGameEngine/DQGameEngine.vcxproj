@@ -162,8 +162,9 @@
     <ClInclude Include="src\Core\Vector.h" />
     <ClInclude Include="src\Components\TiltedMapComponent.h" />
     <ClInclude Include="src\Core\TextureManager.h" />
-    <ClInclude Include="src\Core\State.h" />
+    <ClInclude Include="src\Core\IState.h" />
     <ClInclude Include="src\Core\StateMachine.h" />
+    <ClInclude Include="src\Components\StateMachineComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Components\CharacterController.cpp" />
@@ -202,6 +203,7 @@
     <ClCompile Include="src\Components\TiltedMapComponent.cpp" />
     <ClCompile Include="src\Core\TextureManager.cpp" />
     <ClCompile Include="src\Core\StateMachine.cpp" />
+    <ClCompile Include="src\Components\StateMachineComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\vertex.glsl">

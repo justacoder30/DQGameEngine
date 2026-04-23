@@ -3,11 +3,11 @@
 
 INPUT Input = INPUT();
 const bool* Key = SDL_GetKeyboardState(NULL);
-Uint8 PreKey[SDL_SCANCODE_COUNT];
+bool PreKey[SDL_SCANCODE_COUNT];
 
 void INPUT::CopyKey()
 {
-	for (int i = 0; i < SDL_SCANCODE_COUNT; i++) { // init them all to false
+	for (int i = 0; i < SDL_SCANCODE_COUNT; i++) { 
 		PreKey[i] = Key[i];
 	}
 }
@@ -18,8 +18,9 @@ void INPUT::Update()
 
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
-			if (event.type == SDL_EVENT_QUIT)
+			case SDL_EVENT_QUIT:
 				quit = true;
+				break;
 		}
 	}
 }

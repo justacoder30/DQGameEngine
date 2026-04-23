@@ -2,15 +2,7 @@
 #include "Coin.h"
 #include <iostream>
 
-enum State
-{
-	Idle,
-	Walk,
-	Run,
-	Jump,
-	Fall,
-	Attack1,
-};
+
 
 enum Direction
 {
@@ -33,14 +25,30 @@ Player::Player()
 	std::vector<std::string> jumpAnimation = CreateStringAnimate("adventurer-jump-0", 4);
 	std::vector<std::string> fallAnimation = CreateStringAnimate("adventurer-fall-0", 2);
 	std::vector<std::string> atk1Animation = CreateStringAnimate("adventurer-attack1-0", 4);
+	std::vector<std::string> atk2Animation = CreateStringAnimate("adventurer-attack2-0", 6);
+	std::vector<std::string> atk3Animation = CreateStringAnimate("adventurer-attack3-0", 6);
 
 	AddAnimation(Idle, Animation(idleAnimation, 0.15));
 	AddAnimation(Run, Animation(runAnimation, 0.1));
-	AddAnimation(Attack1, Animation(atk1Animation, 0.1));
+	AddAnimation(Attack1, Animation(atk1Animation, 0.1, false));
+	AddAnimation(Attack2, Animation(atk2Animation, 0.1, false));
+	AddAnimation(Attack3, Animation(atk3Animation, 0.1, false));
 	AddAnimation(Jump, Animation(jumpAnimation, jumpTime/ jumpAnimation.size(), false));
 	AddAnimation(Fall, Animation(fallAnimation, 0.12));
 
-	Play(Idle);
+	//Play(Idle);
+
+	state = new StateMachineComponent();
+
+	idleState = new IdleState(this);
+	runState = new RunState(this);
+	jumpState = new JumpState(this);
+	fallState = new FallState(this);
+	attackState = new AttackState(this);
+
+	state->ChangeState(idleState);
+	
+	
 	float scale = 2;
 
 	SetSize(50 * scale, 37 * scale);
@@ -62,10 +70,11 @@ Player::Player()
 	jumpTime = 0.5f;
 	jumpHeight = 100.f;
 
-	auto atkBox = new RectangleComponent(Vector(hitbox_bounds.x + hitbox_bounds.w, hitbox_bounds.y), Vector(19 * scale, 28 * scale));
+	atkBox = new RectangleComponent(Vector(hitbox_bounds.x + hitbox_bounds.w, hitbox_bounds.y), Vector(19 * scale, 28 * scale));
 	atkBox->layer = Layer::Attack;
 	atkBox->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item);
 	atkBox->bodyType = BodyType::NoneType;
+	
 
 	controller = new CharacterController();
 	controller->hitbox = hitbox;
@@ -77,16 +86,25 @@ Player::Player()
 	Add(hitbox);
 	Add(groundBox);
 	Add(atkBox);
+	Add(state);
 }
 
 void Player::OnUpdate(float dt)
 {
+	atkBox->active = false;
 	controller->velocity.x = 0;
 
 	if (!onGround) controller->velocity.y += controller->gravity * dt;
 
+	//if (Key[SDL_SCANCODE_J]) atkBox->active = true;
+
+	if (Key[SDL_SCANCODE_J] && !PreKey[SDL_SCANCODE_J])
+		attackBuffer = 0.2f;
+
+	attackBuffer -= dt;
+
 	if (Key[SDL_SCANCODE_A]) {
-		if (controller->velocity.y == 0) Play(Run);
+		//if (controller->velocity.y == 0) Play(Run);
 		controller->velocity.x = -speed;
 		if (direction != Left) {
 			direction = Left;
@@ -94,7 +112,7 @@ void Player::OnUpdate(float dt)
 		}
 	}
 	else if (Key[SDL_SCANCODE_D]) {
-		if (controller->velocity.y == 0) Play(Run);
+		//if (controller->velocity.y == 0) Play(Run);
 		controller->velocity.x = speed;
 		if (direction != Right) {
 			direction = Right;
@@ -115,19 +133,14 @@ void Player::OnUpdate(float dt)
 		}
 	}
 
-	if (Key[SDL_SCANCODE_SPACE] && onGround) {
+	if (Key[SDL_SCANCODE_SPACE] && !PreKey[SDL_SCANCODE_SPACE] && onGround) {
 		controller->velocity.y = -controller->jumpForce;
-		Play(Jump);
+		//Play(Jump);
 	}
-	if (controller->velocity.y > 0) Play(Fall);
 
-	if (controller->velocity.x == 0 && controller->velocity.y == 0) Play(Idle);
-	//std::cout << "Velocity: " << rb->velocity.x << ", " << rb->velocity.y << std::endl;	
+	//if (controller->velocity.y > 0) Play(Fall);
 
-	//position += controller->velocity * dt;
-
-	//if (controller->velocity.x != 0) controller->MoveX(controller->velocity.x * dt);
-	//if (controller->velocity.y != 0) controller->MoveY(controller->velocity.y * dt);
+	//if (controller->velocity.x == 0 && controller->velocity.y == 0) Play(Idle);
 
 	Animation2DComponent::OnUpdate(dt);
 }

@@ -1,14 +1,14 @@
 #pragma once
-#include "State.h"
+#include "IState.h"
 
 class StateMachine
 {
 public:
-    void ChangeState(State* newState);
+    void ChangeState(IState* newState);
 
     void Update(float dt);
 
 private:
-    State* current = nullptr;
+    IState* current = nullptr;
 };
 

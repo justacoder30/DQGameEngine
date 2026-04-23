@@ -37,14 +37,14 @@ Boardphase* GameApp::GetBoardphase()
 
 void GameApp::GameLoop()
 {
-    while (m_Running)
+    while (!Input.Quit())
     {
-        SDL_Event e;
-        while (SDL_PollEvent(&e))
-        {
-            if (e.type == SDL_EVENT_QUIT)
-                m_Running = false;
-        }
+        //SDL_Event e;
+        //while (SDL_PollEvent(&e))
+        //{
+        //    if (e.type == SDL_EVENT_QUIT)
+        //        m_Running = false;
+        //}
 
         Input.Update();
 

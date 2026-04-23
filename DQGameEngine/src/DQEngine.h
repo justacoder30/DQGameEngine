@@ -7,6 +7,7 @@
 #include "Components/CameraComponent.h"
 #include "Components/RigidbodyComponent.h"
 #include "Components/CharacterController.h"
+#include "Components/StateMachineComponent.h"
 
 #include "Core/Input.h"
 #include "Core/CollisionCallbacks.h"

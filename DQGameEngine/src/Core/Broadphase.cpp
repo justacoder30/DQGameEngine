@@ -24,11 +24,14 @@ void Boardphase::Run()
 
     for (auto* a : colliders)
     {
+        if (!a->active) continue;
         auto neighbors = board->Query(a);
 
         for (auto* b : neighbors)
         {
-            if (a >= b) continue; 
+            if (a >= b) continue;
+
+            if (!b->active) continue;
 
             if (!a->GetParent() || !b->GetParent())
                 continue;
@@ -39,7 +42,6 @@ void Boardphase::Run()
             if (a->CheckCollide(b))
             {
                 auto pair = MakePair(a, b);
-                bool isTrigger = a->isTrigger || b->isTrigger;
 
                 currentCollisions.insert(pair);
 

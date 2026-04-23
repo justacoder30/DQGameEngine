@@ -1,4 +1,6 @@
 #include "Skeleton.h"
+#include "Player.h"
+#include <iostream>
 
 Skeleton::Skeleton(const Vector& pos)
 {
@@ -40,8 +42,8 @@ void Skeleton::OnLoad()
 	//rb->SetJump(0.5f, 100.f);
 	//rb->bodyType = BodyType::Dynamic;
 
-	float jumpTime = 0.5f;
-	float jumpHeight = 100.f;
+	float jumpTime = 0.25f;
+	float jumpHeight = 30.f;
 
 	controller = new CharacterController();
 	controller->hitbox = hitbox;
@@ -60,10 +62,13 @@ void Skeleton::OnLoad()
 void Skeleton::OnUpdate(float dt)
 {
 	if (!sensor_edge->isColliding) {
-		speed *= -1;
-		HorizontalFlip();
+		if (onGround) {
+			speed *= -1;
+			HorizontalFlip();
+		}
 	}
-	controller->velocity.x = speed;
+	if (onGround) controller->velocity.x = speed;
+	else controller->velocity.x = 0;
 	if (!onGround) controller->velocity.y += controller->gravity * dt;
 
 	//if (controller->velocity.x != 0) controller->MoveX(controller->velocity.x * dt);
@@ -80,13 +85,25 @@ void Skeleton::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape
 	}
 	else if (self == sensor_wall && otherShape->layer == Layer::Ground)
 	{
-		speed *= -1;
-		HorizontalFlip();
+		if (onGround) {
+			speed *= -1;
+			HorizontalFlip();
+		}
+	}
+
+	if (dynamic_cast<Player*>(other) && otherShape->layer == Layer::Attack) {
+		std::cout << "Player Hit" << std::endl;
+		controller->velocity.y = -controller->jumpForce;
+		onGround = false;
 	}
 }
 
 void Skeleton::OnCollision(ShapeComponent* self, ShapeComponent* otherShape, Component* other)
 {
+	if (self == sensor_ground && otherShape->layer == Layer::Ground)
+	{
+		onGround = true;
+	}
 }
 
 void Skeleton::OnCollisionEnd(ShapeComponent* self, ShapeComponent* otherShape, Component* other)

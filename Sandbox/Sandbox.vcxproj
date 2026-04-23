@@ -150,10 +150,15 @@ SDL3_test.lib
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="PlayerState\AttackState.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="GameTest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerState\FallState.cpp" />
+    <ClCompile Include="PlayerState\IdleState.cpp" />
+    <ClCompile Include="PlayerState\JumpState.cpp" />
+    <ClCompile Include="PlayerState\RunState.cpp" />
     <ClCompile Include="Skeleton.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -163,11 +168,17 @@ SDL3_test.lib
     <None Include="assets\demo.tmx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="PlayerState\AttackState.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="GameTest.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerState\FallState.h" />
+    <ClInclude Include="PlayerState\IdleState.h" />
+    <ClInclude Include="PlayerState\JumpState.h" />
+    <ClInclude Include="PlayerState\PlayerState.h" />
+    <ClInclude Include="PlayerState\RunState.h" />
     <ClInclude Include="Skeleton.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

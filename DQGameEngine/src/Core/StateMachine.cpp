@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "StateMachine.h"
 
-void StateMachine::ChangeState(State* newState)
+void StateMachine::ChangeState(IState* newState)
 {
     if (current)
         current->Exit();

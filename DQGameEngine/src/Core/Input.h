@@ -7,7 +7,7 @@ class INPUT
 private:
 	SDL_Event event;
 	bool onRelease;
-	bool quit;
+	bool quit = false;
 	void CopyKey();
 public:
 	Rect mouseRect;
@@ -18,4 +18,4 @@ public:
 
 extern INPUT Input;
 extern const bool* Key;
-extern Uint8 PreKey[SDL_SCANCODE_COUNT];
+extern bool PreKey[SDL_SCANCODE_COUNT];

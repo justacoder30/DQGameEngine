@@ -1,10 +1,9 @@
 #pragma once
 
-
-class State
+class IState
 {
 public:
-    virtual ~State() = default;
+    virtual ~IState() = default;
     virtual void Enter() {}
     virtual void Update(float dt) {}
     virtual void Exit() {}
