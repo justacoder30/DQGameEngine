@@ -7,7 +7,6 @@ public:
 	Player();	
 
 	void OnUpdate(float dt) override;
-	//void OnCollision(ShapeComponent* shape, Component* other) override;
 	void OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape, Component* other) override;
 	void OnCollision(ShapeComponent* self, ShapeComponent* otherShape, Component* other) override;
 	void OnCollisionEnd(ShapeComponent* self, ShapeComponent* otherShape, Component* other) override;
@@ -16,8 +15,12 @@ public:
 	float jumpTime = 0.5;
 	float jumpHeight = 100;
 	float speed = 200;
+	RectangleComponent* hitbox;
+	CharacterController* controller;
 
 private:
+
+	std::vector<std::string> CreateStringAnimate(const std::string& f, int cout);
 
 	bool onGround = false;
 	RigidbodyComponent* rb;

@@ -15,6 +15,32 @@ Animation::Animation(const char* f_p, int frame_count, float frame_speed, bool L
 	CurrentFrame = 0;
 	FrameWidth = texture->GetWidth() / FrameCount;
 	FrameHeight = texture->GetHeight();
+
+    isSpriteSheet = true;
+}
+
+Animation::Animation(const std::vector<std::string>& paths, float frame_speed, bool Loop)
+{
+    for (auto p : paths)
+    {
+        textures.push_back(TextureManager::Load(p));
+    }
+
+    FrameCount = paths.size();
+    FrameSpeed = frame_speed;
+    loop = Loop;
+    CurrentFrame = 0;
+
+    isSpriteSheet = false;
+
+    FrameWidth = textures[0]->GetWidth();
+    FrameHeight = textures[0]->GetHeight();
+}
+
+Texture* Animation::GetCurrentTexture()
+{
+    if (isSpriteSheet) return texture;
+    return textures[CurrentFrame];
 }
 
 int Animation::LastFrame()

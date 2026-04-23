@@ -18,8 +18,10 @@ void Animation2DComponent::AddAnimation(int id, const Animation& animation)
 
 void Animation2DComponent::Play(int id)
 {
-    animationClip.Play(animations[id]);
+	if (currentAnimation == id) return;
+    
     currentAnimation = id;
+    animationClip.Play(animations[id]);
     playing = true;
 }
 
@@ -47,7 +49,6 @@ void Animation2DComponent::SetSize(float w, float h)
 
 void Animation2DComponent::OnUpdate(float dt)
 {
-    animationClip.Play(animations[currentAnimation]);
     animationClip.Update(dt);
     src = animationClip.getRect();
 	PositionComponent::OnUpdate(dt);    
@@ -55,20 +56,19 @@ void Animation2DComponent::OnUpdate(float dt)
 
 void Animation2DComponent::OnDraw()
 {
-    if (animationClip.animation.texture == nullptr) return;
+    if (animationClip.animation.GetCurrentTexture() == nullptr) return;
     
     if (layer == RenderLayer::World && !Renderer2D::GetCamera()->CanSee(dst))
         return;
 
     Renderer2D::Submit({
         CommandType::Sprite,
-        animationClip.animation.texture,
+        animationClip.animation.GetCurrentTexture(),
         src,
         dst,
         flip,
         angle,
         anchor,
-        //Vector(0, 0),
         layer
     });
 

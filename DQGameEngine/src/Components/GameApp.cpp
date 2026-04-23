@@ -52,7 +52,7 @@ void GameApp::GameLoop()
         Uint64 current = SDL_GetPerformanceCounter();
         float dt = (float)(current - m_LastTime) / SDL_GetPerformanceFrequency();
         if (dt > 1 / 60.f) dt = 1 / 60.f;
-		std::cout << "FPS: " << 1 / dt << std::endl;    
+		//std::cout << "FPS: " << 1 / dt << std::endl;    
         m_LastTime = current;
 
         GameApp::GetBoardphase()->Run();

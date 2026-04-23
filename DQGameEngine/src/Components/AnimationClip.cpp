@@ -12,7 +12,6 @@ AnimationClip::AnimationClip(Animation Animation)
 
 void AnimationClip::Play(Animation _animation)
 {
-	if (animation.texture != NULL && animation.texture->Compare(_animation.texture)) return;
 	animation = _animation;
 	loop = animation.loop;
 	ResetFrame();
@@ -59,6 +58,7 @@ bool AnimationClip::IsDone()
 
 Rect AnimationClip::getRect()
 {
+	if(!animation.IsSheet()) return Rect(0, 0, animation.FrameWidth, animation.FrameHeight);
 	return Rect(animation.CurrentFrame * animation.FrameWidth, 0, animation.FrameWidth, animation.FrameHeight);
 }
 

@@ -8,7 +8,8 @@ enum State
 	Walk,
 	Run,
 	Jump,
-	Fall
+	Fall,
+	Attack1,
 };
 
 enum Direction
@@ -20,44 +21,53 @@ enum Direction
 };
 
 Direction direction = Right;
-auto hitbox = new RectangleComponent(Vector(21, 64), Vector(22, 64));
-auto controller = new CharacterController();
+
 
 Player::Player()
 {
-	AddAnimation(Idle, Animation("resource/img/Knight/Idle.png", 4, 0.17));
-	AddAnimation(Run, Animation("resource/img/Knight/Run.png", 7, 0.09));
-	AddAnimation(Fall, Animation("resource/img/Knight/Fall.png", 4, 0.135, false));
-	AddAnimation(Jump, Animation("resource/img/Knight/Jump.png", 2, 0.12, false));
-
-
-	Play(Idle);
-	anchor = Vector(0.25, 0.75);
-	//anchor = Vector(0.25, 0.75);
-	//anchor = Vector(0.5, 0.5);
-	
-	hitbox->layer = Layer::Player;
-	//hitbox->layer = Direction::Down;
-	hitbox->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item);
-	hitbox->hasPhysics = true;
-	hitbox->bodyType = BodyType::Dynamic;
-	
-	auto hitbox_bounds = hitbox->GetBounds();
-	auto groundBox = new RectangleComponent(Vector(hitbox_bounds.x + hitbox_bounds.w/4, hitbox_bounds.y + hitbox_bounds.h), Vector(hitbox_bounds.w/2, 2));
-	groundBox->layer = Layer::Sensor;
-	groundBox->mask = ToMask(Layer::Ground);
-	groundBox->isTrigger = true;	
-
-	rb = new RigidbodyComponent();
 	jumpTime = 0.5f;
 	jumpHeight = 100.f;
 
-	auto atkBox = new RectangleComponent(Vector(hitbox_bounds.x + hitbox_bounds.w, hitbox_bounds.y), Vector(32, hitbox_bounds.y));
+	std::vector<std::string> idleAnimation = CreateStringAnimate("adventurer-idle-2-0", 4);
+	std::vector<std::string> runAnimation = CreateStringAnimate("adventurer-run-0", 6);
+	std::vector<std::string> jumpAnimation = CreateStringAnimate("adventurer-jump-0", 4);
+	std::vector<std::string> fallAnimation = CreateStringAnimate("adventurer-fall-0", 2);
+	std::vector<std::string> atk1Animation = CreateStringAnimate("adventurer-attack1-0", 4);
+
+	AddAnimation(Idle, Animation(idleAnimation, 0.15));
+	AddAnimation(Run, Animation(runAnimation, 0.1));
+	AddAnimation(Attack1, Animation(atk1Animation, 0.1));
+	AddAnimation(Jump, Animation(jumpAnimation, jumpTime/ jumpAnimation.size(), false));
+	AddAnimation(Fall, Animation(fallAnimation, 0.12));
+
+	Play(Idle);
+	float scale = 2;
+
+	SetSize(50 * scale, 37 * scale);
+
+	anchor = Vector(0.5, 0.5);
+
+	hitbox = new RectangleComponent(Vector(20 * scale, 9 * scale), Vector(13 * scale, 28 * scale));
+	hitbox->layer = Layer::Player;
+	hitbox->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item);
+	hitbox->hasPhysics = true;
+	hitbox->bodyType = BodyType::Dynamic;
+
+	auto hitbox_bounds = hitbox->GetBounds();
+	auto groundBox = new RectangleComponent(Vector(hitbox_bounds.x + hitbox_bounds.w / 4, hitbox_bounds.y + hitbox_bounds.h), Vector(hitbox_bounds.w / 2, 2));
+	groundBox->layer = Layer::Sensor;
+	groundBox->mask = ToMask(Layer::Ground);
+	groundBox->isTrigger = true;
+
+	jumpTime = 0.5f;
+	jumpHeight = 100.f;
+
+	auto atkBox = new RectangleComponent(Vector(hitbox_bounds.x + hitbox_bounds.w, hitbox_bounds.y), Vector(19 * scale, 28 * scale));
 	atkBox->layer = Layer::Attack;
 	atkBox->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item);
 	atkBox->bodyType = BodyType::NoneType;
 
-		
+	controller = new CharacterController();
 	controller->hitbox = hitbox;
 	controller->gravity = (2 * jumpHeight) / (jumpTime * jumpTime);
 	controller->jumpForce = 2 * jumpHeight / jumpTime;
@@ -66,7 +76,6 @@ Player::Player()
 
 	Add(hitbox);
 	Add(groundBox);
-	Add(rb);
 	Add(atkBox);
 }
 
@@ -75,10 +84,6 @@ void Player::OnUpdate(float dt)
 	controller->velocity.x = 0;
 
 	if (!onGround) controller->velocity.y += controller->gravity * dt;
-
-	if (Key[SDL_SCANCODE_J]) {
-		angle += 90 * dt;
-	}
 
 	if (Key[SDL_SCANCODE_A]) {
 		if (controller->velocity.y == 0) Play(Run);
@@ -127,6 +132,7 @@ void Player::OnUpdate(float dt)
 	Animation2DComponent::OnUpdate(dt);
 }
 
+
 void Player::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape, Component* other)
 {
 	if (self->layer == Layer::Sensor && otherShape->layer == Layer::Ground)
@@ -154,4 +160,16 @@ void Player::OnCollisionEnd(ShapeComponent* self, ShapeComponent* otherShape, Co
 void Player::SetSpawnPoint(const Vector& spawnPoint)
 {
 	position = Vector(spawnPoint.x + hitbox->GetBounds().x / 2, spawnPoint.y + hitbox->GetBounds().w / 2);
+}
+
+std::vector<std::string> Player::CreateStringAnimate(const std::string& f, int cout)
+{
+	std::vector<std::string> animations;
+
+	for (size_t i = 0; i < cout; i++)
+	{
+		animations.push_back("resource/img/Hero/" + f + std::to_string(i) + ".png");
+	}
+
+	return animations;
 }

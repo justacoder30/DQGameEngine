@@ -24,9 +24,9 @@ protected:
 
     int currentAnimation = -1;
     AnimationClip animationClip;
+    std::unordered_map<int, Animation> animations;
 
 private:
 
-    std::unordered_map<int, Animation> animations;
     bool playing = false;
 };
