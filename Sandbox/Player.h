@@ -34,7 +34,8 @@ public:
 	bool onGround = false;
 	float jumpTime = 0.5;
 	float jumpHeight = 100;
-	float speed = 200;
+	//float speed = 20000;
+	float speed = 100000;
 
 	RectangleComponent* atkBox;
 	RectangleComponent* hitbox;

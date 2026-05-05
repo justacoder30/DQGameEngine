@@ -81,6 +81,8 @@ Player::Player()
 	controller->gravity = (2 * jumpHeight) / (jumpTime * jumpTime);
 	controller->jumpForce = 2 * jumpHeight / jumpTime;
 
+	CharacterController::StepSize = 4;
+
 	Add(controller);
 
 	Add(hitbox);
@@ -103,7 +105,7 @@ void Player::OnUpdate(float dt)
 
 	attackBuffer -= dt;
 
-	if (Key[SDL_SCANCODE_A]) {
+	if (Key[SDL_SCANCODE_A] && !PreKey[SDL_SCANCODE_A]) {
 		//if (controller->velocity.y == 0) Play(Run);
 		controller->velocity.x = -speed;
 		if (direction != Left) {
@@ -111,25 +113,12 @@ void Player::OnUpdate(float dt)
 			HorizontalFlip();
 		}
 	}
-	else if (Key[SDL_SCANCODE_D]) {
+	else if (Key[SDL_SCANCODE_D] && !PreKey[SDL_SCANCODE_D]) {
 		//if (controller->velocity.y == 0) Play(Run);
 		controller->velocity.x = speed;
 		if (direction != Right) {
 			direction = Right;
 			HorizontalFlip();
-		}
-	}
-
-	if (Key[SDL_SCANCODE_W]) {
-		if (direction != Up) {
-			direction = Up;
-			VerticalFlip();
-		}
-	}
-	else if (Key[SDL_SCANCODE_S]) {
-		if (direction != Down) {
-			direction = Down;
-			VerticalFlip();
 		}
 	}
 

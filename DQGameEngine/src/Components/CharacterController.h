@@ -13,6 +13,7 @@ public:
 
     float gravity = 0.f;
     float jumpForce = 0.f;
+	inline static float StepSize;
 
     ShapeComponent* hitbox = nullptr;
 

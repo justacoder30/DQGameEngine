@@ -39,20 +39,13 @@ void GameApp::GameLoop()
 {
     while (!Input.Quit())
     {
-        //SDL_Event e;
-        //while (SDL_PollEvent(&e))
-        //{
-        //    if (e.type == SDL_EVENT_QUIT)
-        //        m_Running = false;
-        //}
-
         Input.Update();
 
 
         Uint64 current = SDL_GetPerformanceCounter();
         float dt = (float)(current - m_LastTime) / SDL_GetPerformanceFrequency();
         if (dt > 1 / 60.f) dt = 1 / 60.f;
-		//std::cout << "FPS: " << 1 / dt << std::endl;    
+		std::cout << "FPS: " << 1 / dt << std::endl;    
         m_LastTime = current;
 
         GameApp::GetBoardphase()->Run();

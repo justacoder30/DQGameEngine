@@ -16,8 +16,23 @@ void CharacterController::OnUpdate(float dt)
 {
     if (!hitbox) return;
 
-    if(velocity.x != 0) MoveX(velocity.x * dt);
-	if(velocity.y != 0) MoveY(velocity.y * dt);
+ //   if(velocity.x != 0) MoveX(velocity.x * dt);
+	//if(velocity.y != 0) MoveY(velocity.y * dt);
+
+    Vector move = velocity * dt;
+
+    int steps = (int)(std::max(abs(move.x), abs(move.y)) / StepSize) + 1;
+
+    for (int i = 0; i < steps; i++)
+    {
+        if (velocity.x == 0 && velocity.y == 0)
+            break;
+
+        Vector stepMove = move / (float)steps;
+
+        if (stepMove.x != 0) MoveX(stepMove.x);
+        if (stepMove.y != 0) MoveY(stepMove.y);
+    }
 }
 
 void CharacterController::MoveX(const float& dx)

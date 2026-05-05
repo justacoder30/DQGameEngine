@@ -4,11 +4,8 @@
 class Board
 {
 public:
-	virtual std::vector<ShapeComponent*> Query(ShapeComponent* obj) {
-		std::vector<ShapeComponent*> result;
-		return result;
-	};
-	virtual void Insert(ShapeComponent* obj) {};
-	virtual void Clear() {};
+	virtual std::vector<ShapeComponent*> Query(ShapeComponent* obj) = 0;
+	virtual void Insert(ShapeComponent* obj) = 0;
+	virtual void Clear() = 0;
 };
 
