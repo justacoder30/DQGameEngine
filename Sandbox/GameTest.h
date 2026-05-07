@@ -8,5 +8,6 @@ public:
 	GameTest(int width, int height, const char* title) : GameApp(width, height, title) {}
 
 	void OnLoad() override;
+	void OnUpdate(float dt) override;
 };
 

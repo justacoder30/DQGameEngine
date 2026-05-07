@@ -61,7 +61,7 @@ void Renderer2D::InitWindow(float windowWidth, float windowHeight, const char* t
 
 void Renderer2D::InitRenderer()
 {
-    uint32_t color = 0xffff0000;
+    uint32_t color = 0xffffffff;
 
     s_Data.WhiteTexture = new Texture(1, 1, &color);
 
@@ -114,6 +114,9 @@ void Renderer2D::InitRenderer()
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)offsetof(QuadVertex, TexIndex));
     glEnableVertexAttribArray(2);
 
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void*)offsetof(QuadVertex, Color));
+    glEnableVertexAttribArray(3);
+
     s_Data.VertexBufferBase = new QuadVertex[MaxVertices];
 
     s_Data.ShaderPtr = new Shader(
@@ -136,7 +139,7 @@ void Renderer2D::BeginScene()
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer2D::Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect, const Flip& flip, const float& angle, const Vector& centerP)
+void Renderer2D::Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect, const Color& color, const Flip& flip, const float& angle, const Vector& centerP)
 {
     if (s_Data.IndexCount + 6 > MaxIndices)
     {
@@ -250,9 +253,13 @@ void Renderer2D::Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect
         s_Data.VertexBufferPtr->TexCoord[1] = texCoords[i][1];
         s_Data.VertexBufferPtr->TexIndex = texIndex;
 
+        s_Data.VertexBufferPtr->Color[0] = color.r;
+        s_Data.VertexBufferPtr->Color[1] = color.g;
+        s_Data.VertexBufferPtr->Color[2] = color.b;
+        s_Data.VertexBufferPtr->Color[3] = color.a;
+
         s_Data.VertexBufferPtr++;
     }
-
     s_Data.IndexCount += 6;
 }
 
@@ -300,6 +307,11 @@ void Renderer2D::DrawRect(const Rect& rect)
         s_Data.VertexBufferPtr->TexCoord[1] = texCoords[i][1];
 
         s_Data.VertexBufferPtr->TexIndex = texIndex;
+
+        s_Data.VertexBufferPtr->Color[0] = 0.0f;
+        s_Data.VertexBufferPtr->Color[1] = 0.0f;
+        s_Data.VertexBufferPtr->Color[2] = 1.0f;
+        s_Data.VertexBufferPtr->Color[3] = 1.0f;
 
         s_Data.VertexBufferPtr++;
     }
@@ -367,13 +379,13 @@ void Renderer2D::SubmitRect(const Rect& rect, RenderLayer layer)
 
 void Renderer2D::FlushLayer(const RenderLayer& layer)
 {
-    auto queue = GetQueue(layer);
+    auto& queue = GetQueue(layer);
 
     for (auto& cmd : queue)
     {
         if (cmd.type == CommandType::Sprite)
         {
-            Draw(*cmd.texture, cmd.src, cmd.dst, cmd.flip, cmd.angle, cmd.center);
+            Draw(*cmd.texture, cmd.src, cmd.dst, cmd.color, cmd.flip, cmd.angle, cmd.center);
         }
         else if (cmd.type == CommandType::Rect)
         {
@@ -390,7 +402,7 @@ void Renderer2D::ClearCommandQueue()
     s_UIQueue.clear();
 }
 
-std::vector<RenderCommand> Renderer2D::GetQueue(const RenderLayer& layer)
+std::vector<RenderCommand>& Renderer2D::GetQueue(const RenderLayer& layer)
 {
     switch (layer)
     {

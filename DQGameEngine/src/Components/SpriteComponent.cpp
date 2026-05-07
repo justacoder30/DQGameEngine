@@ -9,8 +9,18 @@ SpriteComponent::SpriteComponent(const std::string& path)
 	size.x = m_Texture->GetWidth() / 3, size.y = m_Texture->GetHeight() / 3;
 }
 
+SpriteComponent::SpriteComponent()
+{
+	m_Texture = new Texture();
+	position.x = 0, position.y = 0;
+	size.x = m_Texture->GetWidth() / 3, size.y = m_Texture->GetHeight() / 3;
+}
+
 void SpriteComponent::OnDraw()
 {
+	if(!m_Visible)
+		return;
+
 	Rect m_Src(0, 0, m_Texture->GetWidth(), m_Texture->GetHeight());
 
 	if (layer == RenderLayer::World && !Renderer2D::GetCamera()->CanSee(dst))
@@ -24,6 +34,7 @@ void SpriteComponent::OnDraw()
 		flip,
 		angle,
 		anchor,
-		layer
+		layer,
+		m_Color
 	});
 }

@@ -42,6 +42,7 @@ protected:
 
 private:
     bool m_IsRemoved = false;
+    bool m_IsLoaded = false;
     std::vector<Component*> m_Children;
     std::unordered_map<std::type_index, Component*> m_ComponentMap;
 };

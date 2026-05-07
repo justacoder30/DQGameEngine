@@ -5,6 +5,7 @@
 #include "Core/Rect.h" 
 #include "Core/Vector.h" 
 #include "Core/Flip.h"
+#include "Core/Color.h"
 #include <glm/glm.hpp>
 #include "RenderCommand.h"
 #include "vector"
@@ -14,6 +15,8 @@ struct QuadVertex
     float Position[3];
     float TexCoord[2];
     int   TexIndex;
+
+    float Color[4];
 };
 
 class Renderer2D
@@ -31,7 +34,7 @@ public:
 	static Vector GetViewportSize() { return Vector(s_Camera->GetViewBounds().w, s_Camera->GetViewBounds().h); }
 	static Vector GetWindowSize() { return Vector(m_WindowWidth, m_WindowHeight); }
     static void SetViewport(float gameWidth, float gameHeight);
-    static void Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect, const Flip& flip = None, const float& angle = 0.0f, const Vector& centerP = Vector::Zero());
+    static void Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect, const Color& color, const Flip& flip = None, const float& angle = 0.0f, const Vector& centerP = Vector::Zero());
     static void DrawRect(const Rect& rect);
     static void DrawRectOutline(const Rect& rect, float thickness = 2.0f);
     static void SetMatrix(const glm::mat4& viewProj);
@@ -42,7 +45,7 @@ public:
     static void SubmitRect(const Rect& rect, RenderLayer layer);
 	static void FlushLayer(const RenderLayer& layer);
     static void ClearCommandQueue();
-    static std::vector<RenderCommand> GetQueue(const RenderLayer& layer);
+    static std::vector<RenderCommand>& GetQueue(const RenderLayer& layer);
     
     static SDL_Window* m_Window;
     

@@ -134,6 +134,7 @@
     <ClInclude Include="src\Components\CharacterController.h" />
     <ClInclude Include="src\Core\BaseBoard.h" />
     <ClInclude Include="src\Core\Board.h" />
+    <ClInclude Include="src\Core\Color.h" />
     <ClInclude Include="src\Core\SpatialGrid.h" />
     <ClInclude Include="src\Components\RigidbodyComponent.h" />
     <ClInclude Include="src\Renderer\RenderCommand.h" />

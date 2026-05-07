@@ -7,16 +7,26 @@ void Component::Add(Component* component)
     m_Children.push_back(component);
 	component->OnAttach();
     m_ComponentMap[std::type_index(typeid(*component))] = component;
+
+    if (m_IsLoaded)
+    {
+        component->Load();
+    }
 }
 
 void Component::Load()
 {
+    if (m_IsLoaded)
+        return;
+
 	OnLoad();
 
     for (auto& child : m_Children)
     {
         child->Load();
     }
+    
+    m_IsLoaded = true;
 }
 
 void Component::Update(float dt)
@@ -34,6 +44,7 @@ void Component::Update(float dt)
             child->ClearChildren();
             child->OnDetach();
             child->m_Parent = nullptr;
+            m_ComponentMap.erase(std::type_index(typeid(*child)));
 
             delete child;                
             it = m_Children.erase(it); 
@@ -64,6 +75,7 @@ void Component::ClearChildren()
 {
     for (auto child : m_Children)
     {
+        m_ComponentMap.erase(std::type_index(typeid(*child)));
         child->OnDetach();     // 👈 thêm
         child->m_Parent = nullptr;
         delete child;

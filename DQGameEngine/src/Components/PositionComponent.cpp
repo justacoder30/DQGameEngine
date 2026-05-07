@@ -3,6 +3,14 @@
 
 void PositionComponent::OnUpdate(float dt)
 {
+	//if (layer == RenderLayer::UI) {
+ //       dst.x = position.x - anchor.x * size.x;
+ //       dst.y = position.y - anchor.y * size.y;
+ //       dst.w = size.x;
+ //       dst.h = size.y;
+ //       return;
+ //   }
+
     if (flip == Flip::Horizontal || flip == Flip::Diagonal) {
         dst.x -= size.x * (1.0f - anchor.x * 2.0f);
     }
@@ -19,6 +27,14 @@ void PositionComponent::OnUpdate(float dt)
 	dst = Rect(dst.x, dst.y, size.x, size.y);
 }
 
+void PositionComponent::OnDraw() 
+{
+    if (!m_Visible)
+        return;
+
+    Component::OnDraw();
+}
+
 const Vector& PositionComponent::GetWorldPosition()
 {
     Vector worldPos = position;
@@ -26,8 +42,8 @@ const Vector& PositionComponent::GetWorldPosition()
     Component* p = GetParent();
     auto t = dynamic_cast<PositionComponent*>(p);
     if (t) {
-        worldPos.x = t->dst.x;
-        worldPos.y = t->dst.y;
+        worldPos.x += t->dst.x;
+        worldPos.y += t->dst.y;
     }
     return worldPos;
 }

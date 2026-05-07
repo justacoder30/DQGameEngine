@@ -2,6 +2,7 @@
 #include "Texture.h"
 #include "Core/Rect.h"
 #include "Core/Flip.h"
+#include "Core/Color.h"
 #include <glm/glm.hpp>  
 
 enum class CommandType
@@ -29,5 +30,7 @@ struct RenderCommand
 	Vector center;
 
     RenderLayer layer;
+
+    Color color = { 1,1,1,1 };
 };
 

@@ -7,7 +7,8 @@ class SpriteComponent : public PositionComponent
 {
 public:
     SpriteComponent(const std::string& path);
-
+    SpriteComponent();
+	void SetColor(const Color& color) { m_Color = color; }
 protected:
 
     void OnDraw() override;
@@ -15,5 +16,5 @@ protected:
 private:
 
     Texture* m_Texture;
-	
+    Color m_Color = { 1.0f, 1.0f, 1.0f, 1.0f };
 };

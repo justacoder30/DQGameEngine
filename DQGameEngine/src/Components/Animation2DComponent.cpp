@@ -56,6 +56,9 @@ void Animation2DComponent::OnUpdate(float dt)
 
 void Animation2DComponent::OnDraw()
 {
+    if (!m_Visible)
+        return;
+
     if (animationClip.animation.GetCurrentTexture() == nullptr) return;
     
     if (layer == RenderLayer::World && !Renderer2D::GetCamera()->CanSee(dst))
@@ -69,7 +72,8 @@ void Animation2DComponent::OnDraw()
         flip,
         angle,
         anchor,
-        layer
+        layer,
+        m_Color
     });
 
     //Renderer2D::DrawRectOutline(dst, 1.f);

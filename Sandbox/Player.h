@@ -5,6 +5,7 @@
 #include "PlayerState/JumpState.h"
 #include "PlayerState/FallState.h"
 #include "PlayerState/Attackstate.h"
+#include "Healthbar.h"
 
 class IdleState;
 
@@ -25,6 +26,7 @@ class Player : public Animation2DComponent, public CollisionCallbacks
 public:
 	Player();	
 
+	void OnLoad() override;
 	void OnUpdate(float dt) override;
 	void OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape, Component* other) override;
 	void OnCollision(ShapeComponent* self, ShapeComponent* otherShape, Component* other) override;
@@ -34,8 +36,9 @@ public:
 	bool onGround = false;
 	float jumpTime = 0.5;
 	float jumpHeight = 100;
+	float speed = 200;
 	//float speed = 20000;
-	float speed = 100000;
+	//float speed = 100000;
 
 	RectangleComponent* atkBox;
 	RectangleComponent* hitbox;
@@ -48,6 +51,9 @@ public:
 	FallState* fallState;
 	AttackState* attackState;
 
+	Healthbar* healthbar;
+
+	float atkDamage = 25;
 	float attackBuffer = 0;
 
 private:

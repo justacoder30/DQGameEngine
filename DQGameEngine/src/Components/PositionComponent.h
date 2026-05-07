@@ -12,6 +12,7 @@ public:
 	PositionComponent(const Vector& position, const Vector& size = 0) : position(position), size(size) {}	
 
 	void OnUpdate(float dt) override;
+	void OnDraw() override;
 
 	const Vector& GetWorldPosition();
 	void SetPosition(float x, float y);
@@ -19,15 +20,18 @@ public:
 	void HorizontalFlip();
 	void VerticalFlip();
 	
+	bool m_Visible = true;
+	float angle = 0.0f;
 	Vector position;
 	Vector size;
 	Vector anchor;
 	Flip flip  = Flip::None;
-	float angle = 0.0f;
 	RenderLayer layer = RenderLayer::World;
 
 	Rect src;
 	Rect dst;
+
 protected:
+
 };
 

@@ -1,4 +1,5 @@
 #include "Skeleton.h"
+#include "HealthBar.h"
 #include "Player.h"
 #include <iostream>
 
@@ -56,7 +57,11 @@ void Skeleton::OnLoad()
 	Add(sensor_edge);
 	Add(rb);
 	Add(controller);
-	controller->velocity.x = speed;
+
+	auto healthbar = new Healthbar(Vector(15, 5), Vector(60, 5));
+	healthbar->SetColor({ 0.0f, 1.0f, 0.0f, 1.0f });
+	Add(healthbar);
+	controller->velocity.x = 0;
 }
 
 void Skeleton::OnUpdate(float dt)
@@ -67,12 +72,9 @@ void Skeleton::OnUpdate(float dt)
 			HorizontalFlip();
 		}
 	}
-	if (onGround) controller->velocity.x = speed;
-	else controller->velocity.x = 0;
+	//if (onGround) controller->velocity.x = speed;
+	//else controller->velocity.x = 0;
 	if (!onGround) controller->velocity.y += controller->gravity * dt;
-
-	//if (controller->velocity.x != 0) controller->MoveX(controller->velocity.x * dt);
-	//if (controller->velocity.y != 0) controller->MoveY(controller->velocity.y * dt);
 
 	Animation2DComponent::OnUpdate(dt);
 }
@@ -90,11 +92,25 @@ void Skeleton::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape
 			HorizontalFlip();
 		}
 	}
+	auto player = dynamic_cast<Player*>(other);
 
-	if (dynamic_cast<Player*>(other) && otherShape->layer == Layer::Attack) {
-		std::cout << "Player Hit" << std::endl;
+	if (player && otherShape->layer == Layer::Attack) {
+
+		float knockbackX = 100.0f;
+		float knockbackY = 120.0f;
+
+		float dir = (position.x < player->position.x) ? -1.0f : 1.0f;
 		controller->velocity.y = -controller->jumpForce;
+		controller->velocity.x = dir * knockbackX;
+		hp -= player->atkDamage;
+		
+		if (hp <= 0) {
+			RemoveFromParent();
+		}
+
+		GetComponent<Healthbar>()->SetHealth(hp, MaxHP);
 		onGround = false;
+
 	}
 }
 

@@ -4,6 +4,7 @@
 #include "PositionComponent.h"
 #include "AnimationClip.h"
 #include "Core/Rect.h"
+#include "Core/Color.h"
 
 class Animation2DComponent : public PositionComponent
 {
@@ -16,6 +17,7 @@ public:
     bool IsPlaying(int id);
     Rect GetSrcRect();
     void SetSize(float w, float h);
+    void SetColor(const Color& color) { m_Color = color; }
 
 protected:
 
@@ -27,6 +29,6 @@ protected:
     std::unordered_map<int, Animation> animations;
 
 private:
-
+    Color m_Color = { 1.0f, 1.0f, 1.0f, 1.0f };
     bool playing = false;
 };

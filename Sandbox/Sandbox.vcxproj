@@ -150,6 +150,7 @@ SDL3_test.lib
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Healthbar.cpp" />
     <ClCompile Include="PlayerState\AttackState.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="GameTest.cpp" />
@@ -168,6 +169,7 @@ SDL3_test.lib
     <None Include="assets\demo.tmx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Healthbar.h" />
     <ClInclude Include="PlayerState\AttackState.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Coin.h" />

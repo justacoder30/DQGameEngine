@@ -6,6 +6,8 @@
 #include "Components/RectangleComponent.h"
 #include "Components/RigidbodyComponent.h"
 
+static float StepSize = 4;
+
 void CharacterController::OnLoad()
 {
     colliders = GameApp::GetBoardphase()->GetColliders();

@@ -17,8 +17,15 @@ public:
 	RectangleComponent* sensor_edge;
 	RectangleComponent* hitbox;
 	CharacterController* controller;
+
+
 	bool onGround = true;
 	float speed = 80.f;	
 	bool flip = false;	
+
+	const int MaxHP = 100;	
+	int hp = MaxHP;
+	float atkDamage = 15;
+
 };
 

@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Coin.h"
+
 #include <iostream>
 
 
@@ -33,7 +34,7 @@ Player::Player()
 	AddAnimation(Attack1, Animation(atk1Animation, 0.1, false));
 	AddAnimation(Attack2, Animation(atk2Animation, 0.1, false));
 	AddAnimation(Attack3, Animation(atk3Animation, 0.1, false));
-	AddAnimation(Jump, Animation(jumpAnimation, jumpTime/ jumpAnimation.size(), false));
+	AddAnimation(Jump, Animation(jumpAnimation, jumpTime / jumpAnimation.size(), false));
 	AddAnimation(Fall, Animation(fallAnimation, 0.12));
 
 	//Play(Idle);
@@ -47,8 +48,8 @@ Player::Player()
 	attackState = new AttackState(this);
 
 	state->ChangeState(idleState);
-	
-	
+
+
 	float scale = 2;
 
 	SetSize(50 * scale, 37 * scale);
@@ -62,7 +63,7 @@ Player::Player()
 	hitbox->bodyType = BodyType::Dynamic;
 
 	auto hitbox_bounds = hitbox->GetBounds();
-	auto groundBox = new RectangleComponent(Vector(hitbox_bounds.x + hitbox_bounds.w / 4, hitbox_bounds.y + hitbox_bounds.h), Vector(hitbox_bounds.w / 2, 2));
+	auto groundBox = new RectangleComponent(Vector(hitbox_bounds.x, hitbox_bounds.y + hitbox_bounds.h), Vector(hitbox_bounds.w, 2));
 	groundBox->layer = Layer::Sensor;
 	groundBox->mask = ToMask(Layer::Ground);
 	groundBox->isTrigger = true;
@@ -74,7 +75,7 @@ Player::Player()
 	atkBox->layer = Layer::Attack;
 	atkBox->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item);
 	atkBox->bodyType = BodyType::NoneType;
-	
+
 
 	controller = new CharacterController();
 	controller->hitbox = hitbox;
@@ -89,10 +90,23 @@ Player::Player()
 	Add(groundBox);
 	Add(atkBox);
 	Add(state);
+
+	//healthbar = new Healthbar(Vector(15, 5), Vector(60, 5));
+	//Add(healthbar);
+
+	
+}
+
+void Player::OnLoad()
+{
+	
+
+	//SetColor({ 1, 0, 0, 1 });
 }
 
 void Player::OnUpdate(float dt)
 {
+	healthbar->Show();
 	atkBox->active = false;
 	controller->velocity.x = 0;
 
@@ -105,7 +119,7 @@ void Player::OnUpdate(float dt)
 
 	attackBuffer -= dt;
 
-	if (Key[SDL_SCANCODE_A] && !PreKey[SDL_SCANCODE_A]) {
+	if (Key[SDL_SCANCODE_A]) {
 		//if (controller->velocity.y == 0) Play(Run);
 		controller->velocity.x = -speed;
 		if (direction != Left) {
@@ -113,7 +127,7 @@ void Player::OnUpdate(float dt)
 			HorizontalFlip();
 		}
 	}
-	else if (Key[SDL_SCANCODE_D] && !PreKey[SDL_SCANCODE_D]) {
+	else if (Key[SDL_SCANCODE_D]) {
 		//if (controller->velocity.y == 0) Play(Run);
 		controller->velocity.x = speed;
 		if (direction != Right) {
@@ -127,9 +141,8 @@ void Player::OnUpdate(float dt)
 		//Play(Jump);
 	}
 
-	//if (controller->velocity.y > 0) Play(Fall);
-
-	//if (controller->velocity.x == 0 && controller->velocity.y == 0) Play(Idle);
+	auto hp_pos = healthbar->GetWorldPosition();
+	std::cout << "hp_pos = " << hp_pos.x << ", " << hp_pos.y << std::endl;
 
 	Animation2DComponent::OnUpdate(dt);
 }
