@@ -150,7 +150,14 @@ SDL3_test.lib
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="PlayerState\DeathState.cpp" />
+    <ClCompile Include="EnemyState\EnemyDeathState.cpp" />
+    <ClCompile Include="EnemyState\EnemyHurtState.cpp" />
+    <ClCompile Include="EnemyState\EnemyAttackState.cpp" />
+    <ClCompile Include="EnemyState\EnemyChaseState.cpp" />
+    <ClCompile Include="EnemyState\EnemyIdleState.cpp" />
     <ClCompile Include="Healthbar.cpp" />
+    <ClCompile Include="PlayerState\HurtState.cpp" />
     <ClCompile Include="PlayerState\AttackState.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="GameTest.cpp" />
@@ -163,13 +170,16 @@ SDL3_test.lib
     <ClCompile Include="Skeleton.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="assets\images\tilemap\tileset.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="assets\demo.tmx" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="PlayerState\DeathState.h" />
+    <ClInclude Include="EnemyState\EnemyDeathState.h" />
+    <ClInclude Include="EnemyState\EnemyHurtState.h" />
+    <ClInclude Include="EnemyState\EnemyAttackState.h" />
+    <ClInclude Include="EnemyState\EnemyChaseState.h" />
+    <ClInclude Include="EnemyState\EnemyIdleState.h" />
+    <ClInclude Include="EnemyState\EnemyState.h" />
+    <ClInclude Include="EnumState.h" />
     <ClInclude Include="Healthbar.h" />
+    <ClInclude Include="PlayerState\HurtState.h" />
     <ClInclude Include="PlayerState\AttackState.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Coin.h" />

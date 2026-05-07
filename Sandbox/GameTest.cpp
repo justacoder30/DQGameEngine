@@ -16,6 +16,7 @@ void GameTest::OnLoad()
     //auto map = new Map("resource/Map/map_test.tmx");
     auto map = new Map("resource/Map/map2.tmx");
     Add(map);
+    Add(player);
     auto cam = new CameraComponent(784, 441);
     
 	bg->size = Vector(784, 441);
@@ -61,11 +62,13 @@ void GameTest::OnLoad()
 
     Add(cam);
     Add(bg);
-    Add(player);//std::cout << bg->coin->position.x << ", " << bg->coin->position.y << std::endl;
+    //std::cout << bg->coin->position.x << ", " << bg->coin->position.y << std::endl;
     
     SpatialGrid* grid = new SpatialGrid();
     grid->Init(256.f);
     s_Boardphase.SetBoard(grid);
+
+	//m_Running = true;
 
     
 

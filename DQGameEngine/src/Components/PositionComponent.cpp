@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PositionComponent.h"
+#include "Renderer/Renderer2D.h"
 
 void PositionComponent::OnUpdate(float dt)
 {
@@ -33,6 +34,14 @@ void PositionComponent::OnDraw()
         return;
 
     Component::OnDraw();
+}
+
+void PositionComponent::OnDetach()
+{
+    auto camera = Renderer2D::GetCamera();
+    if(camera && camera->GetTarget() == this) {
+        camera->Follow(nullptr);
+	}
 }
 
 const Vector& PositionComponent::GetWorldPosition()

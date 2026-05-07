@@ -21,6 +21,8 @@ public:
     glm::mat4 GetViewProjection() const { return m_ViewProjection; }
     glm::mat4 GetBackdropMatrix() const { return m_BackdropMatrix; }
 
+	PositionComponent* GetTarget() const { return m_Target; }
+
 
 protected:
     void OnUpdate(float dt) override;

@@ -19,13 +19,13 @@ public:
     void SetSize(float w, float h);
     void SetColor(const Color& color) { m_Color = color; }
 
+    AnimationClip animationClip;
 protected:
 
     void OnUpdate(float dt) override;
     void OnDraw() override;
 
     int currentAnimation = -1;
-    AnimationClip animationClip;
     std::unordered_map<int, Animation> animations;
 
 private:

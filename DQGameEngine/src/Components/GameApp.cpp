@@ -4,6 +4,7 @@
 #include "Core/Input.h" 
 
 Boardphase GameApp::s_Boardphase;
+bool m_Running = true;
 
 GameApp::GameApp(int width, int height, const char* title)
 {

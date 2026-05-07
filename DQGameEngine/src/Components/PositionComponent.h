@@ -13,6 +13,7 @@ public:
 
 	void OnUpdate(float dt) override;
 	void OnDraw() override;
+	void OnDetach() override;
 
 	const Vector& GetWorldPosition();
 	void SetPosition(float x, float y);

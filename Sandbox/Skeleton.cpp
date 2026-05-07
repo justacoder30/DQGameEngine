@@ -3,6 +3,14 @@
 #include "Player.h"
 #include <iostream>
 
+enum Direction
+{
+	Left,
+	Right,
+	Up,
+	Down
+};	
+
 Skeleton::Skeleton(const Vector& pos)
 {
 	hitbox = new RectangleComponent(Vector(40, 16), Vector(16, 48));
@@ -13,6 +21,11 @@ Skeleton::Skeleton(const Vector& pos)
 void Skeleton::OnLoad()
 {
 	AddAnimation(0, Animation("resource/img/Enemy/Skeleton/Walk.png", 10, 0.08));
+	AddAnimation(Idle, Animation("resource/img/Enemy/Skeleton/Idle.png", 8, 0.08));
+	AddAnimation(Run, Animation("resource/img/Enemy/Skeleton/Walk.png", 10, 0.08));
+	AddAnimation(Attack1, Animation("resource/img/Enemy/Skeleton/Attack.png", 10, 0.1));
+	AddAnimation(Death, Animation("resource/img/Enemy/Skeleton/Death.png", 13, 0.08, false));
+	AddAnimation(Hurt, Animation("resource/img/Enemy/Skeleton/Hurt.png", 5, 0.07, false));
 	Play(0);
 
 	anchor = Vector(0.5, 0.625);
@@ -33,6 +46,18 @@ void Skeleton::OnLoad()
 	sensor_edge->layer = Layer::Sensor;
 	sensor_edge->mask = ToMask(Layer::Ground);
 	sensor_edge->isTrigger = true;
+
+	sensor_player = new RectangleComponent(Vector(-50, -50), Vector(200, 200));
+	sensor_player->layer = Layer::Enemy;
+	sensor_player->mask = ToMask(Layer::Player);
+	sensor_player->bodyType = BodyType::NoneType;
+	sensor_player->isTrigger = true;
+
+	atkBox = new RectangleComponent(Vector(hitbox_bounds.x + hitbox_bounds.w, hitbox_bounds.y), Vector(40, hitbox_bounds.h - 10));
+	atkBox->layer = Layer::Attack;
+	atkBox->mask = ToMask(Layer::Player);
+	atkBox->bodyType = BodyType::NoneType;
+	atkBox->active = false;
 
 	hitbox->layer = Layer::Enemy;
 	hitbox->mask = ToMask(Layer::Ground) | ToMask(Layer::Attack);
@@ -55,25 +80,38 @@ void Skeleton::OnLoad()
 	Add(sensor_ground);
 	Add(sensor_wall);
 	Add(sensor_edge);
+	Add(sensor_player);
+	Add(atkBox);
 	Add(rb);
 	Add(controller);
 
 	auto healthbar = new Healthbar(Vector(15, 5), Vector(60, 5));
 	healthbar->SetColor({ 0.0f, 1.0f, 0.0f, 1.0f });
 	Add(healthbar);
-	controller->velocity.x = 0;
+	controller->velocity.x = speed;
+
+	state = new StateMachineComponent();
+
+	idleState = new EnemyIdleState(this);
+	chaseState = new EnemyChaseState(this);
+	attackState = new EnemyAttackState(this);
+	hurtState = new EnemyHurtState(this);
+	deathState = new EnemyDeathState(this);
+
+	Add(state);
+
+	state->ChangeState(idleState);
 }
 
 void Skeleton::OnUpdate(float dt)
 {
 	if (!sensor_edge->isColliding) {
 		if (onGround) {
-			speed *= -1;
+			controller->velocity.x *= -1;
 			HorizontalFlip();
 		}
 	}
-	//if (onGround) controller->velocity.x = speed;
-	//else controller->velocity.x = 0;
+
 	if (!onGround) controller->velocity.y += controller->gravity * dt;
 
 	Animation2DComponent::OnUpdate(dt);
@@ -88,7 +126,7 @@ void Skeleton::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape
 	else if (self == sensor_wall && otherShape->layer == Layer::Ground)
 	{
 		if (onGround) {
-			speed *= -1;
+			controller->velocity.x *= -1;
 			HorizontalFlip();
 		}
 	}
@@ -96,19 +134,20 @@ void Skeleton::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape
 
 	if (player && otherShape->layer == Layer::Attack) {
 
+		if (hp <= 0) return;
 		float knockbackX = 100.0f;
-		float knockbackY = 120.0f;
+		float knockbackY = 100.0f;
 
 		float dir = (position.x < player->position.x) ? -1.0f : 1.0f;
 		controller->velocity.y = -controller->jumpForce;
 		controller->velocity.x = dir * knockbackX;
 		hp -= player->atkDamage;
-		
-		if (hp <= 0) {
-			RemoveFromParent();
-		}
 
 		GetComponent<Healthbar>()->SetHealth(hp, MaxHP);
+
+		if (hp <= 0) state->ChangeState(deathState);
+		else state->ChangeState(hurtState);
+
 		onGround = false;
 
 	}
@@ -120,6 +159,13 @@ void Skeleton::OnCollision(ShapeComponent* self, ShapeComponent* otherShape, Com
 	{
 		onGround = true;
 	}
+	else if (self == sensor_player && otherShape->layer == Layer::Player)
+	{
+		auto player = dynamic_cast<Player*>(other);
+		if (player) {
+			target = dynamic_cast<Player*>(other);
+		}
+	}
 }
 
 void Skeleton::OnCollisionEnd(ShapeComponent* self, ShapeComponent* otherShape, Component* other)
@@ -127,5 +173,9 @@ void Skeleton::OnCollisionEnd(ShapeComponent* self, ShapeComponent* otherShape, 
 	if (self == sensor_ground && otherShape->layer == Layer::Ground)
 	{
 		onGround = false;
+	}
+	else if (self == sensor_player && otherShape->layer == Layer::Player)
+	{
+		target = nullptr;
 	}
 }

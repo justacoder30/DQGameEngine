@@ -24,8 +24,7 @@ protected:
     static Boardphase s_Boardphase;
 
 private:
-
-    bool m_Running = true;
-
     Uint64 m_LastTime = 0;
 };
+
+extern bool m_Running;

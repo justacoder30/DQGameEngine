@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Skeleton.h"
 #include "Coin.h"
 
 #include <iostream>
@@ -28,6 +29,8 @@ Player::Player()
 	std::vector<std::string> atk1Animation = CreateStringAnimate("adventurer-attack1-0", 4);
 	std::vector<std::string> atk2Animation = CreateStringAnimate("adventurer-attack2-0", 6);
 	std::vector<std::string> atk3Animation = CreateStringAnimate("adventurer-attack3-0", 6);
+	std::vector<std::string> hurtAnimation = CreateStringAnimate("adventurer-hurt-0", 3);
+	std::vector<std::string> deathAnimation = CreateStringAnimate("adventurer-die-0", 7);
 
 	AddAnimation(Idle, Animation(idleAnimation, 0.15));
 	AddAnimation(Run, Animation(runAnimation, 0.1));
@@ -35,7 +38,9 @@ Player::Player()
 	AddAnimation(Attack2, Animation(atk2Animation, 0.1, false));
 	AddAnimation(Attack3, Animation(atk3Animation, 0.1, false));
 	AddAnimation(Jump, Animation(jumpAnimation, jumpTime / jumpAnimation.size(), false));
-	AddAnimation(Fall, Animation(fallAnimation, 0.12));
+	AddAnimation(Fall, Animation(fallAnimation, 0.12, false));
+	AddAnimation(Hurt, Animation(hurtAnimation, 0.12, false));
+	AddAnimation(Death, Animation(deathAnimation, 0.12, false));
 
 	//Play(Idle);
 
@@ -46,6 +51,8 @@ Player::Player()
 	jumpState = new JumpState(this);
 	fallState = new FallState(this);
 	attackState = new AttackState(this);
+	hurtState = new HurtState(this);
+	deathState = new DeathState(this);
 
 	state->ChangeState(idleState);
 
@@ -58,7 +65,7 @@ Player::Player()
 
 	hitbox = new RectangleComponent(Vector(20 * scale, 9 * scale), Vector(13 * scale, 28 * scale));
 	hitbox->layer = Layer::Player;
-	hitbox->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item);
+	hitbox->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item) | ToMask(Layer::Attack);
 	hitbox->hasPhysics = true;
 	hitbox->bodyType = BodyType::Dynamic;
 
@@ -73,7 +80,7 @@ Player::Player()
 
 	atkBox = new RectangleComponent(Vector(hitbox_bounds.x + hitbox_bounds.w, hitbox_bounds.y), Vector(19 * scale, 28 * scale));
 	atkBox->layer = Layer::Attack;
-	atkBox->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item);
+	atkBox->mask = ToMask(Layer::Enemy);
 	atkBox->bodyType = BodyType::NoneType;
 
 
@@ -136,13 +143,27 @@ void Player::OnUpdate(float dt)
 		}
 	}
 
+	if (Key[SDL_SCANCODE_LEFT] && !PreKey[SDL_SCANCODE_LEFT]) {
+		//if (controller->velocity.y == 0) Play(Run);
+		controller->velocity.x = -100000;
+		if (direction != Left) {
+			direction = Left;
+			HorizontalFlip();
+		}
+	}
+	else if (Key[SDL_SCANCODE_RIGHT] && !PreKey[SDL_SCANCODE_RIGHT]) {
+		//if (controller->velocity.y == 0) Play(Run);
+		controller->velocity.x = 100000;
+		if (direction != Right) {
+			direction = Right;
+			HorizontalFlip();
+		}
+	}
+
 	if (Key[SDL_SCANCODE_SPACE] && !PreKey[SDL_SCANCODE_SPACE] && onGround) {
 		controller->velocity.y = -controller->jumpForce;
 		//Play(Jump);
 	}
-
-	auto hp_pos = healthbar->GetWorldPosition();
-	std::cout << "hp_pos = " << hp_pos.x << ", " << hp_pos.y << std::endl;
 
 	Animation2DComponent::OnUpdate(dt);
 }
@@ -153,6 +174,17 @@ void Player::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape, 
 	if (self->layer == Layer::Sensor && otherShape->layer == Layer::Ground)
 	{
 		onGround = true;
+	}
+	else if (self == hitbox && otherShape->layer == Layer::Attack)
+	{
+		auto skeleton = dynamic_cast<Skeleton*>(other);
+		if (skeleton) {
+			//std::cout << "Player hit by skeleton attack! HP: " << hp << std::endl;
+			hp -= skeleton->atkDamage;
+			healthbar->SetHealth(hp , MaxHP);
+			if (hp <= 0) state->ChangeState(deathState);
+			else state->ChangeState(hurtState);
+		}
 	}
 }
 
@@ -175,6 +207,15 @@ void Player::OnCollisionEnd(ShapeComponent* self, ShapeComponent* otherShape, Co
 void Player::SetSpawnPoint(const Vector& spawnPoint)
 {
 	position = Vector(spawnPoint.x + hitbox->GetBounds().x / 2, spawnPoint.y + hitbox->GetBounds().w / 2);
+	this->spawnPoint = position;
+}
+
+void Player::ReSpawn()
+{
+	position = spawnPoint;
+	hp = MaxHP;
+	state->ChangeState(idleState);
+	healthbar->SetHealth(hp, MaxHP);
 }
 
 std::vector<std::string> Player::CreateStringAnimate(const std::string& f, int cout)
