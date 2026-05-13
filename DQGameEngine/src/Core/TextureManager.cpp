@@ -8,6 +8,12 @@ Texture* TextureManager::Load(const std::string& path)
     if (s_Textures.find(path) != s_Textures.end())
         return s_Textures[path];  
 
+    if (path == "default") {
+        Texture* tex = new Texture();
+        s_Textures[path] = tex;
+        return tex;
+    }
+
     Texture* tex = new Texture(path);
     s_Textures[path] = tex;
     return tex;

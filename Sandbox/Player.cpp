@@ -26,7 +26,7 @@ Player::Player()
 	std::vector<std::string> runAnimation = CreateStringAnimate("adventurer-run-0", 6);
 	std::vector<std::string> jumpAnimation = CreateStringAnimate("adventurer-jump-0", 4);
 	std::vector<std::string> fallAnimation = CreateStringAnimate("adventurer-fall-0", 2);
-	std::vector<std::string> atk1Animation = CreateStringAnimate("adventurer-attack1-0", 4);
+	std::vector<std::string> atk1Animation = CreateStringAnimate("adventurer-attack1-0", 5);
 	std::vector<std::string> atk2Animation = CreateStringAnimate("adventurer-attack2-0", 6);
 	std::vector<std::string> atk3Animation = CreateStringAnimate("adventurer-attack3-0", 6);
 	std::vector<std::string> hurtAnimation = CreateStringAnimate("adventurer-hurt-0", 3);
@@ -38,7 +38,7 @@ Player::Player()
 	AddAnimation(Attack2, Animation(atk2Animation, 0.1, false));
 	AddAnimation(Attack3, Animation(atk3Animation, 0.1, false));
 	AddAnimation(Jump, Animation(jumpAnimation, jumpTime / jumpAnimation.size(), false));
-	AddAnimation(Fall, Animation(fallAnimation, 0.12, false));
+	AddAnimation(Fall, Animation(fallAnimation, 0.12));
 	AddAnimation(Hurt, Animation(hurtAnimation, 0.12, false));
 	AddAnimation(Death, Animation(deathAnimation, 0.12, false));
 
@@ -113,6 +113,7 @@ void Player::OnLoad()
 
 void Player::OnUpdate(float dt)
 {
+	std::cout << "Current Frame: " << animationClip.animation.CurrentFrame << std::endl;
 	healthbar->Show();
 	atkBox->active = false;
 	controller->velocity.x = 0;

@@ -44,7 +44,7 @@ void AttackState::Update(float dt)
         return;
     }
 
-    if (timer >= atk.duration)
+    if (player->animationClip.IsDone())
     {
         player->state->ChangeState(player->idleState);
     }

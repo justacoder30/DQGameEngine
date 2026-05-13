@@ -6,7 +6,7 @@
 class TextureManager
 {
 public:
-    static Texture* Load(const std::string& path);
+    static Texture* Load(const std::string& path = "default");
     static void Clear();
 
 private:

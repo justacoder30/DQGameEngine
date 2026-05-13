@@ -11,7 +11,7 @@ SpriteComponent::SpriteComponent(const std::string& path)
 
 SpriteComponent::SpriteComponent()
 {
-	m_Texture = new Texture();
+	m_Texture = TextureManager::Load();
 	position.x = 0, position.y = 0;
 	size.x = m_Texture->GetWidth() / 3, size.y = m_Texture->GetHeight() / 3;
 }
