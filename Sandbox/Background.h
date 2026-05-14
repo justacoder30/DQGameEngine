@@ -1,30 +1,19 @@
 #pragma once
-#include "Components\SpriteComponent.h"
-#include "Components\RectangleComponent.h"
-#include "Core\CollisionCallbacks.h"
+#include "DQEngine.h"
 #include "Coin.h"
 #include <iostream>
 
-class Background : public SpriteComponent
+class Background : public PositionComponent
 {
 
 public:
-	Background() : SpriteComponent("resource/img/Background/background.png") {
-		size = Renderer2D::GetViewportSize();
+	Background() {}
 
-		position = Vector(0, 0);
-		//anchor = Vector(1.0f, 1.0f);
-		anchor = Vector(0.5f, 0.5f);
-		//anchor = Vector(1, 0.5f);
-		layer = RenderLayer::Background;
+	void OnLoad() override;
+	void OnUpdate(float dt) override;
 
-		//coin = new Coin(10, 10);
-		//coin->layer = RenderLayer::UI;
-		////coin->position = Vector(-784/2, -441/2);
-		//Add(coin);
-		
-	}
-
-	Coin* coin;
+private:
+	float cloud_speed = 15.f;
+	std::vector<SpriteComponent*> clouds;
 };
 

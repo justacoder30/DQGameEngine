@@ -150,6 +150,7 @@ SDL3_test.lib
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Background.cpp" />
     <ClCompile Include="PlayerState\AirAttackEndState.cpp" />
     <ClCompile Include="PlayerState\AirAttackState.cpp" />
     <ClCompile Include="PlayerState\DeathState.cpp" />
@@ -169,6 +170,7 @@ SDL3_test.lib
     <ClCompile Include="PlayerState\IdleState.cpp" />
     <ClCompile Include="PlayerState\JumpState.cpp" />
     <ClCompile Include="PlayerState\RunState.cpp" />
+    <ClCompile Include="PlayerState\RollState.cpp" />
     <ClCompile Include="Skeleton.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -195,6 +197,7 @@ SDL3_test.lib
     <ClInclude Include="PlayerState\JumpState.h" />
     <ClInclude Include="PlayerState\PlayerState.h" />
     <ClInclude Include="PlayerState\RunState.h" />
+    <ClInclude Include="PlayerState\RollState.h" />
     <ClInclude Include="Skeleton.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

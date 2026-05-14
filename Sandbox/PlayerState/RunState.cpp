@@ -25,4 +25,10 @@ void RunState::Update(float dt)
         player->state->ChangeState(player->idleState);
         return;
     }
+
+	if (Key[SDL_SCANCODE_LSHIFT] && !PreKey[SDL_SCANCODE_LSHIFT])
+	{
+		player->state->ChangeState(player->rollState);
+		return;
+	}
 }

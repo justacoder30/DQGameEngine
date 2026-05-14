@@ -8,5 +8,9 @@ public:
 
     void Enter() override;
     void Update(float dt) override;
+
+private:
+
+	bool hasHit = false;
 };
 

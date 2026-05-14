@@ -3,13 +3,7 @@
 #include "Player.h"
 #include <iostream>
 
-enum Direction
-{
-	Left,
-	Right,
-	Up,
-	Down
-};	
+
 
 Skeleton::Skeleton(const Vector& pos)
 {
@@ -136,6 +130,9 @@ void Skeleton::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape
 		if (hp <= 0) return;
 		float knockbackX = 100.0f;
 		float knockbackY = 100.0f;
+
+		Time::Freeze(0.04f);
+		Renderer2D::GetCamera()->Shake(1.2f, 0.1f);
 
 		float dir = (position.x < player->position.x) ? -1.0f : 1.0f;
 		controller->velocity.y = -controller->jumpForce;

@@ -10,6 +10,7 @@
 #include "PlayerState/AirAttackEndstate.h"
 #include "PlayerState/HurtState.h"
 #include "PlayerState/DeathState.h"
+#include "PlayerState/RollState.h"
 #include "Healthbar.h"
 
 class IdleState;
@@ -56,6 +57,9 @@ public:
 	RectangleComponent* atkBox;
 	RectangleComponent* atkEndBox;
 	RectangleComponent* hitbox;
+	RectangleComponent* rollGroundBox;
+	RectangleComponent* groundBox;
+	RectangleComponent* rollHitbox;
 	CharacterController* controller;
 	StateMachineComponent* state;
 
@@ -68,6 +72,7 @@ public:
 	AirAttackEndState* airAttackEndkState;
 	HurtState* hurtState;
 	DeathState* deathState;
+	RollState* rollState;
 	//DeathState* DeathState;
 
 	Healthbar* healthbar;
@@ -76,6 +81,8 @@ public:
 	int hp = MaxHP;
 	float atkDamage = 25;
 	float attackBuffer = 0;
+	bool invincible = false;
+	Direction direction = Right;
 
 private:
 	Vector spawnPoint;

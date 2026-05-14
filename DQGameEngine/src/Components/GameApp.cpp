@@ -2,6 +2,7 @@
 #include "GameApp.h"
 #include "Renderer/Renderer2D.h"
 #include "Core/Input.h" 
+#include "Core/Time.h" 
 
 Boardphase GameApp::s_Boardphase;
 bool m_Running = true;
@@ -44,13 +45,17 @@ void GameApp::GameLoop()
 
 
         Uint64 current = SDL_GetPerformanceCounter();
+        
         float dt = (float)(current - m_LastTime) / SDL_GetPerformanceFrequency();
         if (dt > 1 / 60.f) dt = 1 / 60.f;
 		//std::cout << "FPS: " << 1 / dt << std::endl;    
         m_LastTime = current;
 
+        Time::Update(dt);
+        float scaledDt = dt * Time::timeScale;
+
         GameApp::GetBoardphase()->Run();
-        Update(dt);
+        Update(scaledDt);
 
 		Draw();
     }

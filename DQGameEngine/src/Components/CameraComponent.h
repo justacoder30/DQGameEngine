@@ -13,10 +13,12 @@ public:
     void SetZoom(float zoom) { m_Zoom = zoom; }
     void Follow(PositionComponent* target, float smooth = 5.0f);
     void SetBounds(const Rect& bounds);
-    const Rect& GetViewBounds() const;
+    Rect GetViewBounds() const;
 	bool CanSee(PositionComponent* component);
 	bool CanSee(const Rect& bounds);
     void SetBackdropMatrix(const glm::mat4& backdropMatrix) { m_BackdropMatrix = backdropMatrix; }
+    void Shake(float strength, float duration);
+    void SetOrigin(const Vector& origin) { m_Origin = origin; }
 
     glm::mat4 GetViewProjection() const { return m_ViewProjection; }
     glm::mat4 GetBackdropMatrix() const { return m_BackdropMatrix; }
@@ -43,5 +45,19 @@ private:
 
     glm::mat4 m_ViewProjection;
     glm::mat4 m_BackdropMatrix;
+
+    float shakeStrength = 0;
+    float shakeDuration = 0;
+    float shakeTimer = 0;
+
+    Vector m_Origin = Vector(0.5f, 0.5f);
+    Vector shakeOffset;
+
+    Vector m_LookAheadOffset;
+
+    float m_LookAheadDistance = 80.f;
+    float m_LookAheadSmooth = 4.f;
+
+    bool m_EnableLookAhead = true;
 };
 

@@ -7,7 +7,7 @@
 
 void GameTest::OnLoad()
 {
-    DebugMode = true;
+    //DebugMode = true;
 	std::string objects_pos[] = { "PlayerPosition", "CoinPosition", "EnemyPosition", "EnemyPosition 1", "HeartPosition", "FlagPosition", "BossPosition", };
 
     auto anim = new Animation2DComponent();
@@ -19,6 +19,7 @@ void GameTest::OnLoad()
     Add(map);
     Add(player);
     auto cam = new CameraComponent(784, 441);
+    cam->SetOrigin(Vector(0.5f, 0.7f));
     
 	bg->size = Vector(784, 441);
 

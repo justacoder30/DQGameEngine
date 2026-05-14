@@ -5,6 +5,7 @@ void AirAttackEndState::Enter()
 {
 	player->atkEndBox->active = true;
 	player->Play(AirAttackEnd);
+	player->invincible = true;
 }
 
 void AirAttackEndState::Update(float dt)
@@ -15,4 +16,9 @@ void AirAttackEndState::Update(float dt)
 	{
 		player->state->ChangeState(player->idleState);
 	}
+}
+
+void AirAttackEndState::Exit()
+{
+	player->invincible = false;
 }

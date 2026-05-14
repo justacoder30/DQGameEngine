@@ -8,6 +8,7 @@ public:
 
     void Enter() override;
     void Update(float dt) override;
+	void Exit() override;
 
 private:
 };

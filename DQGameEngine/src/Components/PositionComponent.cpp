@@ -4,13 +4,13 @@
 
 void PositionComponent::OnUpdate(float dt)
 {
-	//if (layer == RenderLayer::UI) {
- //       dst.x = position.x - anchor.x * size.x;
- //       dst.y = position.y - anchor.y * size.y;
- //       dst.w = size.x;
- //       dst.h = size.y;
- //       return;
- //   }
+	if (layer == RenderLayer::UI) {
+        dst.x = position.x - anchor.x * size.x;
+        dst.y = position.y - anchor.y * size.y;
+        dst.w = size.x;
+        dst.h = size.y;
+        return;
+    }
 
     if (flip == Flip::Horizontal || flip == Flip::Diagonal) {
         dst.x -= size.x * (1.0f - anchor.x * 2.0f);

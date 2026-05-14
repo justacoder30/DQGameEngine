@@ -4,19 +4,6 @@
 
 #include <iostream>
 
-
-
-enum Direction
-{
-	Left,
-	Right,
-	Up,
-	Down
-};
-
-Direction direction = Right;
-
-
 Player::Player()
 {
 	jumpTime = 0.5f;
@@ -26,6 +13,7 @@ Player::Player()
 	std::vector<std::string> runAnimation = CreateStringAnimate("adventurer-run-0", 6);
 	std::vector<std::string> jumpAnimation = CreateStringAnimate("adventurer-jump-0", 4);
 	std::vector<std::string> fallAnimation = CreateStringAnimate("adventurer-fall-0", 2);
+	std::vector<std::string> rollAnimation = CreateStringAnimate("adventurer-smrslt-0", 4);
 	std::vector<std::string> atk1Animation = CreateStringAnimate("adventurer-attack1-0", 5);
 	std::vector<std::string> atk2Animation = CreateStringAnimate("adventurer-attack2-0", 6);
 	std::vector<std::string> atk3Animation = CreateStringAnimate("adventurer-attack3-0", 6);
@@ -50,6 +38,7 @@ Player::Player()
 
 	AddAnimation(Jump, Animation(jumpAnimation, jumpTime / jumpAnimation.size(), false));
 	AddAnimation(Fall, Animation(fallAnimation, 0.12));
+	AddAnimation(Roll, Animation(rollAnimation, 0.12, false));
 	AddAnimation(Hurt, Animation(hurtAnimation, 0.12, false));
 	AddAnimation(Death, Animation(deathAnimation, 0.12, false));
 
@@ -66,6 +55,7 @@ Player::Player()
 	hurtState = new HurtState(this);
 	deathState = new DeathState(this);
 	airAttackEndkState = new AirAttackEndState(this);
+	rollState = new RollState(this);
 
 	state->ChangeState(idleState);
 
@@ -82,8 +72,20 @@ Player::Player()
 	hitbox->hasPhysics = true;
 	hitbox->bodyType = BodyType::Dynamic;
 
+	rollHitbox = new RectangleComponent(Vector(20 * scale, 9 * scale), Vector(13 * scale, 19 * scale));
+	rollHitbox->layer = Layer::Player;
+	rollHitbox->mask = ToMask(Layer::Ground) | ToMask(Layer::Enemy) | ToMask(Layer::Item) | ToMask(Layer::Attack);
+	rollHitbox->hasPhysics = true;
+	rollHitbox->bodyType = BodyType::Dynamic;
+
+	auto rollHitbox_bounds = rollHitbox->GetBounds();	
+	rollGroundBox = new RectangleComponent(Vector(rollHitbox_bounds.x, rollHitbox_bounds.y + rollHitbox_bounds.h), Vector(rollHitbox_bounds.w, 2));
+	rollGroundBox->layer = Layer::Sensor;
+	rollGroundBox->mask = ToMask(Layer::Ground);
+	rollGroundBox->isTrigger = true;
+
 	auto hitbox_bounds = hitbox->GetBounds();
-	auto groundBox = new RectangleComponent(Vector(hitbox_bounds.x, hitbox_bounds.y + hitbox_bounds.h), Vector(hitbox_bounds.w, 2));
+	groundBox = new RectangleComponent(Vector(hitbox_bounds.x, hitbox_bounds.y + hitbox_bounds.h), Vector(hitbox_bounds.w, 2));
 	groundBox->layer = Layer::Sensor;
 	groundBox->mask = ToMask(Layer::Ground);
 	groundBox->isTrigger = true;
@@ -112,10 +114,13 @@ Player::Player()
 	Add(state);
 
 	Add(hitbox);
+	Add(rollHitbox);
+	Add(rollGroundBox);
 	Add(groundBox);
 	Add(atkBox);
 	Add(atkEndBox);
 	Add(controller);
+
 	//DebugMode = true;
 
 	//healthbar = new Healthbar(Vector(15, 5), Vector(60, 5));
@@ -197,11 +202,12 @@ void Player::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape, 
 	{
 		onGround = true;
 	}
-	else if (self == hitbox && otherShape->layer == Layer::Attack)
+	else if (self == hitbox && otherShape->layer == Layer::Attack && !invincible)
 	{
 		auto skeleton = dynamic_cast<Skeleton*>(other);
 		if (skeleton) {
-			//std::cout << "Player hit by skeleton attack! HP: " << hp << std::endl;
+			Time::Freeze(0.03f);
+			Renderer2D::GetCamera()->Shake(1.f, 0.1f);
 			hp -= skeleton->atkDamage;
 			healthbar->SetHealth(hp , MaxHP);
 			if (hp <= 0) state->ChangeState(deathState);

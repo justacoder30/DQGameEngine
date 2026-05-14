@@ -61,6 +61,7 @@ void AirAttackState::NextAttack()
         return;
     }
 
+	if (comboStep == 2) player->invincible = true;
     nextAttackQueued = false;
     timer = 0;
     hasHit = false;

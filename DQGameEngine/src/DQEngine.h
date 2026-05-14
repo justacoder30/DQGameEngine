@@ -11,6 +11,7 @@
 #include "Core/Input.h"
 #include "Core/CollisionCallbacks.h"
 #include "Core/SpatialGrid.h"
+#include "Core/Time.h"
 
 int Test();
 int Test1();

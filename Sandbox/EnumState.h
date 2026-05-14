@@ -7,6 +7,7 @@ enum State
 	Jump,
 	Fall,
 	Death,
+	Roll,
 	Hurt,
 	Attack1,
 	Attack2,
@@ -15,4 +16,12 @@ enum State
 	AirAttack2,
 	AirAttack3,
 	AirAttackEnd,
+};
+
+enum Direction
+{
+	Left,
+	Right,
+	Up,
+	Down
 };

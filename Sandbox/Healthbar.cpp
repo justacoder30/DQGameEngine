@@ -33,6 +33,8 @@ void Healthbar::OnLoad()
 {
 	Add(bar);
 	bar->layer = layer;
+
+	PositionComponent::OnLoad();
 }
 
 void Healthbar::OnUpdate(float dt)

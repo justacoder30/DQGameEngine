@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CameraComponent.h"
 #include "Renderer/Renderer2D.h"
+#include "Core/Utils.h"
 
 CameraComponent::CameraComponent(float width, float height)
     : m_Width(width), m_Height(height)
@@ -33,14 +34,14 @@ void CameraComponent::SetBounds(const Rect& bounds)
     m_UseBounds = true;
 }
 
-const Rect& CameraComponent::GetViewBounds() const
+Rect CameraComponent::GetViewBounds() const
 {
     float w = m_Width / m_Zoom;
     float h = m_Height / m_Zoom;
 
     return Rect(
-        m_Position.x - w * 0.5f,
-        m_Position.y - h * 0.5f,
+        m_Position.x - w * m_Origin.x,
+        m_Position.y - h * m_Origin.y,
         w,
         h
     );
@@ -62,13 +63,46 @@ bool CameraComponent::CanSee(const Rect& bounds)
 	return view.CheckCollide(bounds);
 }
 
+void CameraComponent::Shake(float strength, float duration)
+{
+    shakeStrength = strength;
+    shakeDuration = duration;
+    shakeTimer = duration;
+}
+
 void CameraComponent::OnUpdate(float dt)
 {
+    if (shakeTimer > 0)
+    {
+        shakeTimer -= dt;
+
+        shakeOffset.x = RandomFloat(-shakeStrength, shakeStrength);
+
+        shakeOffset.y = RandomFloat(-shakeStrength, shakeStrength);
+    }
+    else shakeOffset = Vector::Zero();
+
     if (m_Target)
     {
         auto targetPos = m_Target->GetWorldPosition();
-        m_Position.x += (targetPos.x - m_Position.x) * m_SmoothSpeed * dt;
-        m_Position.y += (targetPos.y - m_Position.y) * m_SmoothSpeed * dt;
+
+        Vector desiredLookAhead = Vector::Zero();
+
+        //if (m_EnableLookAhead)
+        //{
+        //    float vx = 0;
+
+        //    auto posComp = dynamic_cast<PositionComponent*>(m_Target);
+
+        //    if (posComp) vx = posComp->velocity.x;
+
+        //    if (vx > 1.0f)  desiredLookAhead.x = m_LookAheadDistance;
+        //    else if (vx < -1.0f) desiredLookAhead.x = -m_LookAheadDistance;
+        //    }
+        //}
+
+        m_Position.x += (m_Target->position.x - m_Position.x) * m_SmoothSpeed * dt;
+        m_Position.y += (m_Target->position.y - m_Position.y) * m_SmoothSpeed * dt;
     }
 
     if (m_UseBounds)
@@ -96,18 +130,37 @@ void CameraComponent::OnAttach()
 
 void CameraComponent::RecalculateMatrix()
 {
-    m_HalfSize.x = (m_Width * 0.5f) / m_Zoom;
-    m_HalfSize.y = (m_Height * 0.5f) / m_Zoom;
+    //m_HalfSize.x = (m_Width * 0.5f) / m_Zoom;
+    //m_HalfSize.y = (m_Height * 0.5f) / m_Zoom;
+
+    //glm::mat4 proj = glm::ortho(
+    //    -m_HalfSize.x, m_HalfSize.x,
+    //    m_HalfSize.y, -m_HalfSize.y,
+    //    -1.0f, 1.0f
+    //);
 
     glm::mat4 proj = glm::ortho(
-        -m_HalfSize.x, m_HalfSize.x,
-        m_HalfSize.y, -m_HalfSize.y,
+        0.0f, m_Width / m_Zoom,
+        m_Height / m_Zoom, 0.0f,
         -1.0f, 1.0f
     );
 
+    //glm::mat4 view = glm::translate(
+    //    glm::mat4(1.0f),
+    //    glm::vec3(-m_Position.x + shakeOffset.x, -m_Position.y + shakeOffset.y, 0.0f)
+    //);
+
+    float originX = m_Origin.x * m_Width;
+
+    float originY = m_Origin.y * m_Height;
+
     glm::mat4 view = glm::translate(
         glm::mat4(1.0f),
-        glm::vec3(-m_Position.x, -m_Position.y, 0.0f)
+        glm::vec3(
+            -m_Position.x + originX + shakeOffset.x,
+            -m_Position.y + originY + shakeOffset.y,
+            0.0f
+        )
     );
 
     m_BackdropMatrix = proj;
