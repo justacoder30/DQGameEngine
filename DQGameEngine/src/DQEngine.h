@@ -5,7 +5,6 @@
 #include "Components/Animation2DComponent.h"
 #include "Components/RectangleComponent.h"
 #include "Components/CameraComponent.h"
-#include "Components/RigidbodyComponent.h"
 #include "Components/CharacterController.h"
 #include "Components/StateMachineComponent.h"
 

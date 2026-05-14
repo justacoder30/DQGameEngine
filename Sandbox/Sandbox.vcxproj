@@ -150,6 +150,8 @@ SDL3_test.lib
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="PlayerState\AirAttackEndState.cpp" />
+    <ClCompile Include="PlayerState\AirAttackState.cpp" />
     <ClCompile Include="PlayerState\DeathState.cpp" />
     <ClCompile Include="EnemyState\EnemyDeathState.cpp" />
     <ClCompile Include="EnemyState\EnemyHurtState.cpp" />
@@ -170,6 +172,8 @@ SDL3_test.lib
     <ClCompile Include="Skeleton.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="PlayerState\AirAttackEndState.h" />
+    <ClInclude Include="PlayerState\AirAttackState.h" />
     <ClInclude Include="PlayerState\DeathState.h" />
     <ClInclude Include="EnemyState\EnemyDeathState.h" />
     <ClInclude Include="EnemyState\EnemyHurtState.h" />

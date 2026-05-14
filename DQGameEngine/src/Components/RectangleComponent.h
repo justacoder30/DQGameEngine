@@ -5,7 +5,7 @@
 class RectangleComponent : public ShapeComponent
 {
 public:
-	RectangleComponent() {}
+	RectangleComponent();
 	RectangleComponent(const Vector& position, const Vector& size);
 
 	Rect GetWorldBounds();
@@ -13,8 +13,10 @@ public:
 	Rect GetBounds() const { return bounds; }
 
 	void OnDraw() override;
+	void OnAttach() override;
 
 private:
 	Rect bounds;
+	bool fixParentSize = false;
 };
 

@@ -30,6 +30,8 @@ public:
 	Component* GetParent() { return m_Parent; }
     const std::vector<Component*>& GetChildren() const { return m_Children; }
 
+	bool DebugMode = false;
+
 protected:
 
     virtual void OnDetach() {}

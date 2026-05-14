@@ -35,14 +35,14 @@ public:
 	static Vector GetWindowSize() { return Vector(m_WindowWidth, m_WindowHeight); }
     static void SetViewport(float gameWidth, float gameHeight);
     static void Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect, const Color& color, const Flip& flip = None, const float& angle = 0.0f, const Vector& centerP = Vector::Zero());
-    static void DrawRect(const Rect& rect);
-    static void DrawRectOutline(const Rect& rect, float thickness = 2.0f);
+    static void DrawRect(const Rect& rect, const Color& color);
+    static void DrawRectOutline(const Rect& rect, const Color& color, float thickness = 2.0f);
     static void SetMatrix(const glm::mat4& viewProj);
 	static void SetCamera(CameraComponent* camera) { s_Camera = camera; }
 	static CameraComponent* GetCamera() { return s_Camera; }
 
     static void Submit(const RenderCommand& cmd);
-    static void SubmitRect(const Rect& rect, RenderLayer layer);
+    static void SubmitRect(const Rect& rect, const Color& color, RenderLayer layer);
 	static void FlushLayer(const RenderLayer& layer);
     static void ClearCommandQueue();
     static std::vector<RenderCommand>& GetQueue(const RenderLayer& layer);

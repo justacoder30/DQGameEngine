@@ -23,7 +23,7 @@ void Skeleton::OnLoad()
 	AddAnimation(0, Animation("resource/img/Enemy/Skeleton/Walk.png", 10, 0.08));
 	AddAnimation(Idle, Animation("resource/img/Enemy/Skeleton/Idle.png", 8, 0.08));
 	AddAnimation(Run, Animation("resource/img/Enemy/Skeleton/Walk.png", 10, 0.08));
-	AddAnimation(Attack1, Animation("resource/img/Enemy/Skeleton/Attack.png", 10, 0.1));
+	AddAnimation(Attack1, Animation("resource/img/Enemy/Skeleton/Attack.png", 10, 0.1, false));
 	AddAnimation(Death, Animation("resource/img/Enemy/Skeleton/Death.png", 13, 0.08, false));
 	AddAnimation(Hurt, Animation("resource/img/Enemy/Skeleton/Hurt.png", 5, 0.07, false));
 	Play(0);
@@ -61,8 +61,6 @@ void Skeleton::OnLoad()
 
 	hitbox->layer = Layer::Enemy;
 	hitbox->mask = ToMask(Layer::Ground) | ToMask(Layer::Attack);
-
-	RigidbodyComponent* rb = new RigidbodyComponent();
 	//jumpTime = 0.5f;
 	//jumpHeight = 100.f;
 	//rb->SetJump(0.5f, 100.f);
@@ -82,7 +80,6 @@ void Skeleton::OnLoad()
 	Add(sensor_edge);
 	Add(sensor_player);
 	Add(atkBox);
-	Add(rb);
 	Add(controller);
 
 	auto healthbar = new Healthbar(Vector(15, 5), Vector(60, 5));
@@ -101,6 +98,8 @@ void Skeleton::OnLoad()
 	Add(state);
 
 	state->ChangeState(idleState);
+
+	Animation2DComponent::OnLoad();
 }
 
 void Skeleton::OnUpdate(float dt)

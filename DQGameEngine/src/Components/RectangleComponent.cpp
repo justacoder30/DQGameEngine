@@ -2,6 +2,11 @@
 #include "RectangleComponent.h"
 #include "Renderer/Renderer2D.h"
 
+RectangleComponent::RectangleComponent()
+{
+    fixParentSize = true;
+}
+
 RectangleComponent::RectangleComponent(const Vector& position, const Vector& size) : ShapeComponent(position, size)
 {
     bounds = Rect(position, size);
@@ -58,5 +63,20 @@ bool RectangleComponent::CheckCollide(ShapeComponent* other)
 
 void RectangleComponent::OnDraw()
 {
-	Renderer2D::DrawRectOutline(GetWorldBounds(), 1.f);
+    if (!DebugMode) return;
+
+	Renderer2D::DrawRectOutline(GetWorldBounds(), debugColor, 1.f);
+}
+
+void RectangleComponent::OnAttach()
+{
+    if (fixParentSize) {
+        auto parent = dynamic_cast<PositionComponent*>(GetParent());
+        if (parent) {
+            bounds = Rect(Vector::Zero(), parent->size);
+            shapeType = ShapeType::Rectangle;
+        }
+    }
+	
+    ShapeComponent::OnAttach();
 }

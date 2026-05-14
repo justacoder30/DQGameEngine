@@ -49,6 +49,8 @@ void AnimationClip::stop()
 
 bool AnimationClip::IsDone()
 {
+	if (animation.loop) return false;
+
 	if (animation.CurrentFrame == animation.LastFrame() && timer + deltaTime > animation.FrameSpeed) {
 		return true;
 	}

@@ -1,16 +1,15 @@
-#include "AttackState.h"
+#include "AirAttackState.h"
 #include "../Player.h"
 
-void AttackState::Enter()
+void AirAttackState::Enter()
 {
     timer = 0;
     hasHit = false;
-    nextAttackQueued = false;
-
-    player->Play(Attack1 + comboStep);
+	nextAttackQueued = false;
+    player->Play(AirAttack1 + comboStep);
 }
 
-void AttackState::Update(float dt)
+void AirAttackState::Update(float dt)
 {
     timer += dt;
 
@@ -27,9 +26,12 @@ void AttackState::Update(float dt)
     if (timer >= atk.comboWindow && player->attackBuffer > 0)
     {
         nextAttackQueued = true;
-        //player->attackBuffer = 0;
-        //NextAttack();
     }
+
+	if (comboStep == 2 && player->onGround) {
+		player->state->ChangeState(player->airAttackEndkState);
+		return;
+	}
 
     if (player->animationClip.IsDone())
     {
@@ -39,29 +41,29 @@ void AttackState::Update(float dt)
             return;
         }
 
-        player->state->ChangeState(player->idleState);
+        player->state->ChangeState(player->fallState);
     }
 }
 
-void AttackState::Exit()
+void AirAttackState::Exit()
 {
     comboStep = 0;
-	nextAttackQueued = false;
+    nextAttackQueued = false;
 }
 
-void AttackState::NextAttack()
+void AirAttackState::NextAttack()
 {
-    nextAttackQueued = false;
     comboStep++;
 
     if (comboStep > 2)
     {
-        player->state->ChangeState(player->idleState);
+        player->state->ChangeState(player->fallState);
         return;
     }
 
+    nextAttackQueued = false;
     timer = 0;
     hasHit = false;
 
-    player->Play(Attack1 + comboStep);
+    player->Play(AirAttack1 + comboStep);
 }

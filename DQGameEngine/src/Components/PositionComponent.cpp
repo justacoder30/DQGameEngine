@@ -36,6 +36,11 @@ void PositionComponent::OnDraw()
     Component::OnDraw();
 }
 
+void PositionComponent::OnLoad()
+{
+	if (m_Parent) DebugMode = m_Parent->DebugMode;
+}
+
 void PositionComponent::OnDetach()
 {
     auto camera = Renderer2D::GetCamera();

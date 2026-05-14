@@ -16,6 +16,8 @@ public:
 			r->bodyType = BodyType::Static;
 			Add(r);
 		}
+
+		TiltedMapComponent::OnLoad();
 	}
 };
 

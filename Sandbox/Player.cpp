@@ -32,11 +32,22 @@ Player::Player()
 	std::vector<std::string> hurtAnimation = CreateStringAnimate("adventurer-hurt-0", 3);
 	std::vector<std::string> deathAnimation = CreateStringAnimate("adventurer-die-0", 7);
 
+	std::vector<std::string> airAtk1Animation = CreateStringAnimate("adventurer-air-attack1-0", 4);
+	std::vector<std::string> airAtk2Animation = CreateStringAnimate("adventurer-air-attack2-0", 3);
+	std::vector<std::string> airAtk3Animation = CreateStringAnimate("adventurer-air-attack3-loop-0", 2);
+	std::vector<std::string> airAtkEndAnimation = CreateStringAnimate("adventurer-air-attack-3-end-0", 3);
+
 	AddAnimation(Idle, Animation(idleAnimation, 0.15));
 	AddAnimation(Run, Animation(runAnimation, 0.1));
-	AddAnimation(Attack1, Animation(atk1Animation, 0.1, false));
-	AddAnimation(Attack2, Animation(atk2Animation, 0.1, false));
-	AddAnimation(Attack3, Animation(atk3Animation, 0.1, false));
+	AddAnimation(Attack1, Animation(atk1Animation, attacks[0].duration / atk1Animation.size(), false));
+	AddAnimation(Attack2, Animation(atk2Animation, attacks[1].duration / atk2Animation.size(), false));
+	AddAnimation(Attack3, Animation(atk3Animation, attacks[2].duration / atk3Animation.size(), false));
+
+	AddAnimation(AirAttack1, Animation(airAtk1Animation, airAttacks[0].duration / airAtk1Animation.size(), false));
+	AddAnimation(AirAttack2, Animation(airAtk2Animation, airAttacks[1].duration / airAtk2Animation.size(), false));
+	AddAnimation(AirAttack3, Animation(airAtk3Animation, airAttacks[2].duration / airAtk3Animation.size()));
+	AddAnimation(AirAttackEnd, Animation(airAtkEndAnimation, airAttacks[3].duration / airAtkEndAnimation.size(), false));
+
 	AddAnimation(Jump, Animation(jumpAnimation, jumpTime / jumpAnimation.size(), false));
 	AddAnimation(Fall, Animation(fallAnimation, 0.12));
 	AddAnimation(Hurt, Animation(hurtAnimation, 0.12, false));
@@ -51,8 +62,10 @@ Player::Player()
 	jumpState = new JumpState(this);
 	fallState = new FallState(this);
 	attackState = new AttackState(this);
+	airAttackState = new AirAttackState(this);
 	hurtState = new HurtState(this);
 	deathState = new DeathState(this);
+	airAttackEndkState = new AirAttackEndState(this);
 
 	state->ChangeState(idleState);
 
@@ -83,6 +96,11 @@ Player::Player()
 	atkBox->mask = ToMask(Layer::Enemy);
 	atkBox->bodyType = BodyType::NoneType;
 
+	atkEndBox = new RectangleComponent();
+	atkEndBox->layer = Layer::Attack;
+	atkEndBox->mask = ToMask(Layer::Enemy);
+	atkEndBox->bodyType = BodyType::NoneType;
+
 
 	controller = new CharacterController();
 	controller->hitbox = hitbox;
@@ -91,12 +109,14 @@ Player::Player()
 
 	CharacterController::StepSize = 4;
 
-	Add(controller);
+	Add(state);
 
 	Add(hitbox);
 	Add(groundBox);
 	Add(atkBox);
-	Add(state);
+	Add(atkEndBox);
+	Add(controller);
+	//DebugMode = true;
 
 	//healthbar = new Healthbar(Vector(15, 5), Vector(60, 5));
 	//Add(healthbar);
@@ -109,13 +129,14 @@ void Player::OnLoad()
 	
 
 	//SetColor({ 1, 0, 0, 1 });
+	Animation2DComponent::OnLoad();
 }
 
 void Player::OnUpdate(float dt)
 {
-	std::cout << "Current Frame: " << animationClip.animation.CurrentFrame << std::endl;
 	healthbar->Show();
 	atkBox->active = false;
+	atkEndBox->active = false;
 	controller->velocity.x = 0;
 
 	if (!onGround) controller->velocity.y += controller->gravity * dt;
@@ -123,7 +144,7 @@ void Player::OnUpdate(float dt)
 	//if (Key[SDL_SCANCODE_J]) atkBox->active = true;
 
 	if (Key[SDL_SCANCODE_J] && !PreKey[SDL_SCANCODE_J])
-		attackBuffer = 0.2f;
+		attackBuffer = 0.1f;
 
 	attackBuffer -= dt;
 

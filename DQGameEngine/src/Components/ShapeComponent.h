@@ -1,6 +1,7 @@
 #pragma once
 #include "PositionComponent.h"
 #include "Core/CollisionCallbacks.h"
+#include "Core/Color.h"
 
 enum class Layer : uint32_t
 {
@@ -59,8 +60,9 @@ public:
 	bool active = true;
 	bool isColliding = false;
 
+	Color debugColor = { 0.0f, 0.0f, 1.0f, 1.0f };
 	CollisionCallbacks* callback = nullptr;
 	ShapeType shapeType = ShapeType::Rectangle;
-	BodyType bodyType = BodyType::NoneType;
+	BodyType bodyType = BodyType::NoneType; 
 };
 

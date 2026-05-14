@@ -7,6 +7,7 @@
 
 void GameTest::OnLoad()
 {
+    DebugMode = true;
 	std::string objects_pos[] = { "PlayerPosition", "CoinPosition", "EnemyPosition", "EnemyPosition 1", "HeartPosition", "FlagPosition", "BossPosition", };
 
     auto anim = new Animation2DComponent();
@@ -72,7 +73,7 @@ void GameTest::OnLoad()
 
     
 
-	
+    GameApp::OnLoad();
 }
 
 void GameTest::OnUpdate(float dt)

@@ -1,7 +1,6 @@
 #pragma once
 #include "PlayerState.h"
-
-class AttackState : public PlayerState
+class AirAttackState : public PlayerState
 {
 public:
     using PlayerState::PlayerState;
@@ -14,7 +13,9 @@ private:
     int comboStep = 0;
     float timer = 0;
     bool hasHit = false;
-	bool nextAttackQueued = false;
+    bool nextAttackQueued = false;
 
     void NextAttack();
+
 };
+

@@ -93,9 +93,6 @@
     <ClInclude Include="src\Renderer\RenderCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\RigidbodyComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Core\SpatialGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>

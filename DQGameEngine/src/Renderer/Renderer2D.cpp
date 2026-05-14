@@ -263,7 +263,7 @@ void Renderer2D::Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect
     s_Data.IndexCount += 6;
 }
 
-void Renderer2D::DrawRect(const Rect& rect)
+void Renderer2D::DrawRect(const Rect& rect, const Color& color)
 {
     Texture& tex = *s_Data.WhiteTexture;
 
@@ -308,10 +308,10 @@ void Renderer2D::DrawRect(const Rect& rect)
 
         s_Data.VertexBufferPtr->TexIndex = texIndex;
 
-        s_Data.VertexBufferPtr->Color[0] = 0.0f;
-        s_Data.VertexBufferPtr->Color[1] = 0.0f;
-        s_Data.VertexBufferPtr->Color[2] = 1.0f;
-        s_Data.VertexBufferPtr->Color[3] = 1.0f;
+        s_Data.VertexBufferPtr->Color[0] = color.r;
+        s_Data.VertexBufferPtr->Color[1] = color.g;
+        s_Data.VertexBufferPtr->Color[2] = color.b;
+        s_Data.VertexBufferPtr->Color[3] = color.a;
 
         s_Data.VertexBufferPtr++;
     }
@@ -321,19 +321,19 @@ void Renderer2D::DrawRect(const Rect& rect)
     //memcpy(s_Data.VertexBufferPtr->Color, color, sizeof(float) * 4);
 }
 
-void Renderer2D::DrawRectOutline(const Rect& rect, float thickness)
+void Renderer2D::DrawRectOutline(const Rect& rect, const Color& color, float thickness)
 {
     // Top
-	Renderer2D::SubmitRect(Rect(rect.x, rect.y, rect.w, thickness), RenderLayer::World);
+	Renderer2D::SubmitRect(Rect(rect.x, rect.y, rect.w, thickness), color, RenderLayer::World);
 
     // Bottom
-	Renderer2D::SubmitRect(Rect(rect.x, rect.y + rect.h - thickness, rect.w, thickness), RenderLayer::World);
+	Renderer2D::SubmitRect(Rect(rect.x, rect.y + rect.h - thickness, rect.w, thickness), color, RenderLayer::World);
 
     // Left
-	Renderer2D::SubmitRect(Rect(rect.x, rect.y, thickness, rect.h), RenderLayer::World);
+	Renderer2D::SubmitRect(Rect(rect.x, rect.y, thickness, rect.h), color, RenderLayer::World);
 
     // Right
-	Renderer2D::SubmitRect(Rect(rect.x + rect.w - thickness, rect.y, thickness, rect.h), RenderLayer::World);
+	Renderer2D::SubmitRect(Rect(rect.x + rect.w - thickness, rect.y, thickness, rect.h), color, RenderLayer::World);
 }
 
 void Renderer2D::SetMatrix(const glm::mat4& viewProj)
@@ -357,11 +357,12 @@ void Renderer2D::Submit(const RenderCommand& cmd)
     }
 }
 
-void Renderer2D::SubmitRect(const Rect& rect, RenderLayer layer)
+void Renderer2D::SubmitRect(const Rect& rect, const Color& color, RenderLayer layer)
 {
     RenderCommand cmd;
     cmd.type = CommandType::Rect;
     cmd.dst = rect;
+	cmd.color = color;
 
     switch (layer)
     {
@@ -389,7 +390,7 @@ void Renderer2D::FlushLayer(const RenderLayer& layer)
         }
         else if (cmd.type == CommandType::Rect)
         {
-            DrawRect(cmd.dst); 
+            DrawRect(cmd.dst, cmd.color); 
         }
     }
 

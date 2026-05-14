@@ -2,7 +2,6 @@
 #include "Broadphase.h"
 #include "BaseBoard.h"
 #include "Components/RectangleComponent.h"
-#include "Components/RigidbodyComponent.h"
 
 Boardphase::Boardphase()
 {

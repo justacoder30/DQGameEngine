@@ -11,6 +11,8 @@ void ShapeComponent::OnAttach()
 			callback = callbacks;
 		}
 	}
+
+	PositionComponent::OnAttach();
 }
 
 void ShapeComponent::OnDetach()

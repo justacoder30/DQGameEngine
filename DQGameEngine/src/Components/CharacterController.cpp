@@ -4,7 +4,6 @@
 #include "Components/PositionComponent.h"
 #include "Components/GameApp.h"
 #include "Components/RectangleComponent.h"
-#include "Components/RigidbodyComponent.h"
 
 static float StepSize = 4;
 

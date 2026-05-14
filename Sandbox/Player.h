@@ -6,11 +6,20 @@
 #include "PlayerState/JumpState.h"
 #include "PlayerState/FallState.h"
 #include "PlayerState/Attackstate.h"
+#include "PlayerState/AirAttackstate.h"
+#include "PlayerState/AirAttackEndstate.h"
 #include "PlayerState/HurtState.h"
 #include "PlayerState/DeathState.h"
 #include "Healthbar.h"
 
 class IdleState;
+
+struct AttackData
+{
+	float duration;
+	float hitTime;
+	float comboWindow;
+};
 
 class Player : public Animation2DComponent, public CollisionCallbacks
 {
@@ -29,10 +38,23 @@ public:
 	float jumpTime = 0.5;
 	float jumpHeight = 100;
 	float speed = 200;
-	//float speed = 20000;
-	//float speed = 100000;
+
+	AttackData attacks[3] = {
+		{0.3f, 0.15f, 0.15f}, // Attack1
+		{0.3f, 0.15f, 0.15f}, // Attack2
+		{0.3f, 0.15f, 0.15f}, // Attack3
+	};
+
+	AttackData airAttacks[4] = {
+		{0.25f, 0.1f, 0.15f}, // Attack1
+		{0.25f, 0.1f, 0.15f}, // Attack2
+		{0.25f, 0.1f, 0.15f}, // Attack3
+		{0.4f, 0.1f, 0.15f}, // AttackEnd
+	};
+
 
 	RectangleComponent* atkBox;
+	RectangleComponent* atkEndBox;
 	RectangleComponent* hitbox;
 	CharacterController* controller;
 	StateMachineComponent* state;
@@ -42,6 +64,8 @@ public:
 	JumpState* jumpState;
 	FallState* fallState;
 	AttackState* attackState;
+	AirAttackState* airAttackState;
+	AirAttackEndState* airAttackEndkState;
 	HurtState* hurtState;
 	DeathState* deathState;
 	//DeathState* DeathState;

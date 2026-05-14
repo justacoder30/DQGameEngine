@@ -1,4 +1,5 @@
 #include "Coin.h"
+#include "Player.h"
 #include <iostream>
 
 
@@ -14,13 +15,20 @@ void Coin::OnLoad()
 
 	auto r = new RectangleComponent(Vector(0, 0), Vector(16, 16));
 	r->layer = Layer::Item;	
-	r->mask = ToMask(Layer::Player) | ToMask(Layer::Item);
+	r->mask = ToMask(Layer::Player);
 	//r->hasPhysics = true;
-	r->bodyType = BodyType::Dynamic;
-	//controller = new CharacterController();
-	//controller->hitbox = r;
+	//r->bodyType = BodyType::Dynamic;
 
 	Add(r);
-	//Add(controller);
 	Play(0);
+
+	Animation2DComponent::OnLoad();
+}
+
+void Coin::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape, Component* other)
+{
+	if (dynamic_cast<Player*>(other))
+	{
+		RemoveFromParent();
+	}
 }
