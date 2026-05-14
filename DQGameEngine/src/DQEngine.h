@@ -12,6 +12,7 @@
 #include "Core/CollisionCallbacks.h"
 #include "Core/SpatialGrid.h"
 #include "Core/Time.h"
+#include "Core/Utils.h"
 
 int Test();
 int Test1();

@@ -1,6 +1,7 @@
 #include "GameTest.h"
 #include "Player.h"
 #include "Background.h"
+#include "DarkMage.h"
 #include "Coin.h"
 #include "Map.h"
 #include "Skeleton.h"
@@ -8,7 +9,7 @@
 void GameTest::OnLoad()
 {
     //DebugMode = true;
-	std::string objects_pos[] = { "PlayerPosition", "CoinPosition", "EnemyPosition", "EnemyPosition 1", "HeartPosition", "FlagPosition", "BossPosition", };
+	std::string objects_pos[] = {"DarkMagePosition", "PlayerPosition", "CoinPosition", "EnemyPosition", "EnemyPosition 1", "HeartPosition", "FlagPosition", "BossPosition", };
 
     auto anim = new Animation2DComponent();
 
@@ -26,6 +27,8 @@ void GameTest::OnLoad()
     for (auto obj : objects_pos) {
         auto positions = map->GetObjectGroup(obj);
 
+		std::cout << "Object: " << obj << ", Positions Count: " << positions.size() << std::endl;
+
         if (positions.empty()) continue;
 
         if (obj == "PlayerPosition") {
@@ -42,6 +45,11 @@ void GameTest::OnLoad()
         else if (obj == "EnemyPosition") {
             for (auto pos : positions) {
                 Add(new Skeleton(Vector(pos.x, pos.y)));
+            }
+        }
+        else if (obj == "DarkMagePosition") {
+            for (auto pos : positions) {
+                Add(new DarkMage(Vector(pos.x, pos.y)));
             }
         }
     }

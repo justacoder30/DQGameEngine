@@ -50,7 +50,7 @@ public:
 	float attackTimer = 0;
 
 
-	bool onGround = true;
+	bool onGround = false;
 	float speed = 80.f;	
 	bool flip = false;	
 

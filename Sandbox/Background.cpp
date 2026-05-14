@@ -36,6 +36,7 @@ void Background::OnUpdate(float dt)
 	for (size_t i = 0; i < clouds.size(); i++)
 	{
 		clouds[i]->position.x -= cloud_speed * dt;
+		if (clouds[i]->position.x <= -size.x) clouds[i]->position.x = size.x;
 	}
 
 	PositionComponent::OnUpdate(dt);

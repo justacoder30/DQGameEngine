@@ -14,7 +14,6 @@ Skeleton::Skeleton(const Vector& pos)
 
 void Skeleton::OnLoad()
 {
-	AddAnimation(0, Animation("resource/img/Enemy/Skeleton/Walk.png", 10, 0.08));
 	AddAnimation(Idle, Animation("resource/img/Enemy/Skeleton/Idle.png", 8, 0.08));
 	AddAnimation(Run, Animation("resource/img/Enemy/Skeleton/Walk.png", 10, 0.08));
 	AddAnimation(Attack1, Animation("resource/img/Enemy/Skeleton/Attack.png", 10, 0.1, false));
@@ -159,7 +158,7 @@ void Skeleton::OnCollision(ShapeComponent* self, ShapeComponent* otherShape, Com
 	{
 		auto player = dynamic_cast<Player*>(other);
 		if (player) {
-			target = dynamic_cast<Player*>(other);
+			target = static_cast<Player*>(other);
 		}
 	}
 }

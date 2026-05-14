@@ -236,6 +236,7 @@ void Player::SetSpawnPoint(const Vector& spawnPoint)
 {
 	position = Vector(spawnPoint.x + hitbox->GetBounds().x / 2, spawnPoint.y + hitbox->GetBounds().w / 2);
 	this->spawnPoint = position;
+	std::cout << "Player Spawn Point: " << this->spawnPoint.x << ", " << this->spawnPoint.y << std::endl;
 }
 
 void Player::ReSpawn()
@@ -244,6 +245,8 @@ void Player::ReSpawn()
 	hp = MaxHP;
 	state->ChangeState(idleState);
 	healthbar->SetHealth(hp, MaxHP);
+
+	
 }
 
 std::vector<std::string> Player::CreateStringAnimate(const std::string& f, int cout)

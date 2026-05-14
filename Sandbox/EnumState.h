@@ -16,6 +16,7 @@ enum State
 	AirAttack2,
 	AirAttack3,
 	AirAttackEnd,
+	Heal
 };
 
 enum Direction

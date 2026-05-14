@@ -151,6 +151,12 @@ SDL3_test.lib
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Background.cpp" />
+    <ClCompile Include="DarkMage.cpp" />
+    <ClCompile Include="DarkMageState\DarkMageAttackState.cpp" />
+    <ClCompile Include="DarkMageState\DarkMageDeathState.cpp" />
+    <ClCompile Include="DarkMageState\DarkMageHurtState.cpp" />
+    <ClCompile Include="DarkMageState\DarkMageChaseState.cpp" />
+    <ClCompile Include="DarkMageState\DarkMageIdleState.cpp" />
     <ClCompile Include="PlayerState\AirAttackEndState.cpp" />
     <ClCompile Include="PlayerState\AirAttackState.cpp" />
     <ClCompile Include="PlayerState\DeathState.cpp" />
@@ -174,6 +180,13 @@ SDL3_test.lib
     <ClCompile Include="Skeleton.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DarkMage.h" />
+    <ClInclude Include="DarkMageState\DarkMageAttackState.h" />
+    <ClInclude Include="DarkMageState\DarkMageDeathState.h" />
+    <ClInclude Include="DarkMageState\DarkMageHurtState.h" />
+    <ClInclude Include="DarkMageState\DarkMageChaseState.h" />
+    <ClInclude Include="DarkMageState\DarkMageIdleState.h" />
+    <ClInclude Include="DarkMageState\DarkMageState.h" />
     <ClInclude Include="PlayerState\AirAttackEndState.h" />
     <ClInclude Include="PlayerState\AirAttackState.h" />
     <ClInclude Include="PlayerState\DeathState.h" />

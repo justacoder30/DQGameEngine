@@ -6,15 +6,25 @@ Animation::Animation()
 {
 }
 
-Animation::Animation(const char* f_p, int frame_count, float frame_speed, bool Loop)
+Animation::Animation(const char* f_p, int frame_count, float frame_speed, bool Loop, const int& col, const int& FrameHeightCount, const Vector& Framesize)
 {
+	this->col = col;
 	texture = TextureManager::Load(f_p);
 	FrameCount = frame_count;
 	FrameSpeed = frame_speed;
 	loop = Loop;
 	CurrentFrame = 0;
-	FrameWidth = texture->GetWidth() / FrameCount;
-	FrameHeight = texture->GetHeight();
+
+	if (Framesize.x != 0 && Framesize.y != 0)
+	{
+		FrameWidth = Framesize.x;
+		FrameHeight = Framesize.y;
+	}
+	else
+	{
+		FrameWidth = texture->GetWidth() / FrameCount;
+		FrameHeight = texture->GetHeight() / FrameHeightCount;
+	}
 
     isSpriteSheet = true;
 }
