@@ -84,22 +84,6 @@ void CameraComponent::OnUpdate(float dt)
 
     if (m_Target)
     {
-        auto targetPos = m_Target->GetWorldPosition();
-
-        Vector desiredLookAhead = Vector::Zero();
-
-        //if (m_EnableLookAhead)
-        //{
-        //    float vx = 0;
-
-        //    auto posComp = dynamic_cast<PositionComponent*>(m_Target);
-
-        //    if (posComp) vx = posComp->velocity.x;
-
-        //    if (vx > 1.0f)  desiredLookAhead.x = m_LookAheadDistance;
-        //    else if (vx < -1.0f) desiredLookAhead.x = -m_LookAheadDistance;
-        //    }
-        //}
 
         m_Position.x += (m_Target->position.x - m_Position.x) * m_SmoothSpeed * dt;
         m_Position.y += (m_Target->position.y - m_Position.y) * m_SmoothSpeed * dt;
@@ -130,25 +114,11 @@ void CameraComponent::OnAttach()
 
 void CameraComponent::RecalculateMatrix()
 {
-    //m_HalfSize.x = (m_Width * 0.5f) / m_Zoom;
-    //m_HalfSize.y = (m_Height * 0.5f) / m_Zoom;
-
-    //glm::mat4 proj = glm::ortho(
-    //    -m_HalfSize.x, m_HalfSize.x,
-    //    m_HalfSize.y, -m_HalfSize.y,
-    //    -1.0f, 1.0f
-    //);
-
     glm::mat4 proj = glm::ortho(
         0.0f, m_Width / m_Zoom,
         m_Height / m_Zoom, 0.0f,
         -1.0f, 1.0f
     );
-
-    //glm::mat4 view = glm::translate(
-    //    glm::mat4(1.0f),
-    //    glm::vec3(-m_Position.x + shakeOffset.x, -m_Position.y + shakeOffset.y, 0.0f)
-    //);
 
     float originX = m_Origin.x * m_Width;
 

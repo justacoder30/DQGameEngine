@@ -17,9 +17,6 @@ void CharacterController::OnUpdate(float dt)
 {
     if (!hitbox) return;
 
- //   if(velocity.x != 0) MoveX(velocity.x * dt);
-	//if(velocity.y != 0) MoveY(velocity.y * dt);
-
     Vector move = velocity * dt;
 
     int steps = (int)(std::max(abs(move.x), abs(move.y)) / StepSize) + 1;
@@ -33,6 +30,48 @@ void CharacterController::OnUpdate(float dt)
 
         if (stepMove.x != 0) MoveX(stepMove.x);
         if (stepMove.y != 0) MoveY(stepMove.y);
+    }
+}
+
+void CharacterController::Move(const Vector& direction)
+{
+    auto pos = static_cast<PositionComponent*>(GetParent());
+    if (!hitbox) return;
+
+    pos->position += direction;
+
+    auto neighbors = board->Query(hitbox);
+
+    for (auto* neighbor : neighbors)
+    {
+        if (hitbox == neighbor)
+            continue;
+
+        if (!hitbox->active || !neighbor->active)
+            continue;
+
+        if (neighbor->bodyType == BodyType::NoneType)
+            continue;
+
+        if (!ShouldCollide(hitbox, neighbor))
+            continue;
+
+        if (hitbox->CheckCollide(neighbor))
+        {
+            auto ra = static_cast<RectangleComponent*>(hitbox);
+            auto rb = static_cast<RectangleComponent*>(neighbor);
+
+            Vector mtv = ra->GetWorldBounds().GetMTV(rb->GetWorldBounds());
+
+            //pos->position.x += mtv.x;
+
+            if (neighbor->bodyType == BodyType::Static)
+            {
+                pos->position += mtv;
+                velocity.x = 0;
+                velocity.y = 0;
+            }
+        }
     }
 }
 

@@ -19,6 +19,7 @@ public:
 
 	void OnLoad() override; 
 	void OnUpdate(float dt) override;
+	void Move(const Vector& direction);
     void MoveX(const float& dx = 0);
     void MoveY(const float& dy = 0);
 

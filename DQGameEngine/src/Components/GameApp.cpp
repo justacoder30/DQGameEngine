@@ -48,7 +48,6 @@ void GameApp::GameLoop()
         
         float dt = (float)(current - m_LastTime) / SDL_GetPerformanceFrequency();
         if (dt > 1 / 60.f) dt = 1 / 60.f;
-		//std::cout << "FPS: " << 1 / dt << std::endl;    
         m_LastTime = current;
 
         Time::Update(dt);

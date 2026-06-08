@@ -69,21 +69,15 @@ void Renderer2D::InitRenderer()
 
     glGenVertexArrays(1, &s_Data.VAO);
     glBindVertexArray(s_Data.VAO);
-
     glGenBuffers(1, &s_Data.VBO);
-
     glBindBuffer(GL_ARRAY_BUFFER, s_Data.VBO);
-
     glBufferData( GL_ARRAY_BUFFER, MaxVertices * sizeof(QuadVertex), nullptr, GL_DYNAMIC_DRAW );
-
     glGenBuffers(1, &s_Data.EBO);
-
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
 
     uint32_t* indices = new uint32_t[MaxIndices];
-
     uint32_t offset = 0;
 
     for (uint32_t i = 0; i < MaxIndices; i += 6)
@@ -91,18 +85,14 @@ void Renderer2D::InitRenderer()
         indices[i + 0] = offset + 0;
         indices[i + 1] = offset + 1;
         indices[i + 2] = offset + 2;
-
         indices[i + 3] = offset + 2;
         indices[i + 4] = offset + 3;
         indices[i + 5] = offset + 0;
-
         offset += 4;
     }
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Data.EBO);
-
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, MaxIndices * sizeof(uint32_t), indices, GL_STATIC_DRAW );
-
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, MaxIndices * sizeof(uint32_t), indices, GL_STATIC_DRAW);
     delete[] indices;
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)offsetof(QuadVertex, Position));
@@ -125,7 +115,6 @@ void Renderer2D::InitRenderer()
     );
 
     int samplers[32];
-
     for (int i = 0; i < 32; i++)
         samplers[i] = i;
 
@@ -171,6 +160,7 @@ void Renderer2D::Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect
         s_Data.TextureSlots[s_Data.TextureSlotIndex] = &texture;
         s_Data.TextureSlotIndex++;
     }
+
     float texW = (float)texture.GetWidth();
     float texH = (float)texture.GetHeight();
 
@@ -199,20 +189,6 @@ void Renderer2D::Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect
     center_point.x = dstrect.x + dstrect.w * centerP.x;
     center_point.y = dstrect.y + dstrect.h * centerP.y;
 
-    //if (center_point != Vector::Zero()) {
-    //    center_point.x = dstrect.x + centerP.x;
-    //    center_point.y = dstrect.y + centerP.y;
-    //}
-    //else {
-    //    center_point.x = dstrect.x + dstrect.w / 2.0f;
-    //    center_point.y = dstrect.y + dstrect.h / 2.0f;
-    //}
-
-    //Vector center_point;
-    //center_point.x = dstrect.x + dstrect.w * (anchor.x);
-    //center_point.y = dstrect.y + dstrect.h * (anchor.y);
-
-
     float x = dstrect.x;
     float y = dstrect.y;
     float w = dstrect.w;
@@ -228,13 +204,6 @@ void Renderer2D::Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect
         {  w - pivot.x,      h - pivot.y },
         { -pivot.x,          h - pivot.y }
     };
-
-    //float localVertices[4][2] = {
-    //    { -dstrect.w / 2.0f, -dstrect.h / 2.0f },
-    //    {  dstrect.w / 2.0f, -dstrect.h / 2.0f },
-    //    {  dstrect.w / 2.0f,  dstrect.h / 2.0f },
-    //    { -dstrect.w / 2.0f,  dstrect.h / 2.0f }
-    //};
 
     float rad = glm::radians(angle);
     float cosA = cos(rad);

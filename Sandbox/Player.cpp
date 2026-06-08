@@ -125,8 +125,6 @@ Player::Player()
 
 	//healthbar = new Healthbar(Vector(15, 5), Vector(60, 5));
 	//Add(healthbar);
-
-	
 }
 
 void Player::OnLoad()
@@ -194,7 +192,6 @@ void Player::OnUpdate(float dt)
 
 	Animation2DComponent::OnUpdate(dt);
 }
-
 
 void Player::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape, Component* other)
 {

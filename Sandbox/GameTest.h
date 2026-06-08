@@ -11,5 +11,8 @@ public:
 
 	void OnLoad() override;
 	void OnUpdate(float dt) override;
+
+	float m_TimeAccumulator = 0.0f; 
+	int m_FrameCount = 0;  
 };
 

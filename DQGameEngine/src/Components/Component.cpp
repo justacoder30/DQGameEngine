@@ -76,7 +76,7 @@ void Component::ClearChildren()
     for (auto child : m_Children)
     {
         m_ComponentMap.erase(std::type_index(typeid(*child)));
-        child->OnDetach();     // 👈 thêm
+        child->OnDetach();
         child->m_Parent = nullptr;
         delete child;
     }

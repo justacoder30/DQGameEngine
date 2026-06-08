@@ -12,7 +12,6 @@ void GameTest::OnLoad()
 	std::string objects_pos[] = {"DarkMagePosition", "PlayerPosition", "CoinPosition", "EnemyPosition", "EnemyPosition 1", "HeartPosition", "FlagPosition", "BossPosition", };
 
     auto anim = new Animation2DComponent();
-
     auto player = new Player();
     auto bg = new Background();
     //auto map = new Map("resource/Map/map_test.tmx");
@@ -54,40 +53,37 @@ void GameTest::OnLoad()
         }
     }
 
-    //auto coin = new Coin(0, 0);
-    //coin->layer = RenderLayer::UI;
-    ////coin->position = Vector(-784/2, -441/2);
-    //bg->Add(coin);
-
-
 	auto healthbar = new Healthbar(Vector(10, 10), Vector(200, 15));  
 	healthbar->SetColor({ 1.0f, 0.0f, 0.0f, 1.0f });
 	healthbar->layer = RenderLayer::UI;
 	bg->Add(healthbar);
-
 	player->healthbar = healthbar;
-
     cam->Follow(player);
 	cam->SetBounds(Rect(0, 0, map->GetWidth(), map->GetHeight()));
 
     Add(cam);
     Add(bg);
-    //std::cout << bg->coin->position.x << ", " << bg->coin->position.y << std::endl;
     
     SpatialGrid* grid = new SpatialGrid();
     grid->Init(256.f);
     s_Boardphase.SetBoard(grid);
-
-	//m_Running = true;
-
-    
 
     GameApp::OnLoad();
 }
 
 void GameTest::OnUpdate(float dt)
 {
+    m_TimeAccumulator += dt;
+    m_FrameCount++;
 
-    //std::cout << "Coin World Position: " << coin_pos.x << ", " << coin_pos.y << ". hp_pos = " << hp_pos.x << ", " << hp_pos.y << std::endl;
+    if (m_TimeAccumulator >= 1.0f)
+    {
+        float m_AverageFPS = (float)m_FrameCount / m_TimeAccumulator;
+        m_TimeAccumulator -= 1.0f;
+        m_FrameCount = 0;
+		std::cout << "Average FPS: " << m_AverageFPS << std::endl;
+        //std::cout << "Average FPS: " << 1 / dt << std::endl;
+    }
+
     GameApp::OnUpdate(dt);
 }

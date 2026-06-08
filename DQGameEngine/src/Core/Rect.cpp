@@ -36,7 +36,10 @@ Rect::Rect(const float& _x, const float& _y, const float& _w, const float& _h) :
 	w = size.x;
 	h = size.y;
 
-	setRect();
+	top = y;
+	bottom = y + h;
+	left = x;
+	right = x + w;
 }
 
 bool Rect::CheckCollide(const Rect& other)
@@ -47,17 +50,17 @@ bool Rect::CheckCollide(const Rect& other)
 		right > other.left);
 }
 
+Vector Rect::GetCenter()
+{
+	return Vector(x + w / 2, y + h / 2);
+}
+
 Vector Rect::GetOverlap(const Rect& other)
 {
 	float overlapX = std::min(right, other.right) - std::max(left, other.left);
 	float overlapY = std::min(bottom, other.bottom) - std::max(top, other.top);
 
 	return Vector(overlapX, overlapY);	
-}
-
-Vector Rect::GetCenter()
-{
-	return Vector(x + w / 2, y + h / 2);
 }
 
 Vector Rect::GetMTV(const Rect& other)
