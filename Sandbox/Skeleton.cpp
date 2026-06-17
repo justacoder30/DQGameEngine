@@ -53,7 +53,7 @@ void Skeleton::OnLoad()
 	atkBox->active = false;
 
 	hitbox->layer = Layer::Enemy;
-	hitbox->mask = ToMask(Layer::Ground) | ToMask(Layer::Attack);
+	hitbox->mask = ToMask(Layer::Ground) | ToMask(Layer::Attack) | ToMask(Layer::Player);
 	//jumpTime = 0.5f;
 	//jumpHeight = 100.f;
 	//rb->SetJump(0.5f, 100.f);
@@ -87,20 +87,21 @@ void Skeleton::OnLoad()
 	attackState = new EnemyAttackState(this);
 	hurtState = new EnemyHurtState(this);
 	deathState = new EnemyDeathState(this);
+	walkState = new EnemyWalkState(this);
 
 	Add(state);
 
-	state->ChangeState(idleState);
+	state->ChangeState(walkState);
 
 	Animation2DComponent::OnLoad();
 }
 
 void Skeleton::OnUpdate(float dt)
 {
+	
 	if (!sensor_edge->isColliding) {
-		if (onGround) {
-			controller->velocity.x *= -1;
-			HorizontalFlip();
+		if (onGround && !target) {
+			canTurn = true;
 		}
 	}
 
@@ -118,8 +119,7 @@ void Skeleton::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape
 	else if (self == sensor_wall && otherShape->layer == Layer::Ground)
 	{
 		if (onGround) {
-			controller->velocity.x *= -1;
-			HorizontalFlip();
+			canTurn = true;
 		}
 	}
 	auto player = dynamic_cast<Player*>(other);
@@ -144,6 +144,21 @@ void Skeleton::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape
 		else state->ChangeState(hurtState);
 
 		onGround = false;
+
+	}
+
+	if (player && self == hitbox && otherShape == player->hitbox) {
+		float knockbackX = 100.0f;
+
+		Time::Freeze(0.03f);
+		Renderer2D::GetCamera()->Shake(1.f, 0.1f);
+
+		player->hp -= atkDamage;
+		player->healthbar->SetHealth(player->hp, player->MaxHP);
+		float dir = (player->position.x < position.x) ? -1.0f : 1.0f;
+		if (player->hp <= 0) player->state->ChangeState(player->deathState);
+		else player->state->ChangeState(player->hurtState);
+		std::cout << "Player HP: " << player->hp << std::endl;
 
 	}
 }

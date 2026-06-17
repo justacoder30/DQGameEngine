@@ -11,15 +11,13 @@ DarkMage::DarkMage(const Vector& pos)
 
 void DarkMage::OnLoad()
 {
-	AddAnimation(Idle, Animation("resource/img/Enemy/DarkMage/DarkMage.png", 8, 0.08, true, 0, 7, Vector(160, 128)));
-	AddAnimation(Run, Animation("resource/img/Enemy/DarkMage/DarkMage.png", 8, 0.08, true, 1, 7, Vector(160, 128)));
-	//AddAnimation(Attack2, Animation("resource/img/Enemy/DarkMage./DarkMage.png", 13, 0.08, false, 2, 7, Vector(160, 128)));
-	//AddAnimation(Heal, Animation("resource/img/Enemy/DarkMage/DarkMage.png", 8, 0.08, false, 3, 7, Vector(160, 128)));
-	AddAnimation(Attack1, Animation("resource/img/Enemy/DarkMage/DarkMage.png", 17, 0.08, false, 2, 13, Vector(160, 128)));
-	AddAnimation(Hurt, Animation("resource/img/Enemy/DarkMage/DarkMage.png", 5, 0.08, false, 5, 7, Vector(160, 128)));
-	AddAnimation(Death, Animation("resource/img/Enemy/DarkMage/DarkMage.png", 9, 0.08, false, 6, 7, Vector(160, 128)));
+	AddAnimation(Idle, Animation("resource/img/Enemy/DarkMage/DarkMage.png", 8, 0, Vector(160, 128), 0.08, true));
+	AddAnimation(Run, Animation("resource/img/Enemy/DarkMage/DarkMage.png", 8, 1, Vector(160, 128), 0.08, true));
+	AddAnimation(Attack1, Animation("resource/img/Enemy/DarkMage/DarkMage.png", 12, 2, Vector(160, 128), 1.5/12, false));
+	AddAnimation(Hurt, Animation("resource/img/Enemy/DarkMage/DarkMage.png", 5, 5, Vector(160, 128), 0.08, false));
+	AddAnimation(Death, Animation("resource/img/Enemy/DarkMage/DarkMage.png", 9, 6, Vector(160, 128), 0.08, false));
 
-	healthbar = new Healthbar(Vector(500, 10), Vector(300, 15));
+	healthbar = new Healthbar(Vector(500, 10), Vector(250, 15));
 	healthbar->SetColor({ 0.0f, 0.0f, 1.0f, 1.0f });
 	healthbar->layer = RenderLayer::UI;
 

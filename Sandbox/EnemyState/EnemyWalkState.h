@@ -1,7 +1,7 @@
 #pragma once
 #include "EnemyState.h"
 
-class EnemyIdleState : public EnemyState
+class EnemyWalkState : public EnemyState
 {
 public:
     using EnemyState::EnemyState;
@@ -10,6 +10,5 @@ public:
     void Update(float dt) override;
 
 private:
-    float idleTime = 0.0f;
+    float walkTime = 0.0f;
 };
-

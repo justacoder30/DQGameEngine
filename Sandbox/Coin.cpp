@@ -11,7 +11,7 @@ Coin::Coin(float x, float y)
 
 void Coin::OnLoad()
 {
-	AddAnimation(0, Animation("resource/img/Item/Coin.png", 5, 0.08));
+	AddAnimation(0, Animation("resource/img/Item/Coin.png", 5, 0.08, true));
 
 	auto r = new RectangleComponent(Vector(0, 0), Vector(16, 16));
 	r->layer = Layer::Item;	

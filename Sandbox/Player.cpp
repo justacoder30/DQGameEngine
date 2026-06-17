@@ -140,7 +140,8 @@ void Player::OnUpdate(float dt)
 	healthbar->Show();
 	atkBox->active = false;
 	atkEndBox->active = false;
-	controller->velocity.x = 0;
+	
+	if (!Key[SDL_SCANCODE_A] && !Key[SDL_SCANCODE_D]) controller->velocity.x = 0;
 
 	if (!onGround) controller->velocity.y += controller->gravity * dt;
 
@@ -201,12 +202,15 @@ void Player::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape, 
 	}
 	else if (self == hitbox && otherShape->layer == Layer::Attack && !invincible)
 	{
+		float knockbackX = 100.0f;
 		auto skeleton = dynamic_cast<Skeleton*>(other);
 		if (skeleton) {
 			Time::Freeze(0.03f);
 			Renderer2D::GetCamera()->Shake(1.f, 0.1f);
 			hp -= skeleton->atkDamage;
 			healthbar->SetHealth(hp , MaxHP);
+			float dir = (position.x < skeleton->position.x) ? -1.0f : 1.0f;
+			controller->velocity.x = dir * knockbackX;
 			if (hp <= 0) state->ChangeState(deathState);
 			else state->ChangeState(hurtState);
 		}

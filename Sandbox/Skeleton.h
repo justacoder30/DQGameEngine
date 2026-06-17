@@ -7,6 +7,7 @@
 #include "EnemyState/EnemyAttackState.h"
 #include "EnemyState/EnemyHurtState.h"
 #include "EnemyState/EnemyDeathState.h"
+#include "EnemyState/EnemyWalkState.h"
 
 class EnemyIdleState;
 class EnemyChaseState;
@@ -40,6 +41,7 @@ public:
 	EnemyAttackState* attackState;
 	EnemyHurtState* hurtState;
 	EnemyDeathState* deathState;
+	EnemyWalkState* walkState;
 
 	Player* target = nullptr;
 
@@ -57,6 +59,8 @@ public:
 	const int MaxHP = 100;	
 	int hp = MaxHP;
 	float atkDamage = 15;
+
+	bool canTurn = false;
 
 };
 

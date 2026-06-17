@@ -23,9 +23,7 @@ void EnemyChaseState::Update(float dt)
         return;
     }
 
-    float dir =
-        (enemy->position.x < enemy->target->position.x)
-        ? 1.0f : -1.0f;
+    float dir = (enemy->position.x < enemy->target->position.x) ? 1.0f : -1.0f;
 
     enemy->controller->velocity.x = dir * enemy->speed;
 
@@ -39,4 +37,5 @@ void EnemyChaseState::Update(float dt)
         enemy->HorizontalFlip();
         enemy->flip = true;
     }
+    
 }

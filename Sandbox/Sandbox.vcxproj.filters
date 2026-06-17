@@ -99,6 +99,9 @@
     <ClCompile Include="DarkMageState\DarkMageAttackState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyState\EnemyWalkState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -195,6 +198,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DarkMageState\DarkMageAttackState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyState\EnemyWalkState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -13,14 +13,15 @@ public:
 	int FrameHeight;
 
 	Animation();
-	Animation(const char* f_p, int frame_count, float frame_speed = 0.08, bool Loop = true, const int& col = 0, const int& FrameHeightCount = 1, const Vector& Framesize = Vector::Zero());
+	Animation(const char* f_p, int frame_count, float frame_speed = 0.08, bool Loop = true);
+	Animation(const char* f_p, int frame_count, const int& row, const Vector& Framesize, float frame_speed = 0.08, bool Loop = true);
 	Animation(const std::vector<std::string>& paths, float frame_speed = 0.08, bool Loop = true);
 
 	Texture* GetCurrentTexture();
 	int LastFrame();
 	bool IsSheet() { return isSpriteSheet; }	
 
-	int col;
+	int row = 0;
 
 private:
 	std::vector<Texture*> textures;

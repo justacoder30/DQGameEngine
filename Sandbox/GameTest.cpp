@@ -14,7 +14,7 @@ void GameTest::OnLoad()
     auto anim = new Animation2DComponent();
     auto player = new Player();
     auto bg = new Background();
-    //auto map = new Map("resource/Map/map_test.tmx");
+    //auto map = new Map("resource/Map/map_test.tmx");fix
     auto map = new Map("resource/Map/map2.tmx");
     Add(map);
     Add(player);

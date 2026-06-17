@@ -61,6 +61,6 @@ bool AnimationClip::IsDone()
 Rect AnimationClip::getRect()
 {
 	if(!animation.IsSheet()) return Rect(0, 0, animation.FrameWidth, animation.FrameHeight);
-	return Rect(animation.CurrentFrame * animation.FrameWidth, animation.col * animation.FrameHeight, animation.FrameWidth, animation.FrameHeight);
+	return Rect(animation.CurrentFrame * animation.FrameWidth, animation.row * animation.FrameHeight, animation.FrameWidth, animation.FrameHeight);
 }
 

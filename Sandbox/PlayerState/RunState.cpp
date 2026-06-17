@@ -1,5 +1,6 @@
 #pragma once
 #include "../Player.h"
+#include <iostream>
 
 void RunState::Enter()
 {
@@ -20,7 +21,7 @@ void RunState::Update(float dt)
         return;
     }
 
-    if (player->controller->velocity.x == 0)
+    if (!Key[SDL_SCANCODE_A] && !Key[SDL_SCANCODE_D])
     {
         player->state->ChangeState(player->idleState);
         return;
