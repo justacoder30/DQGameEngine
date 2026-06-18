@@ -53,7 +53,7 @@ void Skeleton::OnLoad()
 	atkBox->active = false;
 
 	hitbox->layer = Layer::Enemy;
-	hitbox->mask = ToMask(Layer::Ground) | ToMask(Layer::Attack) | ToMask(Layer::Player);
+	hitbox->mask = ToMask(Layer::Ground) | ToMask(Layer::Attack);
 	//jumpTime = 0.5f;
 	//jumpHeight = 100.f;
 	//rb->SetJump(0.5f, 100.f);
@@ -147,8 +147,7 @@ void Skeleton::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape
 
 	}
 
-	if (player && self == hitbox && otherShape == player->hitbox) {
-		float knockbackX = 100.0f;
+	if (player && self == hitbox && otherShape == player->hitbox && hp > 0) {
 
 		Time::Freeze(0.03f);
 		Renderer2D::GetCamera()->Shake(1.f, 0.1f);
@@ -158,8 +157,6 @@ void Skeleton::OnCollisionStart(ShapeComponent* self, ShapeComponent* otherShape
 		float dir = (player->position.x < position.x) ? -1.0f : 1.0f;
 		if (player->hp <= 0) player->state->ChangeState(player->deathState);
 		else player->state->ChangeState(player->hurtState);
-		std::cout << "Player HP: " << player->hp << std::endl;
-
 	}
 }
 

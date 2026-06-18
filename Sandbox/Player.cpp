@@ -109,7 +109,7 @@ Player::Player()
 	controller->gravity = (2 * jumpHeight) / (jumpTime * jumpTime);
 	controller->jumpForce = 2 * jumpHeight / jumpTime;
 
-	CharacterController::StepSize = 4;
+	CharacterController::StepSize = 6;
 
 	Add(state);
 
@@ -189,6 +189,10 @@ void Player::OnUpdate(float dt)
 	if (Key[SDL_SCANCODE_SPACE] && !PreKey[SDL_SCANCODE_SPACE] && onGround) {
 		controller->velocity.y = -controller->jumpForce;
 		//Play(Jump);
+	}
+
+	if (position.y > mapHeight) {
+		ReSpawn();
 	}
 
 	Animation2DComponent::OnUpdate(dt);

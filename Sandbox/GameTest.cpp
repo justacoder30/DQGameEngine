@@ -16,6 +16,7 @@ void GameTest::OnLoad()
     auto bg = new Background();
     //auto map = new Map("resource/Map/map_test.tmx");fix
     auto map = new Map("resource/Map/map2.tmx");
+	player->mapHeight = map->GetHeight();   
     Add(map);
     Add(player);
     auto cam = new CameraComponent(784, 441);
@@ -73,17 +74,18 @@ void GameTest::OnLoad()
 
 void GameTest::OnUpdate(float dt)
 {
-    m_TimeAccumulator += dt;
-    m_FrameCount++;
+  //  m_TimeAccumulator += dt;
+  //  m_FrameCount++;
 
-    if (m_TimeAccumulator >= 1.0f)
-    {
-        float m_AverageFPS = (float)m_FrameCount / m_TimeAccumulator;
-        m_TimeAccumulator -= 1.0f;
-        m_FrameCount = 0;
-		std::cout << "Average FPS: " << m_AverageFPS << std::endl;
-        //std::cout << "Average FPS: " << 1 / dt << std::endl;
-    }
+  //  if (m_TimeAccumulator >= 1.0f)
+  //  {
+  //      float m_AverageFPS = (float)m_FrameCount / m_TimeAccumulator;
+  //      m_TimeAccumulator -= 1.0f;
+  //      m_FrameCount = 0;
+		//std::cout << "Average FPS: " << m_AverageFPS << std::endl;
+  //      //std::cout << "Average FPS: " << 1 / dt << std::endl;
+  //  }
+    std::cout << "FPS: " << 1 / dt << std::endl;
 
     GameApp::OnUpdate(dt);
 }

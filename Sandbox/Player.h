@@ -83,6 +83,7 @@ public:
 	float attackBuffer = 0;
 	bool invincible = false;
 	Direction direction = Right;
+	float mapHeight;
 
 private:
 	Vector spawnPoint;
