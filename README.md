@@ -7,6 +7,8 @@
 
 **DQGameEngine** is a custom 2D C++ game engine designed for educational and performance-focused game development. The repository includes both the core engine architecture and a **Sandbox** project demonstrating the engine's capabilities.
 
+## Sandbox Demo Image
+![Sandbox Demo](.github/assets/demo_img.png)
 ---
 
 ## 🌟 Features
@@ -19,9 +21,6 @@
 - **Audio & Media:** Multi-channel sound effects and background music management via `SDL3_mixer`, font rendering with `SDL3_ttf`, and texture loading with `SDL3_image`.
 - **Tilemap Support:** Native `.tmx` Tiled map parsing and multi-layer rendering integrated with **tmxlite**.
 - **Math Library:** Hardware-accelerated vector and matrix calculations powered by **GLM**.
-
----
-![Sandbox Demo](.github/assets/Picture1(1).png)
 
 ---
 ## ⚙️ Installation & Setup
