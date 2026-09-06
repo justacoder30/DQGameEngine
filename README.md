@@ -21,7 +21,6 @@
 - **Tilemap Support:** Native `.tmx` Tiled map parsing and multi-layer rendering integrated with **tmxlite**.
 - **Math Library:** Hardware-accelerated vector and matrix calculations powered by **GLM**.
 
----
 ## ⚙️ Installation & Setup
 
 ### Quick Run (Pre-built Executable)
