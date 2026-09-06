@@ -3,7 +3,6 @@
 ![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)
 ![OpenGL](https://img.shields.io/badge/OpenGL-3.3%2B-green.svg)
 ![Platform](https://img.shields.io/badge/Platform-Windows%20x64-lightgrey.svg)
-![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)
 
 **DQGameEngine** is a custom 2D C++ game engine designed for educational and performance-focused game development. The repository includes both the core engine architecture and a **Sandbox** project demonstrating the engine's capabilities.
 
