@@ -22,3 +22,12 @@
 
 ---
 ![Sandbox Demo](.github/assets/Picture1(1).png)
+
+---
+## ⚙️ Installation & Setup
+
+### Quick Run (Pre-built Executable)
+1. Go to the **Releases** section on the right side of this repository.
+2. Download the latest `DQGameEngine.zip` package.
+3. Extract the `.zip` archive.
+4. Run `Sandbox.exe` directly (all necessary `.dll` files and assets are pre-packaged).
