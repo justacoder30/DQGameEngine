@@ -11,26 +11,13 @@
 
 ## 🌟 Features
 
-- **Rendering Engine:** Modern OpenGL pipeline with Glad loader, supporting sprite batching and custom shaders.
-- **Windowing & Input:** Powered by **SDL3** for cross-platform hardware handling and event processing.
-- **Audio & Media:** Multi-channel sound effects and music management using `SDL3_mixer`, font rendering via `SDL3_ttf`, and texture loading with `SDL3_image`.
-- **Tilemap Support:** Native `.tmx` map parsing and rendering integrated with **tmxlite**.
-- **Animation System:** Finite State Machine (FSM) architecture for character states and sprite-sheet animations.
+- **2D Rendering Engine:** Modern OpenGL pipeline with Glad loader, supporting 2D sprite batching, custom shader management, and texture atlases.
+- **2D Camera System:** Dynamic 2D camera supporting target tracking, smooth follow (Lerp), zoom controls, and viewport boundary clamping.
+- **Animation System:** Frame-based sprite-sheet animation manager with configurable playback rates, integrated with a Finite State Machine (FSM) for character state transitions.
+- **Collision Detection & Spatial Partitioning:** Axis-Aligned Bounding Box (AABB) collision detection and resolution algorithms, optimized with a **Spatial Grid** for fast broad-phase collision filtering and dynamic entity partitioning.
+- **Windowing & Input:** Powered by **SDL3** for cross-platform window handling, graphics context creation, and real-time event processing.
+- **Audio & Media:** Multi-channel sound effects and background music management via `SDL3_mixer`, font rendering with `SDL3_ttf`, and texture loading with `SDL3_image`.
+- **Tilemap Support:** Native `.tmx` Tiled map parsing and multi-layer rendering integrated with **tmxlite**.
 - **Math Library:** Hardware-accelerated vector and matrix calculations powered by **GLM**.
 
 ---
-
-## 📁 Repository Structure
-
-```text
-DQGameEngine/
-├── DQGameEngine/           # Core Engine Project (Static Library)
-│   ├── src/                # Engine source code & core systems
-│   ├── externalLib/        # Pre-configured third-party headers & libraries
-│   └── assets/             # Core engine assets & default shaders
-├── Sandbox/                # Demo Application Project (.exe)
-│   ├── PlayerState/        # FSM implementation for player entity
-│   ├── EnemyState/         # FSM implementation for AI entities
-│   ├── resource/           # Game textures, sound effects, and Tiled maps
-│   └── main.cpp            # Application entry point
-└── DQGameEngine.sln        # Visual Studio 2022 Solution
