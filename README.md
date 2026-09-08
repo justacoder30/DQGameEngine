@@ -10,6 +10,17 @@
 ## Sandbox Demo Image
 ![Sandbox Demo](.github/assets/demo_img.png)
 
+## 🎮 Sandbox Controls
+
+You can test the engine's movement, FSM state machine, and collision system using the pre-configured controls in the Sandbox project:
+
+| Key Action | Input | Description |
+| :--- | :--- | :--- |
+| **Move Left / Right** | `A` / `D` | Move character horizontally |
+| **Jump** | `Space` | Jump vertically |
+| **Attack** | `J` | Perform ground attack |
+| **Air Attack** | `J` *(while airborne)* | Execute aerial attack |
+| **Roll / Dodge** | `Shift` *(while moving)* | Perform a dodge roll |
 
 ## 🌟 Features
 
