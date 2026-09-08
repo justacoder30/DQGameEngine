@@ -23,8 +23,70 @@
 
 ## ⚙️ Installation & Setup
 
-### Quick Run (Pre-built Executable)
+### Prerequisites
+- **Operating System:** Windows 10 / 11 (64-bit)
+- **IDE:** Visual Studio 2022 with **Desktop development with C++** workload installed.
+
+---
+
+### Option 1: Quick Run / Build Demo (Sandbox)
+
+If you want to test or run the included **Sandbox** demo:
+
 1. Go to the **Releases** section on the right side of this repository.
 2. Download the latest `DQGameEngine.zip` package.
 3. Extract the `.zip` archive.
-4. Run `Sandbox.exe` directly (all necessary `.dll` files and assets are pre-packaged).
+4. Open `DQGameEngine.sln` in **Visual Studio 2022**.
+5. In the **Solution Explorer**, right-click on the **Sandbox** project and select **Set as Startup Project**.
+6. Set the build configuration to **Debug** or **Release** (x64) and press `F5` (or click **Local Windows Debugger**) to compile and launch the demo.
+
+---
+
+### Option 2: Using Core Engine for Your Own Game Project
+
+The solution is architected around two core project types:
+- **`DQGameEngine`**: The core engine compiled as a static library (`.lib`).
+- **`Sandbox`**: An example executable project implementing game logic using the engine API.
+
+To create and configure your own new C++ game project inside the solution:
+
+#### 1. Add Core Engine Reference
+Right-click your newly created project in **Solution Explorer** $\rightarrow$ **Add** $\rightarrow$ **Reference...**
+
+![Add Reference Menu](.github/assets/add_reference.png)
+
+In the **Add Reference** window, check **DQGameEngine** under **Projects** and click **OK**.
+
+![Select Engine Reference](.github/assets/select_engine.png)
+
+---
+
+#### 2. Configure Include Directories
+Go to Project **Properties** $\rightarrow$ **C/C++** $\rightarrow$ **General** $\rightarrow$ **Additional Include Directories**, and add:
+- `$(SolutionDir)DQGameEngine\externalLib\include`
+- `$(SolutionDir)DQGameEngine\src`
+
+![Include Directories](.github/assets/include_directories.png)
+
+---
+
+#### 3. Configure Linker Directories
+Go to **Properties** $\rightarrow$ **Linker** $\rightarrow$ **General** $\rightarrow$ **Additional Library Directories**, and add:
+- `$(SolutionDir)DQGameEngine\externalLib\lib`
+
+![Library Directories](.github/assets/library_directories.png)
+
+---
+
+#### 4. Add Additional Dependencies
+Go to **Properties** $\rightarrow$ **Linker** $\rightarrow$ **Input** $\rightarrow$ **Additional Dependencies**, and add the required external libraries:
+```text
+SDL3.lib
+SDL3_image.lib
+SDL3_mixer.lib
+SDL3_test.lib
+SDL3_ttf.lib
+opengl32.lib
+tmxlite.lib
+
+![Additional Dependencies](.github/assets/additional_dependencies)
