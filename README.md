@@ -88,5 +88,3 @@ SDL3_test.lib
 SDL3_ttf.lib
 opengl32.lib
 tmxlite.lib
-
-![Additional Dependencies](.github/assets/additional_dependencies.png)
