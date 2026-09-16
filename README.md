@@ -38,64 +38,73 @@ You can test the engine's movement, FSM state machine, and collision system usin
 - **Operating System:** Windows 10 / 11 (64-bit)
 - **IDE:** Visual Studio 2022 with **Desktop development with C++** workload installed.
 
----
+### Build and run Sandbox from source  with CMake
 
-### Option 1: Quick Run / Build Demo (Sandbox)
+Install CMake 3.22 or newer and Git. The first configure downloads and configures
+the dependencies, so it requires internet access and can take several minutes.
+Run these commands from the repository root:
 
-If you want to test or run the included **Sandbox** demo:
+```powershell
+cmake -S . -B build
+cmake --build build --config Release --parallel
+cmake --install build --config Release --prefix "./install"
+```
 
-1. Go to the **Releases** section on the right side of this repository.
-2. Download the latest `DQGameEngine.zip` package.
-3. Extract the `.zip` archive.
-4. Open `DQGameEngine.sln` in **Visual Studio 2022**.
-5. In the **Solution Explorer**, right-click on the **Sandbox** project and select **Set as Startup Project**.
-6. Set the build configuration to **Debug** or **Release** (x64) and press `F5` (or click **Local Windows Debugger**) to compile and launch the demo.
+Configure creates the Visual Studio solution; it does **not** compile the code.
+Installation copies already-built files, so build the same configuration before
+installing it. The local install prefix avoids writing into Program Files.
+The install contains the Sandbox demo, SDL3 runtime, and game resources;
+it is not a standalone engine SDK.
 
----
+To run the installed demo:
 
-### Option 2: Using Core Engine for Your Own Game Project
+```powershell
+cd install/bin
+.\Sandbox.exe
+```
 
-The solution is architected around two core project types:
-- **`DQGameEngine`**: The core engine compiled as a static library (`.lib`).
-- **`Sandbox`**: An example executable project implementing game logic using the engine API.
+Alternatively, open `build/DQGameEngine.sln` (or `.slnx` with newer CMake), select Debug or Release and x64,
+and press F5. Sandbox is the default startup project, and its runtime files are
+copied beside the executable. Installation is not required to run from Visual
+Studio. Use the solution inside `build` for this CMake workflow.
 
-To create and configure your own new C++ game project inside the solution:
+For a Debug command-line build, use `--config Debug`. Always run Sandbox with
+its executable directory as the working directory so relative asset paths work.
+The optional `windows` preset requires Visual Studio 2026; the commands above
+let CMake select your installed Visual Studio version.
 
-#### 1. Add Core Engine Reference
-Right-click your newly created project in **Solution Explorer** $\rightarrow$ **Add** $\rightarrow$ **Reference...**
+### Build and package only the engine (Visual Studio SDK)
 
-![Add Reference Menu](.github/assets/add_reference.png)
+Turn off Sandbox and enable the optional SDK installation:
 
-In the **Add Reference** window, check **DQGameEngine** under **Projects** and click **OK**.
+```powershell
+cmake -S . -B build-sdk -A x64 -DDQGAMEENGINE_BUILD_SANDBOX=OFF -DDQGAMEENGINE_INSTALL_SDK=ON
+cmake --build build-sdk --config Release --target DQGameEngine --parallel
+cmake --install build-sdk --config Release --component EngineSDK --prefix ./install/DQGameEngineSDK
+```
 
-![Select Engine Reference](.github/assets/select_engine.png)
+To include Debug libraries in the same package:
 
----
+```powershell
+cmake --build build-sdk --config Debug --target DQGameEngine --parallel
+cmake --install build-sdk --config Debug --component EngineSDK --prefix ./install/DQGameEngineSDK
+```
 
-#### 2. Configure Include Directories
-Go to Project **Properties** $\rightarrow$ **C/C++** $\rightarrow$ **General** $\rightarrow$ **Additional Include Directories**, and add:
-- `$(SolutionDir)DQGameEngine\externalLib\include`
-- `$(SolutionDir)DQGameEngine\src`
+Zip and distribute the **whole** `install/DQGameEngineSDK` folder. It includes
+`include`, `lib/Release` (and `lib/Debug` when installed), matching SDL3.dll files
+in `bin/<Configuration>`, dependency licenses, and `DQGameEngine.props`.
+The engine `.lib` does not contain all its linked dependencies by itself.
 
-![Include Directories](.github/assets/include_directories.png)
+In the recipient's Visual Studio x64 C++ project, open **View > Other Windows >
+Property Manager**, right-click **Release | x64**, select **Add Existing Property
+Sheet**, and choose `DQGameEngine.props`. Repeat for Debug if supplied. The sheet
+sets include paths, library paths, dependencies, C++20, `TMXLITE_STATIC`, and
+the matching `/MD` or `/MDd` runtime; it also copies SDL3.dll next to the game.
 
----
+Use `#include <DQEngine/DQEngine.h>`. Build the consumer with the same MSVC
+toolset used to produce the SDK, and use matching Debug/Release configurations.
+The installed README records the producing compiler/toolset. Supply your own
+game assets. SDK installation currently supports Windows x64 with MSVC.
 
-#### 3. Configure Linker Directories
-Go to **Properties** $\rightarrow$ **Linker** $\rightarrow$ **General** $\rightarrow$ **Additional Library Directories**, and add:
-- `$(SolutionDir)DQGameEngine\externalLib\lib`
-
-![Library Directories](.github/assets/library_directories.png)
-
----
-
-#### 4. Add Additional Dependencies
-Go to **Properties** $\rightarrow$ **Linker** $\rightarrow$ **Input** $\rightarrow$ **Additional Dependencies**, and add the required external libraries:
-```text
-SDL3.lib
-SDL3_image.lib
-SDL3_mixer.lib
-SDL3_test.lib
-SDL3_ttf.lib
-opengl32.lib
-tmxlite.lib
+If you only need to compile the engine locally, use
+`-DDQGAMEENGINE_BUILD_SANDBOX=OFF` without enabling SDK installation.

@@ -1,6 +1,8 @@
 #pragma once
 #include "Renderer/Texture.h"
 #include "Core/Vector.h"
+#include <string>
+#include <vector>
 
 class Animation
 {

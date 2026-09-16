@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <DQGameEngineSDKRoot>$(MSBuildThisFileDirectory)</DQGameEngineSDKRoot>
+  </PropertyGroup>
+  <Import Project="$(DQGameEngineSDKRoot)DQGameEngine.$(Configuration).props"
+          Condition="Exists('$(DQGameEngineSDKRoot)DQGameEngine.$(Configuration).props')" />
+  <Target Name="CheckDQGameEngineSDK" BeforeTargets="PrepareForBuild">
+    <Error Condition="'$(Platform)' != 'x64'" Text="DQGameEngine SDK requires an x64 project." />
+    <Error Condition="!Exists('$(DQGameEngineSDKRoot)DQGameEngine.$(Configuration).props')"
+           Text="DQGameEngine SDK does not contain $(Configuration). Build and install that engine configuration first." />
+  </Target>
+</Project>

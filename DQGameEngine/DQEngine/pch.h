@@ -29,7 +29,6 @@
 
 #include <glad/glad.h>
 #include <SDL3/SDL.h>
-#include <SDL3_image/SDL_image.h>
 #include <SDL3_mixer/SDL_mixer.h>
 #include <tmxlite/Map.hpp>
 #include <tmxlite/TileLayer.hpp>

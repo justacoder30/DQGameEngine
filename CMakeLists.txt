@@ -43,6 +43,11 @@ FetchContent_MakeAvailable(SDL3)
 
 # SDL3_mixer: static + vendored codecs, no separate codec DLLs required.
 set(SDLMIXER_VENDORED ON CACHE BOOL "Use vendored SDL_mixer dependencies" FORCE)
+set(SDLMIXER_DEPS_SHARED OFF CACHE BOOL "Link audio codecs statically" FORCE)
+# Override values cached by earlier configurations too.
+foreach(codec FLAC_LIBFLAC GME MOD_XMP MP3_MPG123 MIDI_FLUIDSYNTH OPUS VORBIS_VORBISFILE VORBIS_TREMOR WAVPACK)
+    set(SDLMIXER_${codec}_SHARED OFF CACHE BOOL "Link ${codec} statically" FORCE)
+endforeach()
 set(SDLMIXER_TESTS OFF CACHE BOOL "Build SDL3_mixer tests" FORCE)
 set(SDLMIXER_EXAMPLES OFF CACHE BOOL "Build SDL3_mixer examples" FORCE)
 set(SDLMIXER_INSTALL OFF CACHE BOOL "Install SDL3_mixer" FORCE)
@@ -57,6 +62,7 @@ FetchContent_MakeAvailable(SDL3_mixer)
 
 # GLM is header-only for our use.
 set(GLM_BUILD_TESTS OFF CACHE BOOL "Build GLM tests" FORCE)
+set(GLM_BUILD_INSTALL OFF CACHE BOOL "Install GLM" FORCE)
 FetchContent_Declare(
     glm
     GIT_REPOSITORY https://github.com/g-truc/glm.git
@@ -75,22 +81,16 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/fallahn/tmxlite.git
     GIT_TAG v1.4.4
     GIT_SHALLOW TRUE
+    SOURCE_SUBDIR tmxlite
 )
 
-FetchContent_GetProperties(tmxlite)
-
-if(NOT tmxlite_POPULATED)
-    FetchContent_Populate(tmxlite)
-endif()
-
-add_subdirectory(
-    "${tmxlite_SOURCE_DIR}/tmxlite"
-    "${tmxlite_BINARY_DIR}/tmxlite"
-    EXCLUDE_FROM_ALL
-)
+FetchContent_MakeAvailable(tmxlite)
+# tmxlite has no install option; keep its SDK install rules out of our demo.
+set_property(DIRECTORY "${tmxlite_SOURCE_DIR}/tmxlite" PROPERTY EXCLUDE_FROM_ALL TRUE)
 
 # Create our own stable target name for the engine.
 if(TARGET tmxlite)
+    target_compile_definitions(tmxlite PUBLIC TMXLITE_STATIC)
     add_library(DQGame::tmxlite ALIAS tmxlite)
 else()
     message(FATAL_ERROR "tmxlite target was not created")
@@ -108,6 +108,7 @@ FetchContent_Declare(
     GIT_SHALLOW TRUE
 )
 FetchContent_MakeAvailable(box2d)
+set_property(DIRECTORY "${box2d_SOURCE_DIR}" PROPERTY EXCLUDE_FROM_ALL TRUE)
 
 # -----------------------------------------------------------------------------
 # Platform libraries
@@ -120,9 +121,9 @@ find_package(OpenGL REQUIRED)
 # -----------------------------------------------------------------------------
 
 file(GLOB_RECURSE DQGAMEENGINE_SOURCES CONFIGURE_DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/DQGameEngine/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DQGameEngine/*.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DQGameEngine/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DQGameEngine/DQEngine/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DQGameEngine/DQEngine/*.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DQGameEngine/DQEngine/*.h"
 )
 
 add_library(DQGameEngine STATIC ${DQGAMEENGINE_SOURCES}
@@ -137,7 +138,7 @@ set_target_properties(DQGameEngine PROPERTIES
 )
 
 target_precompile_headers(DQGameEngine PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/DQGameEngine/pch.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DQGameEngine/DQEngine/pch.h"
 )
 
 set_source_files_properties(
@@ -150,6 +151,7 @@ set_source_files_properties(
 target_include_directories(DQGameEngine
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DQGameEngine>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DQGameEngine/DQEngine>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external>
 
         $<INSTALL_INTERFACE:include>
@@ -192,5 +194,10 @@ if(
     AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Sandbox/CMakeLists.txt"
 )
     add_subdirectory(Sandbox)
+    set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT Sandbox)
 endif()
 
+option(DQGAMEENGINE_INSTALL_SDK "Install the Windows Visual Studio engine SDK" OFF)
+if(DQGAMEENGINE_INSTALL_SDK)
+    include(cmake/InstallSDK.cmake)
+endif()

@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <typeindex>
+#include <vector>
 
 class Component
 {
