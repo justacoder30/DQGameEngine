@@ -1,6 +1,8 @@
 #pragma once
 #include "IState.h"
 
+namespace dqengine {
+
 class StateMachine
 {
 public:
@@ -12,3 +14,5 @@ private:
     IState* current = nullptr;
 };
 
+
+} // namespace dqengine

@@ -2,6 +2,8 @@
 #include "Animation.h"
 #include "Core/TextureManager.h"
 
+namespace dqengine {
+
 Animation::Animation()
 {
 }
@@ -37,7 +39,7 @@ Animation::Animation(const char* f_p, int frame_count, const int& row, const Vec
 
 Animation::Animation(const std::vector<std::string>& paths, float frame_speed, bool Loop)
 {
-    for (auto p : paths)
+    for (const auto& p : paths)
     {
         textures.push_back(TextureManager::Load(p));
     }
@@ -55,11 +57,13 @@ Animation::Animation(const std::vector<std::string>& paths, float frame_speed, b
 
 Texture* Animation::GetCurrentTexture()
 {
-    if (isSpriteSheet) return texture;
-    return textures[CurrentFrame];
+    if (isSpriteSheet) return texture.get();
+    return textures[CurrentFrame].get();
 }
 
 int Animation::LastFrame()
 {
 	return FrameCount - 1;
 }
+
+} // namespace dqengine

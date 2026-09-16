@@ -1,6 +1,10 @@
 ﻿#include "pch.h"
 #include "Renderer2D.h"
 #include "Shader.h"
+#include "Core/TextureManager.h"
+#include <stdexcept>
+
+namespace dqengine {
 
 static const uint32_t MaxQuads = 100000;
 static const uint32_t MaxVertices = MaxQuads * 4;
@@ -15,18 +19,20 @@ struct RendererData
 
     uint32_t IndexCount = 0;
 
-    QuadVertex* VertexBufferBase;
+    UniquePtr<QuadVertex[]> VertexBufferBase;
     QuadVertex* VertexBufferPtr;
 
     Texture* TextureSlots[MaxTextureSlots];
     uint32_t TextureSlotIndex = 1;
 
-    Shader* ShaderPtr;
+    UniquePtr<Shader> ShaderPtr;
 
-    Texture* WhiteTexture;
+    UniquePtr<Texture> WhiteTexture;
 };
 
 static RendererData s_Data;
+static UniquePtr<CameraComponent> s_DefaultCamera;
+static CameraComponent* s_BatchCamera = nullptr;
 
 SDL_Window* Renderer2D::m_Window;
 SDL_GLContext Renderer2D::m_Context;
@@ -63,9 +69,9 @@ void Renderer2D::InitRenderer()
 {
     uint32_t color = 0xffffffff;
 
-    s_Data.WhiteTexture = new Texture(1, 1, &color);
+    s_Data.WhiteTexture = Unique<Texture>(1, 1, &color);
 
-    s_Data.TextureSlots[0] = s_Data.WhiteTexture;
+    s_Data.TextureSlots[0] = s_Data.WhiteTexture.get();
 
     glGenVertexArrays(1, &s_Data.VAO);
     glBindVertexArray(s_Data.VAO);
@@ -77,7 +83,7 @@ void Renderer2D::InitRenderer()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
 
-    uint32_t* indices = new uint32_t[MaxIndices];
+    auto indices = Unique<uint32_t[]>(MaxIndices);
     uint32_t offset = 0;
 
     for (uint32_t i = 0; i < MaxIndices; i += 6)
@@ -92,8 +98,8 @@ void Renderer2D::InitRenderer()
     }
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Data.EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, MaxIndices * sizeof(uint32_t), indices, GL_STATIC_DRAW);
-    delete[] indices;
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, MaxIndices * sizeof(uint32_t), indices.get(), GL_STATIC_DRAW);
+
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)offsetof(QuadVertex, Position));
     glEnableVertexAttribArray(0);
@@ -107,9 +113,9 @@ void Renderer2D::InitRenderer()
     glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void*)offsetof(QuadVertex, Color));
     glEnableVertexAttribArray(3);
 
-    s_Data.VertexBufferBase = new QuadVertex[MaxVertices];
+    s_Data.VertexBufferBase = Unique<QuadVertex[]>(MaxVertices);
 
-    s_Data.ShaderPtr = new Shader(
+    s_Data.ShaderPtr = Unique<Shader>(
         "../DQGameEngine/assets/shaders/vertex.glsl",
         "../DQGameEngine/assets/shaders/fragment.glsl"
     );
@@ -135,7 +141,7 @@ void Renderer2D::Draw(Texture& texture, const Rect& srcrect, const Rect& dstrect
         NextBatch();
     }
 
-    uint32_t currentVertexCount = (uint32_t)(s_Data.VertexBufferPtr - s_Data.VertexBufferBase);
+    uint32_t currentVertexCount = (uint32_t)(s_Data.VertexBufferPtr - s_Data.VertexBufferBase.get());
 
     if (currentVertexCount + 4 > MaxVertices)
     {
@@ -239,7 +245,7 @@ void Renderer2D::DrawRect(const Rect& rect, const Color& color)
     if (s_Data.IndexCount + 6 > MaxIndices)
         NextBatch();
 
-    uint32_t currentVertexCount = (uint32_t)(s_Data.VertexBufferPtr - s_Data.VertexBufferBase);
+    uint32_t currentVertexCount = (uint32_t)(s_Data.VertexBufferPtr - s_Data.VertexBufferBase.get());
 
     if (currentVertexCount + 4 > MaxVertices)
         NextBatch();
@@ -385,6 +391,7 @@ std::vector<RenderCommand>& Renderer2D::GetQueue(const RenderLayer& layer)
         case RenderLayer::UI:
 		    return s_UIQueue;
     }
+    throw std::invalid_argument("Invalid render layer");
 }
 
 void Renderer2D::EndScene()
@@ -394,6 +401,17 @@ void Renderer2D::EndScene()
 
 void Renderer2D::Destroy()
 {
+    ClearCommandQueue();
+    s_Camera = s_BatchCamera = nullptr;
+    s_DefaultCamera.reset();
+    s_Data.ShaderPtr.reset();
+    s_Data.WhiteTexture.reset();
+    s_Data.VertexBufferBase.reset();
+    s_Data.VertexBufferPtr = nullptr;
+    TextureManager::Clear();
+    glDeleteBuffers(1, &s_Data.VBO);
+    glDeleteBuffers(1, &s_Data.EBO);
+    glDeleteVertexArrays(1, &s_Data.VAO);
     SDL_GL_DestroyContext(m_Context);
     SDL_DestroyWindow(m_Window);
     SDL_Quit();
@@ -401,19 +419,25 @@ void Renderer2D::Destroy()
 
 void Renderer2D::SetViewport(float gameWidth, float gameHeight)
 {
-	s_Camera = new CameraComponent(gameWidth, gameHeight);
+	s_DefaultCamera = Unique<CameraComponent>(gameWidth, gameHeight);
+    s_Camera = s_DefaultCamera.get();
+}
+
+void Renderer2D::SetCamera(CameraComponent* camera)
+{
+    s_Camera = camera ? camera : s_DefaultCamera.get();
 }
 
 void Renderer2D::Flush()
 {
-    GLsizeiptr size = (uint8_t*)s_Data.VertexBufferPtr - (uint8_t*)s_Data.VertexBufferBase;
+    GLsizeiptr size = (uint8_t*)s_Data.VertexBufferPtr - (uint8_t*)s_Data.VertexBufferBase.get();
 
     if (size == 0)
         return;
 
     glBindVertexArray(s_Data.VAO);
     glBindBuffer(GL_ARRAY_BUFFER, s_Data.VBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Data.VertexBufferBase);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Data.VertexBufferBase.get());
 
     s_Data.ShaderPtr->Bind();
     for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
@@ -426,8 +450,9 @@ void Renderer2D::Flush()
 
 void Renderer2D::StartBatch(CameraComponent* camera)
 {
+    s_BatchCamera = camera;
     s_Data.IndexCount = 0;
-    s_Data.VertexBufferPtr = s_Data.VertexBufferBase;
+    s_Data.VertexBufferPtr = s_Data.VertexBufferBase.get();
     s_Data.TextureSlotIndex = 1;
 
     if(camera) SetMatrix(camera->GetViewProjection());
@@ -442,5 +467,7 @@ void Renderer2D::EndBatch()
 void Renderer2D::NextBatch()
 {
 	EndBatch();
-    StartBatch();
+    StartBatch(s_BatchCamera);
 }
+
+} // namespace dqengine

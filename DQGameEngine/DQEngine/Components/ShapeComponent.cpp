@@ -2,6 +2,8 @@
 #include "ShapeComponent.h"
 #include "Components/GameApp.h"
 
+namespace dqengine {
+
 void ShapeComponent::OnAttach()
 {
 	GameApp::GetBoardphase()->Add(this);
@@ -24,3 +26,5 @@ void ShapeComponent::OnUpdate(float dt)
 {
 	isColliding = false;
 }
+
+} // namespace dqengine

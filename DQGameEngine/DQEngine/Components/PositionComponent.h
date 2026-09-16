@@ -4,6 +4,8 @@
 #include "Core/Flip.h"
 #include "Renderer/RenderCommand.h"
 
+namespace dqengine {
+
 class PositionComponent : public Component
 {
 public:
@@ -37,3 +39,5 @@ protected:
 
 };
 
+
+} // namespace dqengine

@@ -2,6 +2,8 @@
 #include "Animation2DComponent.h"
 #include "Renderer/Renderer2D.h"
 
+namespace dqengine {
+
 Animation2DComponent::Animation2DComponent()
 {
 }
@@ -78,3 +80,4 @@ void Animation2DComponent::OnDraw()
 
     //Renderer2D::DrawRectOutline(dst, 1.f);
 }
+} // namespace dqengine

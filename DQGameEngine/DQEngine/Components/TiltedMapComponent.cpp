@@ -5,6 +5,8 @@
 #include "Renderer/Renderer2D.h"
 #include <filesystem>
 
+namespace dqengine {
+
 TiltedMapComponent::TiltedMapComponent(const std::string& path)
 {
     Load(path);
@@ -82,7 +84,7 @@ void TiltedMapComponent::BuildTiles()
 
                     int localID = tile.ID - ts.getFirstGID();
 
-                    Texture* tex = m_Textures[i];
+                    auto tex = m_Textures[i];
 
                     int tileCountX = tex->GetWidth() / m_TileSize;
 
@@ -150,7 +152,7 @@ void TiltedMapComponent::OnDraw()
 
         Renderer2D::Submit({
             CommandType::Sprite,
-            tile.texture,
+            tile.texture.get(),
             tile.src,
             tile.dst,
             tile.flip,
@@ -176,3 +178,5 @@ std::vector<Rect> TiltedMapComponent::GetObjectGroup(const std::string& name)
     }
     return rects;
 }
+
+} // namespace dqengine

@@ -5,6 +5,8 @@
 #include "Renderer/Shader.h"
 #include "Components/TiltedMapComponent.h"
 
+namespace dqengine {
+
 //// Shader helpers
 //GLuint compileShader(const char* source, GLenum type) {
 //    GLuint shader = glCreateShader(type);
@@ -507,3 +509,5 @@
 //    }
 //
 //}
+
+} // namespace dqengine

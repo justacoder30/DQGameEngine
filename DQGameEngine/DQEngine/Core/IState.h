@@ -1,5 +1,7 @@
 #pragma once
 
+namespace dqengine {
+
 class IState
 {
 public:
@@ -8,3 +10,5 @@ public:
     virtual void Update(float dt) {}
     virtual void Exit() {}
 };
+
+} // namespace dqengine

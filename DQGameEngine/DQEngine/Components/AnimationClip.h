@@ -3,6 +3,8 @@
 #include "Core/Rect.h"
 #include "Core/Flip.h"
 
+namespace dqengine {
+
 class AnimationClip
 {
 private:
@@ -23,3 +25,5 @@ public:
 	Rect getRect();
 };
 
+
+} // namespace dqengine

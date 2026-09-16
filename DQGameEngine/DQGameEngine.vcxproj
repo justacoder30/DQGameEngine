@@ -165,6 +165,7 @@
     <ClInclude Include="DQEngine\Core\IState.h" />
     <ClInclude Include="DQEngine\Core\StateMachine.h" />
     <ClInclude Include="DQEngine\Components\StateMachineComponent.h" />
+    <ClInclude Include="DQEngine\Core\Memory.h" />
     <ClInclude Include="DQEngine\Core\Time.h" />
     <ClInclude Include="DQEngine\Core\Utils.h" />
   </ItemGroup>

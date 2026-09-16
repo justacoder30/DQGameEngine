@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Vector.h"
 
+namespace dqengine {
+
 Vector Vector::Zero()
 {
     return Vector(0, 0);
@@ -67,3 +69,5 @@ void Vector::printf()
     std::cout << "(" << x << ", " << y << ")" << std::endl;
 }
 
+
+} // namespace dqengine

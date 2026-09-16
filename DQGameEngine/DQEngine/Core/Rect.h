@@ -1,6 +1,8 @@
 #pragma once
 #include "Vector.h"
 
+namespace dqengine {
+
 class Rect
 {
 public:
@@ -22,3 +24,5 @@ private:
 	void setRect();
 };
 
+
+} // namespace dqengine

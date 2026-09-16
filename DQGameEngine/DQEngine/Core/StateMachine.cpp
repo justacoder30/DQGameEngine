@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "StateMachine.h"
 
+namespace dqengine {
+
 void StateMachine::ChangeState(IState* newState)
 {
     if (current)
@@ -17,3 +19,5 @@ void StateMachine::Update(float dt)
     if (current)
         current->Update(dt);
 }
+
+} // namespace dqengine

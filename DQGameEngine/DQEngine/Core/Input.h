@@ -2,6 +2,8 @@
 #include <SDL3/SDL.h>
 #include "Rect.h"
 
+namespace dqengine {
+
 class INPUT
 {
 private:
@@ -19,3 +21,4 @@ public:
 extern INPUT Input;
 extern const bool* Key;
 extern bool PreKey[SDL_SCANCODE_COUNT];
+} // namespace dqengine

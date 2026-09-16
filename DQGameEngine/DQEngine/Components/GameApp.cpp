@@ -4,6 +4,8 @@
 #include "Core/Input.h" 
 #include "Core/Time.h" 
 
+namespace dqengine {
+
 Boardphase GameApp::s_Boardphase;
 bool m_Running = true;
 
@@ -22,6 +24,7 @@ GameApp::GameApp(int width, int height, const char* title)
 
 GameApp::~GameApp()
 {
+    ClearChildren(); // Destroy scene textures while the OpenGL context still exists.
 	Renderer2D::Destroy();
 }
 
@@ -82,3 +85,5 @@ void GameApp::Draw()
 
 	Renderer2D::ClearCommandQueue();
 }
+
+} // namespace dqengine

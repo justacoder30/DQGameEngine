@@ -1,5 +1,7 @@
 #pragma once
 
+namespace dqengine {
+
 enum Flip
 {
 	None,
@@ -8,3 +10,5 @@ enum Flip
 	Diagonal
 };
 
+
+} // namespace dqengine

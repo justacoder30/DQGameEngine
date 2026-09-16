@@ -2,6 +2,8 @@
 #include "ShapeComponent.h"
 #include "Core/Rect.h"	
 
+namespace dqengine {
+
 class RectangleComponent : public ShapeComponent
 {
 public:
@@ -20,3 +22,5 @@ private:
 	bool fixParentSize = false;
 };
 
+
+} // namespace dqengine

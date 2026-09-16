@@ -14,6 +14,10 @@
 #include "Core/Time.h"
 #include "Core/Utils.h"
 
+namespace dqengine {
+
 int Test();
 int Test1();
 void TestTexture();
+
+} // namespace dqengine

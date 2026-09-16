@@ -15,7 +15,18 @@ The engine library alone is not sufficient: distribute this whole folder.
 3. Open **View > Other Windows > Property Manager**. Under your project,
    right-click **Release | x64**, choose **Add Existing Property Sheet**, and
    select `DQGameEngine.props`. Do the same for **Debug | x64** if included.
-4. Use `#include <DQEngine/DQEngine.h>` in your code.
+4. Use `#include <DQEngine/DQEngine.h>` in your code. All engine names are in
+   `dqengine`, for example `dqengine::GameApp` and `dqengine::Vector`.
+
+Use `dqengine::Unique<T>(args...)` / `dqengine::Shared<T>(args...)` to create
+smart pointers and `UniquePtr<T>` / `SharedPtr<T>` / `WeakPtr<T>` to store them.
+`scene.Add(dqengine::Unique<MyComponent>())` transfers ownership to the scene
+and returns a borrowed `MyComponent*`. Never delete that pointer; call
+`RemoveFromParent()` to schedule removal. Use `QueueAdd` when spawning during
+traversal. `GetChildren()` returns a const vector of unique pointers.
+Textures are shared; release them before destroying the game's OpenGL context.
+Rebuild consumers when upgrading from the former global-namespace API, and
+replace headers and libraries together.
 
 The property sheet sets both include directories, the required libraries,
 `TMXLITE_STATIC`, C++20, and the DLL C runtime (`/MD` in Release, `/MDd` in

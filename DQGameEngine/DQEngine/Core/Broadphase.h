@@ -10,6 +10,8 @@
 #include <utility>
 #include <vector>
 
+namespace dqengine {
+
 using CollisionPair = std::pair<ShapeComponent*, ShapeComponent*>;
 
 struct CollisionPairHash
@@ -42,7 +44,7 @@ public:
 
     Board* GetBoard() { return board.get(); }
 
-    void SetBoard(std::unique_ptr<Board> b) { board = std::move(b); }
+    void SetBoard(UniquePtr<Board> b) { board = std::move(b); }
 
 private:
     CollisionPair MakePair( ShapeComponent* a, ShapeComponent* b) const;
@@ -51,7 +53,8 @@ private:
     std::vector<ShapeComponent*> colliders;
     std::unordered_set<CollisionPair, CollisionPairHash> currentCollisions;
     std::unordered_set<CollisionPair, CollisionPairHash> previousCollisions;
-    std::unique_ptr<Board> board;
+    UniquePtr<Board> board;
 };
 
 bool ShouldCollide( ShapeComponent* a, ShapeComponent* b);
+} // namespace dqengine

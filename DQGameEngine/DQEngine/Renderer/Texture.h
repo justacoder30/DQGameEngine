@@ -1,5 +1,9 @@
 #pragma once
+#include "Core/Memory.h"
+#include <cstdint>
 #include <string>
+
+namespace dqengine {
 
 class Texture
 {
@@ -9,6 +13,8 @@ public:
     Texture(uint32_t width, uint32_t height, void* data);
     Texture();
     ~Texture();
+    Texture(const Texture&) = delete;
+    Texture& operator=(const Texture&) = delete;
 
     void Bind(uint32_t slot = 0) const;
     void Unbind() const;
@@ -24,3 +30,4 @@ private:
     int m_Width = 0;
     int m_Height = 0;
 };
+} // namespace dqengine

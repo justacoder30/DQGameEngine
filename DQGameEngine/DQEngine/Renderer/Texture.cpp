@@ -2,11 +2,14 @@
 #include "Texture.h"
 #include "Core/TextureManager.h"
 
+namespace dqengine {
+
 Texture::Texture(const std::string& path)
 {
 	int channels;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char* data = stbi_load(path.c_str(), &m_Width, &m_Height, &channels, 4);
+    UniquePtr<unsigned char, decltype(&stbi_image_free)> data(
+        stbi_load(path.c_str(), &m_Width, &m_Height, &channels, 4), &stbi_image_free);
 
     if (!data) std::cout << "Failed to load texture: " << path << std::endl;
 
@@ -25,11 +28,10 @@ Texture::Texture(const std::string& path)
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.get());
     glGenerateMipmap(GL_TEXTURE_2D);
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    stbi_image_free(data);
 }
 
 Texture::Texture(uint32_t width, uint32_t height, void* data)
@@ -80,3 +82,5 @@ void Texture::Bind(uint32_t slot) const
     glBindTexture(GL_TEXTURE_2D, m_ID);
 }
 
+
+} // namespace dqengine

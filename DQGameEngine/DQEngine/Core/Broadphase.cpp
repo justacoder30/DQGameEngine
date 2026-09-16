@@ -7,7 +7,9 @@
 #include <algorithm>
 #include <functional>
 
-Boardphase::Boardphase() : board(std::make_unique<BaseBoard>())
+namespace dqengine {
+
+Boardphase::Boardphase() : board(Unique<BaseBoard>())
 {
     colliders.reserve(256);
     currentCollisions.reserve(256);
@@ -36,6 +38,8 @@ void Boardphase::Run()
         board->Insert(c);
     }
    
+    std::vector<ShapeComponent*> neighbors;
+    neighbors.reserve(64);
     // Collision detection
     for (ShapeComponent* a : colliders)
     {
@@ -43,7 +47,7 @@ void Boardphase::Run()
         if (!a->active) continue;
         if (!a->GetParent()) continue;
 
-        auto neighbors = board->Query(a);
+        board->Query(a, neighbors);
 
         for (ShapeComponent* b : neighbors)
         {
@@ -113,6 +117,7 @@ void Boardphase::Remove(ShapeComponent* c)
     if (!c) return;
 
     std::erase(colliders, c);
+    board->Remove(c);
 
     auto removeCollider = [c](auto& collisions)
     {
@@ -144,3 +149,4 @@ bool ShouldCollide(ShapeComponent* a, ShapeComponent* b)
 
     return aCanHitB && bCanHitA;
 } 
+} // namespace dqengine

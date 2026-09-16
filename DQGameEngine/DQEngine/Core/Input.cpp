@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Input.h"
 
+namespace dqengine {
+
 INPUT Input = INPUT();
 const bool* Key = SDL_GetKeyboardState(NULL);
 bool PreKey[SDL_SCANCODE_COUNT];
@@ -25,3 +27,5 @@ void INPUT::Update()
 	}
 }
 
+
+} // namespace dqengine

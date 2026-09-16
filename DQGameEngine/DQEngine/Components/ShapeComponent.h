@@ -3,6 +3,8 @@
 #include "Core/CollisionCallbacks.h"
 #include "Core/Color.h"
 
+namespace dqengine {
+
 enum class Layer : uint32_t
 {
 	None = 0,
@@ -66,3 +68,5 @@ public:
 	BodyType bodyType = BodyType::NoneType; 
 };
 
+
+} // namespace dqengine

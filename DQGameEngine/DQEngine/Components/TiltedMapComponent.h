@@ -12,13 +12,15 @@
 #include <vector>
 #include <string>
 
+namespace dqengine {
+
 class TiltedMapComponent : public PositionComponent
 {
 private:
 
     struct Tile
     {
-        Texture* texture;
+        SharedPtr<Texture> texture;
         Rect src;
         Rect dst;
 
@@ -32,8 +34,8 @@ private:
     void BuildTiles();
 	void GetAngleAndFlip(uint8_t flags, float& angle, Flip& flip);
 
-    inline static tmx::Map m_Map;
-    std::vector<Texture*> m_Textures;
+    tmx::Map m_Map;
+    std::vector<SharedPtr<Texture>> m_Textures;
     std::vector<Tile> m_Tiles;
     int m_TileSize = 0;
     float m_Width = 0;
@@ -50,3 +52,4 @@ public:
     float GetHeight() const { return m_Height; }
     std::vector<Rect> GetObjectGroup(const std::string& name);
 };
+} // namespace dqengine

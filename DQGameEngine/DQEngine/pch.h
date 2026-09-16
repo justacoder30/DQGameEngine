@@ -56,5 +56,5 @@
 // String cast (debug glm)
 #include <glm/gtx/string_cast.hpp>
 
-template<typename T> using Shared = std::shared_ptr<T>;
-template<typename T> using Unique = std::unique_ptr<T>; 
+
+#include "Core/Memory.h"

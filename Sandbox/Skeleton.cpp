@@ -82,12 +82,12 @@ void Skeleton::OnLoad()
 
 	state = new StateMachineComponent();
 
-	idleState = new EnemyIdleState(this);
-	chaseState = new EnemyChaseState(this);
-	attackState = new EnemyAttackState(this);
-	hurtState = new EnemyHurtState(this);
-	deathState = new EnemyDeathState(this);
-	walkState = new EnemyWalkState(this);
+	idleState = state->CreateState<EnemyIdleState>(this);
+	chaseState = state->CreateState<EnemyChaseState>(this);
+	attackState = state->CreateState<EnemyAttackState>(this);
+	hurtState = state->CreateState<EnemyHurtState>(this);
+	deathState = state->CreateState<EnemyDeathState>(this);
+	walkState = state->CreateState<EnemyWalkState>(this);
 
 	Add(state);
 

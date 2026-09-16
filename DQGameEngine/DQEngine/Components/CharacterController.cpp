@@ -5,12 +5,12 @@
 #include "Components/GameApp.h"
 #include "Components/RectangleComponent.h"
 
+namespace dqengine {
+
 static float StepSize = 4;
 
 void CharacterController::OnLoad()
 {
-    colliders = GameApp::GetBoardphase()->GetColliders();
-    board = GameApp::GetBoardphase()->GetBoard();
 }
 
 void CharacterController::OnUpdate(float dt)
@@ -40,7 +40,7 @@ void CharacterController::Move(const Vector& direction)
 
     pos->position += direction;
 
-    auto neighbors = board->Query(hitbox);
+    auto neighbors = GameApp::GetBoardphase()->GetBoard()->Query(hitbox);
 
     for (auto* neighbor : neighbors)
     {
@@ -82,7 +82,7 @@ void CharacterController::MoveX(const float& dx)
 
     pos->position.x += dx;
 
-    auto neighbors = board->Query(hitbox);
+    auto neighbors = GameApp::GetBoardphase()->GetBoard()->Query(hitbox);
 
     for (auto* neighbor : neighbors)
     {
@@ -133,7 +133,7 @@ void CharacterController::MoveY(const float& dy)
 
     pos->position.y += dy;
 
-    auto neighbors = board->Query(hitbox);
+    auto neighbors = GameApp::GetBoardphase()->GetBoard()->Query(hitbox);
     for (auto* neighbor : neighbors)
     {
         if (hitbox == neighbor) 
@@ -185,7 +185,7 @@ bool CharacterController::Push(ShapeComponent* target, const Vector& mtv, std::u
 
     visited.insert(target);
 
-    auto neighbors = board->Query(target);
+    auto neighbors = GameApp::GetBoardphase()->GetBoard()->Query(target);
 
     for (auto* n : neighbors)
     {
@@ -212,3 +212,5 @@ bool CharacterController::Push(ShapeComponent* target, const Vector& mtv, std::u
 
     return true;
 }
+
+} // namespace dqengine

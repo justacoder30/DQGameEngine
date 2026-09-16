@@ -1,21 +1,14 @@
 #include "DarkMageDeathState.h"
 #include "../DarkMage.h"
-
-void DarkMageDeathState::Enter()
-{
+void DarkMageDeathState::Enter() {
     boss->dead = true;
-
+    boss->ClearAttacks();
     boss->Play(Death);
-
-    boss->controller->velocity.x = 0;
-
+    boss->controller->velocity = Vector(0,0);
     boss->hitbox->active = false;
+    boss->sensor_player->active = false;
+    boss->healthbar->SetHealth(0,boss->MaxHP);
 }
-
-void DarkMageDeathState::Update(float dt)
-{
-    if (boss->animationClip.IsDone())
-    {
-        boss->RemoveFromParent();
-    }
+void DarkMageDeathState::Update(float) {
+    if (boss->animationClip.IsDone()) boss->RemoveFromParent();
 }

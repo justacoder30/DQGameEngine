@@ -4,6 +4,8 @@
 #include <SDL3/SDL.h>
 #include "Core/Broadphase.h"
 
+namespace dqengine {
+
 class GameApp : public Component
 {
 public:
@@ -28,3 +30,4 @@ private:
 };
 
 extern bool m_Running;
+} // namespace dqengine

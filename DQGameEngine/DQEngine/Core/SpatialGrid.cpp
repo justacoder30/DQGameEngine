@@ -6,13 +6,15 @@
 
 #include <cmath>
 
+namespace dqengine {
+
 void SpatialGrid::Init(float size)
 {
     cellSize = size;
 
     grid.reserve(1024);
     queryStamp.reserve(512);
-    queryResult.reserve(64);
+
 }
 
 void SpatialGrid::Clear()
@@ -63,14 +65,14 @@ void SpatialGrid::Insert(ShapeComponent* obj)
     }
 }
 
-std::vector<ShapeComponent*> SpatialGrid::Query(ShapeComponent* obj)
+void SpatialGrid::Query(ShapeComponent* obj, std::vector<ShapeComponent*>& queryResult)
 {
     queryResult.clear();
 
-    if (!obj) return queryResult;
+    if (!obj) return;
 
     if (obj->shapeType != ShapeType::Rectangle)
-        return queryResult;
+        return;
 
     auto* rect = static_cast<RectangleComponent*>(obj);
 
@@ -117,10 +119,16 @@ std::vector<ShapeComponent*> SpatialGrid::Query(ShapeComponent* obj)
         }
     }
 
-    return queryResult;
+    return;
 }
 
 std::uint64_t SpatialGrid::Hash(int x, int y) const
 {
-    return ((static_cast<std::uint64_t>(x) << 32) | static_cast<std::uint64_t>(y));
+    return ((static_cast<std::uint64_t>(static_cast<std::uint32_t>(x)) << 32) | static_cast<std::uint32_t>(y));
 }
+void SpatialGrid::Remove(ShapeComponent* obj)
+{
+    queryStamp.erase(obj);
+    for (auto& [key, cell] : grid) std::erase(cell.objects, obj);
+}
+} // namespace dqengine

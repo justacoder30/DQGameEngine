@@ -3,9 +3,11 @@
 #include "BaseBoard.h"
 #include "Components/GameApp.h"
 
-std::vector<ShapeComponent*> BaseBoard::Query(ShapeComponent* obj)
+namespace dqengine {
+
+void BaseBoard::Query(ShapeComponent* obj, std::vector<ShapeComponent*>& result)
 {
-	return colliders;
+	result.assign(colliders.begin(), colliders.end());
 }
 
 void BaseBoard::Insert(ShapeComponent* obj)
@@ -17,3 +19,9 @@ void BaseBoard::Clear()
 {
 	colliders.clear();
 }
+
+void BaseBoard::Remove(ShapeComponent* obj)
+{
+    std::erase(colliders, obj);
+}
+} // namespace dqengine

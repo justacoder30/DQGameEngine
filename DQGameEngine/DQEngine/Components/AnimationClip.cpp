@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "AnimationClip.h"
 
+namespace dqengine {
+
 AnimationClip::AnimationClip()
 {}
 
@@ -64,3 +66,5 @@ Rect AnimationClip::getRect()
 	return Rect(animation.CurrentFrame * animation.FrameWidth, animation.row * animation.FrameHeight, animation.FrameWidth, animation.FrameHeight);
 }
 
+
+} // namespace dqengine

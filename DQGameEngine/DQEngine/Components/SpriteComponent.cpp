@@ -2,6 +2,8 @@
 #include "SpriteComponent.h"
 #include "Core/TextureManager.h"
 
+namespace dqengine {
+
 SpriteComponent::SpriteComponent(const std::string& path)
 {
 	m_Texture = TextureManager::Load(path);
@@ -28,7 +30,7 @@ void SpriteComponent::OnDraw()
 
 	Renderer2D::Submit({
 		CommandType::Sprite,
-		m_Texture,
+		m_Texture.get(),
 		m_Src,
 		dst,
 		flip,
@@ -38,3 +40,5 @@ void SpriteComponent::OnDraw()
 		m_Color
 	});
 }
+
+} // namespace dqengine

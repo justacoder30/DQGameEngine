@@ -2,6 +2,8 @@
 #include "RectangleComponent.h"
 #include "Renderer/Renderer2D.h"
 
+namespace dqengine {
+
 RectangleComponent::RectangleComponent()
 {
     fixParentSize = true;
@@ -80,3 +82,5 @@ void RectangleComponent::OnAttach()
 	
     ShapeComponent::OnAttach();
 }
+
+} // namespace dqengine

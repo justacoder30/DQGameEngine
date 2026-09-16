@@ -4,6 +4,8 @@
 #include "Core/Broadphase.h"
 #include <unordered_set>
 
+namespace dqengine {
+
 class ShapeComponent;
 
 class CharacterController : public Component
@@ -27,6 +29,5 @@ private:
 
     bool Push(ShapeComponent* target, const Vector& mtv, std::unordered_set<ShapeComponent*>& visited);
 
-    std::vector<ShapeComponent*> colliders;
-	Board* board;
 };
+} // namespace dqengine

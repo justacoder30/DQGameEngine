@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Time.h"
 
+namespace dqengine {
+
 float Time::timeScale = 1.0f;
 float Time::freezeTimer = 0;
 //srand((unsigned int)time(nullptr));
@@ -23,3 +25,4 @@ void Time::Update(float dt)
         }
     }
 }
+} // namespace dqengine

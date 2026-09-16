@@ -6,6 +6,8 @@
 #include "Core/Rect.h"
 #include "Core/Color.h"
 
+namespace dqengine {
+
 class Animation2DComponent : public PositionComponent
 {
 public:
@@ -32,3 +34,4 @@ private:
     Color m_Color = { 1.0f, 1.0f, 1.0f, 1.0f };
     bool playing = false;
 };
+} // namespace dqengine

@@ -46,16 +46,16 @@ Player::Player()
 
 	state = new StateMachineComponent();
 
-	idleState = new IdleState(this);
-	runState = new RunState(this);
-	jumpState = new JumpState(this);
-	fallState = new FallState(this);
-	attackState = new AttackState(this);
-	airAttackState = new AirAttackState(this);
-	hurtState = new HurtState(this);
-	deathState = new DeathState(this);
-	airAttackEndkState = new AirAttackEndState(this);
-	rollState = new RollState(this);
+	idleState = state->CreateState<IdleState>(this);
+	runState = state->CreateState<RunState>(this);
+	jumpState = state->CreateState<JumpState>(this);
+	fallState = state->CreateState<FallState>(this);
+	attackState = state->CreateState<AttackState>(this);
+	airAttackState = state->CreateState<AirAttackState>(this);
+	hurtState = state->CreateState<HurtState>(this);
+	deathState = state->CreateState<DeathState>(this);
+	airAttackEndkState = state->CreateState<AirAttackEndState>(this);
+	rollState = state->CreateState<RollState>(this);
 
 	state->ChangeState(idleState);
 

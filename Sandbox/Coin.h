@@ -1,5 +1,5 @@
 #pragma once
-#include "DQEngine/DQEngine.h"
+#include "Engine.h"
 #include <iostream>
 
 class Coin : public Animation2DComponent, public CollisionCallbacks

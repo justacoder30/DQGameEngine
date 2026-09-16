@@ -22,7 +22,56 @@ You can test the engine's movement, FSM state machine, and collision system usin
 | **Air Attack** | `J` *(while airborne)* | Execute aerial attack |
 | **Roll / Dodge** | `Shift` *(while moving)* | Perform a dodge roll |
 
+## DarkMage boss
+
+DarkMage keeps its distance and alternates telegraphed head casts with skeleton
+summons. Attack2 uses `Head.png`: heads track briefly, then fly straight, can be
+destroyed by a player attack, and stop at terrain. Rolling avoids their damage.
+Below half health, DarkMage moves faster, recovers sooner, and fires two heads.
+Heal has a green tint and can be interrupted by hitting the boss before
+the healing frame. There are two healing attempts and four summons per boss.
+Leaving the encounter or killing the boss clears its projectiles.
+
+Health, movement range, cooldowns, and encounter limits are in `Sandbox/DarkMage.h`;
+cast/release frames are in `Sandbox/DarkMageState/DarkMageAttackState.cpp`.
+
+`Sandbox/Head.h` and `Head.cpp` implement the flying projectile as a
+`SpriteComponent`. DarkMage spawns it with `GetParent()->QueueAdd(Unique<Head>(...))`.
+`QueueAdd` takes ownership immediately, attaches after the parent's traversal,
+and starts updating the new child on the next frame. `Add` also queues
+automatically when the parent is traversing children. Heads call
+`RemoveFromParent()` on impact or expiry. A weak volley reference cancels them
+when the boss disengages or dies without keeping a dangling boss pointer.
+
 ## 🌟 Features
+
+### Namespace and smart pointers
+
+All engine types and functions are in `dqengine`. Include `<DQEngine/DQEngine.h>`:
+
+```cpp
+dqengine::Component scene;
+auto sprite = dqengine::Unique<dqengine::SpriteComponent>("resource/player.png");
+auto* playerSprite = scene.Add(std::move(sprite));
+playerSprite->position = dqengine::Vector(100.f, 100.f);
+```
+
+`Unique<T>(args...)` and `Shared<T>(args...)` are factories. Use `UniquePtr<T>`,
+`SharedPtr<T>`, and `WeakPtr<T>` for stored pointer types. Components own children
+with unique pointers; `Add` and `QueueAdd` transfer ownership. Their returned
+pointers, `GetParent()`, and `GetComponent<T>()` are borrowed references: do not
+delete them or keep using them after removal. `GetChildren()` exposes a const
+vector of unique pointers; use `child.get()` when a borrowed pointer is needed.
+Legacy `Add(Component*)` still adopts ownership for existing games.
+
+Textures are shared between the cache, sprites, and animations. Clearing the
+cache no longer destroys textures still in use. Release game resources before
+the `GameApp` (and its OpenGL context) is destroyed. State machines own states
+created through `CreateState<T>(args...)`; `ChangeState` borrows its argument.
+
+This namespace/ownership change requires rebuilding the SDK and consumer projects
+together. Existing code must qualify engine names or use `using namespace
+dqengine;` in its own source files. Sandbox uses `Engine.h` for this convenience.
 
 - **2D Rendering Engine:** Modern OpenGL pipeline with Glad loader, supporting 2D sprite batching, custom shader management, and texture atlases.
 - **2D Camera System:** Dynamic 2D camera supporting target tracking, smooth follow (Lerp), zoom controls, and viewport boundary clamping.

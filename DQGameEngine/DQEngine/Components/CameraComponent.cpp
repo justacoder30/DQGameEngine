@@ -3,6 +3,8 @@
 #include "Renderer/Renderer2D.h"
 #include "Core/Utils.h"
 
+namespace dqengine {
+
 CameraComponent::CameraComponent(float width, float height)
     : m_Width(width), m_Height(height)
 {
@@ -136,3 +138,9 @@ void CameraComponent::RecalculateMatrix()
     m_BackdropMatrix = proj;
     m_ViewProjection = m_BackdropMatrix * view;
 }
+void CameraComponent::OnDetach()
+{
+    if (Renderer2D::GetCamera() == this) Renderer2D::SetCamera(nullptr);
+}
+
+} // namespace dqengine

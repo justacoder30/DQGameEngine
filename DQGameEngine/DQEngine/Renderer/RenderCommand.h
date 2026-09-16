@@ -5,6 +5,8 @@
 #include "Core/Color.h"
 #include <glm/glm.hpp>  
 
+namespace dqengine {
+
 enum class CommandType
 {
     Sprite,
@@ -34,3 +36,5 @@ struct RenderCommand
     Color color = { 1,1,1,1 };
 };
 
+
+} // namespace dqengine

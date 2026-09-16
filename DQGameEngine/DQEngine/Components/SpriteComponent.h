@@ -3,6 +3,8 @@
 #include "Renderer/Texture.h"
 #include "Renderer/Renderer2D.h"
 
+namespace dqengine {
+
 class SpriteComponent : public PositionComponent
 {
 public:
@@ -15,6 +17,7 @@ protected:
 
 private:
 
-    Texture* m_Texture;
+    SharedPtr<Texture> m_Texture;
     Color m_Color = { 1.0f, 1.0f, 1.0f, 1.0f };
 };
+} // namespace dqengine

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Rect.h"
 
+namespace dqengine {
+
 void Rect::setRect()
 {
 	top = y;
@@ -71,3 +73,5 @@ Vector Rect::GetMTV(const Rect& other)
 	else
 		return Vector(0, (y < other.y) ? -overlap.y : overlap.y);
 }
+
+} // namespace dqengine

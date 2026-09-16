@@ -10,6 +10,8 @@
 #include "RenderCommand.h"
 #include "vector"
 
+namespace dqengine {
+
 struct QuadVertex
 {
     float Position[3];
@@ -38,7 +40,7 @@ public:
     static void DrawRect(const Rect& rect, const Color& color);
     static void DrawRectOutline(const Rect& rect, const Color& color, float thickness = 2.0f);
     static void SetMatrix(const glm::mat4& viewProj);
-	static void SetCamera(CameraComponent* camera) { s_Camera = camera; }
+	static void SetCamera(CameraComponent* camera);
 	static CameraComponent* GetCamera() { return s_Camera; }
 
     static void Submit(const RenderCommand& cmd);
@@ -63,3 +65,4 @@ private:
     static std::vector<RenderCommand> s_WorldQueue;
     static std::vector<RenderCommand> s_UIQueue;
 };
+} // namespace dqengine

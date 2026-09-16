@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "Shader.h"
 
+namespace dqengine {
+
 std::string Shader::ReadFile(const std::string& path)
 {
     std::ifstream file(path);
@@ -152,13 +154,13 @@ void Shader::Unbind() const
 
 void Shader::SetInt(const std::string& name, int value)
 {
-    glUniform1i(glGetUniformLocation(m_ID, name.c_str()), value);
+    glUniform1i(UniformLocation(name), value);
 }
 
 void Shader::SetIntArray(const std::string& name, int* values, uint32_t count)
 {
     glUniform1iv(
-        glGetUniformLocation(m_ID, name.c_str()),
+        UniformLocation(name),
         count,
         values
     );
@@ -171,9 +173,24 @@ void Shader::SetMat4(const std::string& name, const glm::mat4& matrix)
     // GL_FALSE: Không hoán vị (transpose) ma trận vì GLM đã khớp với định dạng của OpenGL
     // glm::value_ptr: Lấy con trỏ đến dữ liệu mảng của ma trận
     glUniformMatrix4fv(
-        glGetUniformLocation(m_ID, name.c_str()),
+        UniformLocation(name),
         1,
         GL_FALSE,
         glm::value_ptr(matrix)
     );
 }
+
+Shader::~Shader()
+{
+    glDeleteProgram(m_ID);
+}
+
+GLint Shader::UniformLocation(const std::string& name)
+{
+    const auto it = m_UniformLocations.find(name);
+    if (it != m_UniformLocations.end()) return it->second;
+    const GLint location = glGetUniformLocation(m_ID, name.c_str());
+    m_UniformLocations.emplace(name, location);
+    return location;
+}
+} // namespace dqengine

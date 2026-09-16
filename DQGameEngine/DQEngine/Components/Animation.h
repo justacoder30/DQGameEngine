@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+namespace dqengine {
+
 class Animation
 {
 public:
@@ -26,7 +28,9 @@ public:
 	int row = 0;
 
 private:
-	std::vector<Texture*> textures;
-	Texture* texture = nullptr;
+	std::vector<SharedPtr<Texture>> textures;
+	SharedPtr<Texture> texture;
 	bool isSpriteSheet = true;
 };
+
+} // namespace dqengine

@@ -4,6 +4,8 @@
 #include "Core/Rect.h"
 #include <glm/glm.hpp>
 
+namespace dqengine {
+
 class CameraComponent : public Component
 {
 public:
@@ -29,6 +31,7 @@ public:
 protected:
     void OnUpdate(float dt) override;
 	void OnAttach() override;
+    void OnDetach() override;
 
 private:
     void RecalculateMatrix();
@@ -61,3 +64,5 @@ private:
     bool m_EnableLookAhead = true;
 };
 
+
+} // namespace dqengine

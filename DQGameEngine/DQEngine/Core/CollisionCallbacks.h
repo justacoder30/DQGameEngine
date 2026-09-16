@@ -1,5 +1,6 @@
 #pragma once
-#include "Components/ShapeComponent.h"  
+
+namespace dqengine {
 
 class ShapeComponent;
 class Component;
@@ -12,3 +13,5 @@ public:
     virtual void OnCollisionEnd(ShapeComponent* self, ShapeComponent* otherShape, Component* other) {}
 };
 
+
+} // namespace dqengine

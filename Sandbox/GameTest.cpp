@@ -11,7 +11,6 @@ void GameTest::OnLoad()
     //DebugMode = true;
 	std::string objects_pos[] = {"DarkMagePosition", "PlayerPosition", "CoinPosition", "EnemyPosition", "EnemyPosition 1", "HeartPosition", "FlagPosition", "BossPosition", };
 
-    auto anim = new Animation2DComponent();
     auto player = new Player();
     auto bg = new Background();
     //auto map = new Map("resource/Map/map_test.tmx");fix
@@ -39,17 +38,17 @@ void GameTest::OnLoad()
         }
         else if (obj == "CoinPosition") {
             for (auto pos : positions) {
-                Add(new Coin(pos.x, pos.y));
+                Add(Unique<Coin>(pos.x, pos.y));
             }
         }
         else if (obj == "EnemyPosition") {
             for (auto pos : positions) {
-                Add(new Skeleton(Vector(pos.x, pos.y)));
+                Add(Unique<Skeleton>(Vector(pos.x, pos.y)));
             }
         }
         else if (obj == "DarkMagePosition") {
             for (auto pos : positions) {
-                Add(new DarkMage(Vector(pos.x, pos.y)));
+                Add(Unique<DarkMage>(Vector(pos.x, pos.y)));
             }
         }
     }
@@ -65,9 +64,9 @@ void GameTest::OnLoad()
     Add(cam);
     Add(bg);
     
-    auto grid = std::make_unique<SpatialGrid>();
-    grid->Init(128.0f);
-    s_Boardphase.SetBoard(std::move(grid));
+    //auto grid = Unique<SpatialGrid>();
+    //grid->Init(128.0f);
+    //s_Boardphase.SetBoard(std::move(grid));
 
     GameApp::OnLoad();
 }

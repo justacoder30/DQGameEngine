@@ -1,5 +1,7 @@
 #pragma once
 
+namespace dqengine {
+
 class Time
 {
 public:
@@ -11,3 +13,4 @@ public:
 
     static void Update(float dt);
 };
+} // namespace dqengine

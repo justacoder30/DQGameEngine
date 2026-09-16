@@ -2,6 +2,8 @@
 #include "PositionComponent.h"
 #include "Renderer/Renderer2D.h"
 
+namespace dqengine {
+
 void PositionComponent::OnUpdate(float dt)
 {
 	if (layer == RenderLayer::UI) {
@@ -112,3 +114,5 @@ void PositionComponent::VerticalFlip()
     
     anchor.y = 1.0f - anchor.y;
 }
+
+} // namespace dqengine

@@ -1,28 +1,18 @@
 #include "pch.h"
 #include "TextureManager.h"
 
-std::unordered_map<std::string, Texture*> TextureManager::s_Textures;
+namespace dqengine {
 
-Texture* TextureManager::Load(const std::string& path)
+std::unordered_map<std::string, SharedPtr<Texture>> TextureManager::s_Textures;
+
+SharedPtr<Texture> TextureManager::Load(const std::string& path)
 {
-    if (s_Textures.find(path) != s_Textures.end())
-        return s_Textures[path];  
-
-    if (path == "default") {
-        Texture* tex = new Texture();
-        s_Textures[path] = tex;
-        return tex;
-    }
-
-    Texture* tex = new Texture(path);
-    s_Textures[path] = tex;
-    return tex;
+    const auto it = s_Textures.find(path);
+    if (it != s_Textures.end()) return it->second;
+    auto texture = path == "default" ? Shared<Texture>() : Shared<Texture>(path);
+    s_Textures.emplace(path, texture);
+    return texture;
 }
+void TextureManager::Clear() { s_Textures.clear(); }
 
-void TextureManager::Clear()
-{
-    for (auto& pair : s_Textures)
-        delete pair.second;
-
-    s_Textures.clear();
-}
+} // namespace dqengine

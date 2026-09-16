@@ -1,5 +1,7 @@
 #pragma once
 
+namespace dqengine {
+
 class Vector
 {
 public:
@@ -21,3 +23,5 @@ public:
 	float x, y;
 };
 
+
+} // namespace dqengine
