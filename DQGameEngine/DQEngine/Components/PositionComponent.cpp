@@ -49,7 +49,7 @@ void PositionComponent::OnDetach()
 	}
 }
 
-const Vector& PositionComponent::GetWorldPosition()
+Vector PositionComponent::GetWorldPosition()
 {
     Vector worldPos = position;
 

@@ -216,8 +216,4 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="assets\shaders\vertex.glsl" />
-    <None Include="assets\shaders\fragment.glsl" />
-  </ItemGroup>
 </Project>

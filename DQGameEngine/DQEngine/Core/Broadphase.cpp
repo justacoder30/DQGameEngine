@@ -1,123 +1,146 @@
 #include "pch.h"
+
 #include "Broadphase.h"
 #include "BaseBoard.h"
 #include "Components/RectangleComponent.h"
 
-Boardphase::Boardphase()
+#include <algorithm>
+#include <functional>
+
+Boardphase::Boardphase() : board(std::make_unique<BaseBoard>())
 {
-	board = new BaseBoard();
+    colliders.reserve(256);
+    currentCollisions.reserve(256);
+    previousCollisions.reserve(256);
 }
 
 void Boardphase::Add(ShapeComponent* c)
 {
-	colliders.push_back(c);
+    if (!c) return;
+
+    colliders.push_back(c);
 }
 
 void Boardphase::Run()
 {
     currentCollisions.clear();
+
     board->Clear();
 
-    for (auto* c : colliders)
-        board->Insert(c);
-
-    for (auto* a : colliders)
+    for (ShapeComponent* c : colliders)
     {
+        if (!c) continue;
+        if (!c->active) continue;
+        if (!c->GetParent()) continue;
+
+        board->Insert(c);
+    }
+   
+    // Collision detection
+    for (ShapeComponent* a : colliders)
+    {
+        if (!a) continue;
         if (!a->active) continue;
+        if (!a->GetParent()) continue;
+
         auto neighbors = board->Query(a);
 
-        for (auto* b : neighbors)
+        for (ShapeComponent* b : neighbors)
         {
-            if (a >= b) continue;
-
+            if (!b) continue;
             if (!b->active) continue;
+            if (!b->GetParent()) continue;
 
-            if (!a->GetParent() || !b->GetParent())
-                continue;
+            if (!std::less<ShapeComponent*>{}(a, b)) continue;
+            if (!ShouldCollide(a, b)) continue;
+            if (!a->CheckCollide(b)) continue;
 
-            if (!ShouldCollide(a, b))
-                continue;
+            const CollisionPair pair = MakePair(a, b);
 
-            if (a->CheckCollide(b))
-            {
-                auto pair = MakePair(a, b);
+            currentCollisions.insert(pair);
 
-                currentCollisions.insert(pair);
-
-                if (previousCollisions.count(pair)) HandleCollision(a, b);
-                else HandleCollisionStart(a, b);
-            }
+            if (previousCollisions.contains(pair)) HandleCollision(a, b);
+            else HandleCollisionStart(a, b);
         }
     }
 
-    for (auto& pair : previousCollisions)
+    for (const CollisionPair& pair : previousCollisions)
     {
-        if (!currentCollisions.count(pair))
-            HandleCollisionEnd(pair.first, pair.second);
+        if (!currentCollisions.contains(pair))
+            HandleCollisionEnd( pair.first, pair.second);
     }
 
-    previousCollisions = currentCollisions;
+    
+    currentCollisions.swap(previousCollisions);
+    //previousCollisions = currentCollisions;
 }
 
-void Boardphase::HandleCollision(ShapeComponent* a, ShapeComponent* b)
+void Boardphase::HandleCollision( ShapeComponent* a, ShapeComponent* b)
 {
-    if (a->callback)
+    if (a->callback) {
         a->callback->OnCollision(a, b, b->GetParent());
+    }
 
-    if (b->callback)
+    if (b->callback) {
         b->callback->OnCollision(b, a, a->GetParent());
+    }
 }
 
 void Boardphase::HandleCollisionStart(ShapeComponent* a, ShapeComponent* b)
 {
-    if (a->callback)
+    if (a->callback) {
         a->callback->OnCollisionStart(a, b, b->GetParent());
+    }
 
-    if (b->callback)
+    if (b->callback) {
         b->callback->OnCollisionStart(b, a, a->GetParent());
+    }
 }
 
 void Boardphase::HandleCollisionEnd(ShapeComponent* a, ShapeComponent* b)
 {
-    if (a->callback)
+    if (a->callback) {
         a->callback->OnCollisionEnd(a, b, b->GetParent());
+    }
 
-    if (b->callback)
+    if (b->callback) {
         b->callback->OnCollisionEnd(b, a, a->GetParent());
+    }
 }
 
 void Boardphase::Remove(ShapeComponent* c)
 {
-    colliders.erase(
-        std::remove(colliders.begin(), colliders.end(), c),
-        colliders.end()
-    );
-    auto removeIfContains = [&](auto& set)
+    if (!c) return;
+
+    std::erase(colliders, c);
+
+    auto removeCollider = [c](auto& collisions)
     {
-        for (auto it = set.begin(); it != set.end(); )
+        for (auto it = collisions.begin(); it != collisions.end();)
         {
-            if (it->first == c || it->second == c)
-                it = set.erase(it);
-            else
-                ++it;
+            if (it->first == c || it->second == c) {
+                it = collisions.erase(it);
+            } else ++it;
         }
     };
 
-    removeIfContains(currentCollisions);
-    removeIfContains(previousCollisions);
+    removeCollider(currentCollisions);
+    removeCollider(previousCollisions);
 }
 
-std::pair<ShapeComponent*, ShapeComponent*> Boardphase::MakePair(ShapeComponent* a, ShapeComponent* b)
+CollisionPair Boardphase::MakePair(ShapeComponent* a, ShapeComponent* b) const
 {
-    if (a < b)
+    if (std::less<ShapeComponent*>{}(a, b))
         return { a, b };
+
     return { b, a };
 }
 
 bool ShouldCollide(ShapeComponent* a, ShapeComponent* b)
 {
-    bool aCanHitB = (a->mask & ToMask(b->layer)) != 0;
-    bool bCanHitA = (b->mask & ToMask(a->layer)) != 0;
+    const bool aCanHitB = (a->mask & ToMask(b->layer)) != 0;
+
+    const bool bCanHitA = (b->mask & ToMask(a->layer)) != 0;
 
     return aCanHitB && bCanHitA;
-}
+} 

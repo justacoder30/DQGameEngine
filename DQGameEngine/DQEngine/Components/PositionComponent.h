@@ -16,7 +16,7 @@ public:
 	void OnLoad() override;
 	void OnDetach() override;
 
-	const Vector& GetWorldPosition();
+	Vector GetWorldPosition();
 	void SetPosition(float x, float y);
 	void SetAnchor(float x, float y);
 	void HorizontalFlip();

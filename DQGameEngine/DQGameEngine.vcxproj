@@ -121,7 +121,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>DQEngine;$(SolutionDir)tmxlite\src\include;$(SolutionDir)DQGameEngine\externalLib\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>DQEngine;$(SolutionDir)DQGameEngine\externalLib\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -208,18 +208,6 @@
     <ClCompile Include="DQEngine\Components\StateMachineComponent.cpp" />
     <ClCompile Include="DQEngine\Core\Time.cpp" />
     <ClCompile Include="DQEngine\Core\Utils.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="assets\shaders\vertex.glsl">
-      <FileType>Document</FileType>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </None>
-    <None Include="assets\shaders\fragment.glsl">
-      <FileType>Document</FileType>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

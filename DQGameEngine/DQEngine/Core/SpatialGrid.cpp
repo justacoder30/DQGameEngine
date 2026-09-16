@@ -1,73 +1,126 @@
 #include "pch.h"
 #include "SpatialGrid.h"
-#include "Rect.h"   
+
+#include "Rect.h"
 #include "Components/RectangleComponent.h"
+
+#include <cmath>
 
 void SpatialGrid::Init(float size)
 {
     cellSize = size;
+
+    grid.reserve(1024);
+    queryStamp.reserve(512);
+    queryResult.reserve(64);
 }
 
 void SpatialGrid::Clear()
 {
-	grid.clear();
+    ++currentFrame;
+
+    // Extremely unlikely, but protects against overflow.
+    if (currentFrame == 0) {
+        grid.clear();
+        currentFrame = 1;
+    }
+}
+
+int SpatialGrid::ToCell(float value) const
+{
+    return static_cast<int>( std::floor(value / cellSize) );
 }
 
 void SpatialGrid::Insert(ShapeComponent* obj)
 {
-	if (obj->shapeType != ShapeType::Rectangle) return;
-	auto r = static_cast<RectangleComponent*>(obj);    
-    Rect bounds = r->GetWorldBounds();
+    if (!obj) return;
+    if (!obj->active) return;
+    if (obj->shapeType != ShapeType::Rectangle) return;
 
-    int minX = (int)(bounds.x / cellSize);
-    int minY = (int)(bounds.y / cellSize);
-    int maxX = (int)((bounds.x + bounds.w) / cellSize);
-    int maxY = (int)((bounds.y + bounds.h) / cellSize);
+    auto* rect = static_cast<RectangleComponent*>(obj);
 
-    for (int x = minX; x <= maxX; x++)
+    const Rect bounds = rect->GetWorldBounds();
+
+    const int minX = ToCell(bounds.x);
+    const int minY = ToCell(bounds.y);
+    const int maxX = ToCell(bounds.x + bounds.w);
+    const int maxY = ToCell(bounds.y + bounds.h);
+
+    for (int y = minY; y <= maxY; ++y)
     {
-        for (int y = minY; y <= maxY; y++)
+        for (int x = minX; x <= maxX; ++x)
         {
-            grid[Hash(x, y)].objects.push_back(obj);
+            GridCell& cell = grid[Hash(x, y)];
+
+            if (cell.frame != currentFrame)
+            {
+                cell.objects.clear();
+                cell.frame = currentFrame;
+            }
+
+            cell.objects.push_back(obj);
         }
     }
 }
 
 std::vector<ShapeComponent*> SpatialGrid::Query(ShapeComponent* obj)
 {
-    std::vector<ShapeComponent*> result;
+    queryResult.clear();
 
-    if (obj->shapeType != ShapeType::Rectangle) return result;
-    auto r = static_cast<RectangleComponent*>(obj);
-    Rect bounds = r->GetWorldBounds();
+    if (!obj) return queryResult;
 
-    int minX = (int)(bounds.x / cellSize);
-    int minY = (int)(bounds.y / cellSize);
-    int maxX = (int)((bounds.x + bounds.w) / cellSize);
-    int maxY = (int)((bounds.y + bounds.h) / cellSize);
+    if (obj->shapeType != ShapeType::Rectangle)
+        return queryResult;
 
-    std::unordered_set<ShapeComponent*> unique;
+    auto* rect = static_cast<RectangleComponent*>(obj);
 
-    for (int x = minX; x <= maxX; x++)
+    const Rect bounds = rect->GetWorldBounds();
+
+    const int minX = ToCell(bounds.x);
+    const int minY = ToCell(bounds.y);
+    const int maxX = ToCell(bounds.x + bounds.w);
+    const int maxY = ToCell(bounds.y + bounds.h);
+
+    ++currentQuery;
+
+    if (currentQuery == 0)
     {
-        for (int y = minY; y <= maxY; y++)
+        queryStamp.clear();
+        currentQuery = 1;
+    }
+
+    for (int y = minY; y <= maxY; ++y)
+    {
+        for (int x = minX; x <= maxX; ++x)
         {
             auto it = grid.find(Hash(x, y));
+
             if (it == grid.end()) continue;
 
-            for (auto* other : it->second.objects)
+            GridCell& cell = it->second;
+
+            // Cell contains old data.
+            if (cell.frame != currentFrame) continue;
+
+            for (ShapeComponent* other : cell.objects)
             {
-                if (other != obj)
-                    unique.insert(other);
+                if (other == obj) continue;
+
+                auto stampIt = queryStamp.find(other);
+
+                if (stampIt != queryStamp.end() && stampIt->second == currentQuery)
+                    continue;
+
+                queryStamp[other] = currentQuery;
+                queryResult.push_back(other);
             }
         }
     }
 
-    result.assign(unique.begin(), unique.end());
-    return result;
+    return queryResult;
 }
 
-long long SpatialGrid::Hash(int x, int y)
+std::uint64_t SpatialGrid::Hash(int x, int y) const
 {
-	return ((long long)x << 32) | (unsigned int)y;
+    return ((static_cast<std::uint64_t>(x) << 32) | static_cast<std::uint64_t>(y));
 }

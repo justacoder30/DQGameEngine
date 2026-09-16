@@ -65,9 +65,9 @@ void GameTest::OnLoad()
     Add(cam);
     Add(bg);
     
-    SpatialGrid* grid = new SpatialGrid();
-    grid->Init(256.f);
-    s_Boardphase.SetBoard(grid);
+    auto grid = std::make_unique<SpatialGrid>();
+    grid->Init(128.0f);
+    s_Boardphase.SetBoard(std::move(grid));
 
     GameApp::OnLoad();
 }
