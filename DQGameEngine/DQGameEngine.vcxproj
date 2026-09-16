@@ -103,7 +103,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>src;$(SolutionDir)DQGameEngine\externalLib\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>DQEngine;$(SolutionDir)DQGameEngine\externalLib\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -121,7 +121,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>src;$(SolutionDir)tmxlite\src\include;$(SolutionDir)DQGameEngine\externalLib\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>DQEngine;$(SolutionDir)tmxlite\src\include;$(SolutionDir)DQGameEngine\externalLib\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -131,59 +131,59 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Components\CharacterController.h" />
-    <ClInclude Include="src\Core\BaseBoard.h" />
-    <ClInclude Include="src\Core\Board.h" />
-    <ClInclude Include="src\Core\Color.h" />
-    <ClInclude Include="src\Core\SpatialGrid.h" />
-    <ClInclude Include="src\Renderer\RenderCommand.h" />
-    <ClInclude Include="src\Components\CameraComponent.h" />
-    <ClInclude Include="src\Core\Flip.h" />
-    <ClInclude Include="src\Core\Broadphase.h" />
-    <ClInclude Include="src\Core\CollisionCallbacks.h" />
-    <ClInclude Include="src\Components\RectangleComponent.h" />
-    <ClInclude Include="src\Components\ShapeComponent.h" />
-    <ClInclude Include="src\Components\PositionComponent.h" />
-    <ClInclude Include="src\Core\Input.h" />
-    <ClInclude Include="src\Components\Animation2DComponent.h" />
-    <ClInclude Include="src\Components\AnimationClip.h" />
-    <ClInclude Include="src\Components\Animation.h" />
-    <ClInclude Include="src\Components\GameApp.h" />
-    <ClInclude Include="src\Components\SpriteComponent.h" />
-    <ClInclude Include="src\Components\Component.h" />
+    <ClInclude Include="DQEngine\Components\CharacterController.h" />
+    <ClInclude Include="DQEngine\Core\BaseBoard.h" />
+    <ClInclude Include="DQEngine\Core\Board.h" />
+    <ClInclude Include="DQEngine\Core\Color.h" />
+    <ClInclude Include="DQEngine\Core\SpatialGrid.h" />
+    <ClInclude Include="DQEngine\Renderer\RenderCommand.h" />
+    <ClInclude Include="DQEngine\Components\CameraComponent.h" />
+    <ClInclude Include="DQEngine\Core\Flip.h" />
+    <ClInclude Include="DQEngine\Core\Broadphase.h" />
+    <ClInclude Include="DQEngine\Core\CollisionCallbacks.h" />
+    <ClInclude Include="DQEngine\Components\RectangleComponent.h" />
+    <ClInclude Include="DQEngine\Components\ShapeComponent.h" />
+    <ClInclude Include="DQEngine\Components\PositionComponent.h" />
+    <ClInclude Include="DQEngine\Core\Input.h" />
+    <ClInclude Include="DQEngine\Components\Animation2DComponent.h" />
+    <ClInclude Include="DQEngine\Components\AnimationClip.h" />
+    <ClInclude Include="DQEngine\Components\Animation.h" />
+    <ClInclude Include="DQEngine\Components\GameApp.h" />
+    <ClInclude Include="DQEngine\Components\SpriteComponent.h" />
+    <ClInclude Include="DQEngine\Components\Component.h" />
     <ClInclude Include="externalLib\include\glad\glad.h" />
-    <ClInclude Include="src\Core\Rect.h" />
-    <ClInclude Include="src\Renderer\Shader.h" />
-    <ClInclude Include="src\Renderer\Renderer2D.h" />
-    <ClInclude Include="src\DQEngine.h" />
+    <ClInclude Include="DQEngine\Core\Rect.h" />
+    <ClInclude Include="DQEngine\Renderer\Shader.h" />
+    <ClInclude Include="DQEngine\Renderer\Renderer2D.h" />
+    <ClInclude Include="DQEngine\DQEngine.h" />
     <ClInclude Include="externalLib\include\stb_image.h" />
-    <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\Renderer\Texture.h" />
-    <ClInclude Include="src\Core\Vector.h" />
-    <ClInclude Include="src\Components\TiltedMapComponent.h" />
-    <ClInclude Include="src\Core\TextureManager.h" />
-    <ClInclude Include="src\Core\IState.h" />
-    <ClInclude Include="src\Core\StateMachine.h" />
-    <ClInclude Include="src\Components\StateMachineComponent.h" />
-    <ClInclude Include="src\Core\Time.h" />
-    <ClInclude Include="src\Core\Utils.h" />
+    <ClInclude Include="DQEngine\pch.h" />
+    <ClInclude Include="DQEngine\Renderer\Texture.h" />
+    <ClInclude Include="DQEngine\Core\Vector.h" />
+    <ClInclude Include="DQEngine\Components\TiltedMapComponent.h" />
+    <ClInclude Include="DQEngine\Core\TextureManager.h" />
+    <ClInclude Include="DQEngine\Core\IState.h" />
+    <ClInclude Include="DQEngine\Core\StateMachine.h" />
+    <ClInclude Include="DQEngine\Components\StateMachineComponent.h" />
+    <ClInclude Include="DQEngine\Core\Time.h" />
+    <ClInclude Include="DQEngine\Core\Utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Components\CharacterController.cpp" />
-    <ClCompile Include="src\Core\BaseBoard.cpp" />
-    <ClCompile Include="src\Core\SpatialGrid.cpp" />
-    <ClCompile Include="src\Components\CameraComponent.cpp" />
-    <ClCompile Include="src\Core\Broadphase.cpp" />
-    <ClCompile Include="src\Components\RectangleComponent.cpp" />
-    <ClCompile Include="src\Components\ShapeComponent.cpp" />
-    <ClCompile Include="src\Components\PositionComponent.cpp" />
-    <ClCompile Include="src\Core\Input.cpp" />
-    <ClCompile Include="src\Components\Animation2DComponent.cpp" />
-    <ClCompile Include="src\Components\AnimationClip.cpp" />
-    <ClCompile Include="src\Components\Animation.cpp" />
-    <ClCompile Include="src\Components\GameApp.cpp" />
-    <ClCompile Include="src\Components\SpriteComponent.cpp" />
-    <ClCompile Include="src\Components\Component.cpp" />
+    <ClCompile Include="DQEngine\Components\CharacterController.cpp" />
+    <ClCompile Include="DQEngine\Core\BaseBoard.cpp" />
+    <ClCompile Include="DQEngine\Core\SpatialGrid.cpp" />
+    <ClCompile Include="DQEngine\Components\CameraComponent.cpp" />
+    <ClCompile Include="DQEngine\Core\Broadphase.cpp" />
+    <ClCompile Include="DQEngine\Components\RectangleComponent.cpp" />
+    <ClCompile Include="DQEngine\Components\ShapeComponent.cpp" />
+    <ClCompile Include="DQEngine\Components\PositionComponent.cpp" />
+    <ClCompile Include="DQEngine\Core\Input.cpp" />
+    <ClCompile Include="DQEngine\Components\Animation2DComponent.cpp" />
+    <ClCompile Include="DQEngine\Components\AnimationClip.cpp" />
+    <ClCompile Include="DQEngine\Components\Animation.cpp" />
+    <ClCompile Include="DQEngine\Components\GameApp.cpp" />
+    <ClCompile Include="DQEngine\Components\SpriteComponent.cpp" />
+    <ClCompile Include="DQEngine\Components\Component.cpp" />
     <ClCompile Include="externalLib\include\glad\glad.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -192,22 +192,22 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Core\Rect.cpp" />
-    <ClCompile Include="src\Renderer\Shader.cpp" />
-    <ClCompile Include="src\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="src\DQEngine.cpp" />
-    <ClCompile Include="src\pch.cpp">
+    <ClCompile Include="DQEngine\Core\Rect.cpp" />
+    <ClCompile Include="DQEngine\Renderer\Shader.cpp" />
+    <ClCompile Include="DQEngine\Renderer\Renderer2D.cpp" />
+    <ClCompile Include="DQEngine\DQEngine.cpp" />
+    <ClCompile Include="DQEngine\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Renderer\Texture.cpp" />
-    <ClCompile Include="src\Core\Vector.cpp" />
-    <ClCompile Include="src\Components\TiltedMapComponent.cpp" />
-    <ClCompile Include="src\Core\TextureManager.cpp" />
-    <ClCompile Include="src\Core\StateMachine.cpp" />
-    <ClCompile Include="src\Components\StateMachineComponent.cpp" />
-    <ClCompile Include="src\Core\Time.cpp" />
-    <ClCompile Include="src\Core\Utils.cpp" />
+    <ClCompile Include="DQEngine\Renderer\Texture.cpp" />
+    <ClCompile Include="DQEngine\Core\Vector.cpp" />
+    <ClCompile Include="DQEngine\Components\TiltedMapComponent.cpp" />
+    <ClCompile Include="DQEngine\Core\TextureManager.cpp" />
+    <ClCompile Include="DQEngine\Core\StateMachine.cpp" />
+    <ClCompile Include="DQEngine\Components\StateMachineComponent.cpp" />
+    <ClCompile Include="DQEngine\Core\Time.cpp" />
+    <ClCompile Include="DQEngine\Core\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\vertex.glsl">
