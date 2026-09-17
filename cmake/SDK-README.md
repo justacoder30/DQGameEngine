@@ -4,6 +4,12 @@ This package contains the engine and dependency headers, static libraries,
 SDL3 import library and runtime DLL, and Visual Studio property sheets.
 The engine library alone is not sufficient: distribute this whole folder.
 
+Start with [Getting started](docs/getting-started.md), then the
+[user guide](docs/user-guide.md) and [API reference](docs/api-reference.md).
+An asset-free [quickstart example](docs/examples/quickstart/main.cpp) is included;
+add it as the main source of your own Visual Studio project after importing the
+property sheet below.
+
 ## Use in a Visual Studio C++ project
 
 1. Extract this folder anywhere, including a path containing spaces.

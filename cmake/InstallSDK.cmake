@@ -54,6 +54,8 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/SDK-README.md"
     "${PROJECT_BINARY_DIR}/sdk/README.md" @ONLY)
 install(FILES "${PROJECT_BINARY_DIR}/sdk/README.md"
     DESTINATION . RENAME README.md COMPONENT EngineSDK)
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/docs/"
+    DESTINATION docs COMPONENT EngineSDK)
 install(FILES "${PROJECT_SOURCE_DIR}/LICENSE"
     DESTINATION licenses/DQGameEngine COMPONENT EngineSDK)
 # Preserve upstream notices, including those of vendored audio codecs.
